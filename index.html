@@ -13,12 +13,27 @@
       --success: #16a34a;
       --danger: #dc2626;
       --purple: #7c3aed;
+      --star: #f59e0b;
       --bg: #f1f5f9;
       --card: #ffffff;
       --text: #0f172a;
       --muted: #64748b;
       --border: #e2e8f0;
       --radius: 12px;
+      --hover: #f8fafc;
+      --input-bg: #fff;
+    }
+
+    [data-theme="dark"] {
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --border: #334155;
+      --hover: #334155;
+      --input-bg: #0f172a;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -30,18 +45,16 @@
       min-height: 100vh;
       line-height: 1.5;
       -webkit-tap-highlight-color: transparent;
+      transition: background 0.25s, color 0.25s;
     }
 
-    .container {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 12px;
-    }
+    .container { max-width: 720px; margin: 0 auto; padding: 12px; }
 
     header {
       text-align: center;
       margin-bottom: 16px;
       padding-top: 8px;
+      position: relative;
     }
 
     header h1 {
@@ -55,12 +68,25 @@
     }
 
     header h1 i { font-size: 1.3rem; }
+    header p { color: var(--muted); margin-top: 4px; font-size: 0.8rem; }
 
-    header p {
+    .theme-btn {
+      position: absolute;
+      right: 0;
+      top: 8px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
       color: var(--muted);
-      margin-top: 4px;
-      font-size: 0.8rem;
+      font-size: 1rem;
     }
+    .theme-btn:hover { color: var(--text); background: var(--hover); }
 
     .card {
       background: var(--card);
@@ -80,42 +106,24 @@
       flex-wrap: wrap;
     }
 
-    .card h2 i { font-size: 0.95rem; }
-
     .form-group { margin-bottom: 12px; }
+    label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; }
 
-    label {
-      display: block;
-      font-size: 0.8rem;
-      font-weight: 600;
-      margin-bottom: 4px;
-      color: var(--text);
-    }
-
-    input[type="text"],
-    input[type="password"] {
+    input[type="text"], input[type="password"] {
       width: 100%;
       padding: 10px 12px;
       border: 1px solid var(--border);
       border-radius: 8px;
       font-size: 0.9rem;
-      background: #fff;
-      transition: border-color 0.2s;
+      background: var(--input-bg);
+      color: var(--text);
     }
-
     input:focus {
       outline: none;
       border-color: var(--primary);
       box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
     }
-
-    small {
-      color: var(--muted);
-      font-size: 0.7rem;
-      display: block;
-      margin-top: 4px;
-      line-height: 1.4;
-    }
+    small { color: var(--muted); font-size: 0.7rem; display: block; margin-top: 4px; line-height: 1.4; }
 
     .btn {
       display: inline-flex;
@@ -131,22 +139,11 @@
       transition: all 0.2s;
       white-space: nowrap;
     }
-
     .btn i { font-size: 0.85rem; }
-
     .btn-primary { background: var(--primary); color: #fff; }
     .btn-primary:hover { background: var(--primary-dark); }
-
     .btn-success { background: var(--success); color: #fff; }
-    .btn-success:hover { background: #15803d; }
-
-    .btn-danger {
-      background: var(--danger);
-      color: #fff;
-      padding: 7px 10px;
-      font-size: 0.8rem;
-    }
-
+    .btn-danger { background: var(--danger); color: #fff; padding: 7px 10px; font-size: 0.8rem; }
     .btn-outline {
       background: transparent;
       border: 1px solid var(--border);
@@ -154,25 +151,15 @@
       padding: 7px 10px;
       font-size: 0.8rem;
     }
-
-    .btn-outline:hover { background: #f8fafc; }
-
-    .btn-play {
-      background: var(--purple);
-      color: #fff;
-      padding: 7px 10px;
-      font-size: 0.8rem;
-    }
-
-    .btn-play:hover { background: #6d28d9; }
-
+    .btn-outline:hover { background: var(--hover); }
+    .btn-outline.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .btn-play { background: var(--purple); color: #fff; padding: 7px 10px; font-size: 0.8rem; }
+    .btn-star { background: transparent; border: 1px solid var(--border); color: var(--muted); padding: 7px 10px; font-size: 0.8rem; }
+    .btn-star.starred { color: var(--star); border-color: var(--star); }
+    .btn-star:hover { color: var(--star); }
+    .btn-sm { padding: 6px 10px; font-size: 0.8rem; }
     .btn:disabled { opacity: 0.55; cursor: not-allowed; }
-
-    .btn-group {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
+    .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
 
     .upload-zone {
       border: 2px dashed var(--border);
@@ -180,35 +167,25 @@
       padding: 20px 12px;
       text-align: center;
       cursor: pointer;
-      background: #fafbfc;
-      transition: all 0.2s;
+      background: var(--hover);
     }
-
-    .upload-zone:hover,
-    .upload-zone.dragover {
+    .upload-zone:hover, .upload-zone.dragover {
       border-color: var(--primary);
-      background: #eff6ff;
+      background: rgba(37,99,235,0.08);
     }
-
-    .upload-zone i {
-      font-size: 1.8rem;
-      color: var(--primary);
-      margin-bottom: 8px;
-    }
-
-    .upload-zone p {
-      color: var(--muted);
-      font-size: 0.85rem;
-    }
+    .upload-zone i { font-size: 1.8rem; color: var(--primary); margin-bottom: 8px; }
+    .upload-zone p { color: var(--muted); font-size: 0.85rem; }
 
     .path-input { margin-top: 10px; }
+    .path-input input { width: 100%; font-size: 0.85rem; padding: 9px 12px; }
 
-    .path-input input {
-      width: 100%;
-      font-size: 0.85rem;
-      padding: 9px 12px;
-    }
+    .progress-wrap { display: none; margin-top: 12px; }
+    .progress-wrap.show { display: block; }
+    .progress-bar-bg { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+    .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; border-radius: 4px; }
+    .progress-text { font-size: 0.75rem; color: var(--muted); margin-top: 6px; text-align: center; }
 
+    /* LIST VIEW */
     .file-list { list-style: none; }
 
     .file-item {
@@ -219,291 +196,289 @@
       border-bottom: 1px solid var(--border);
       gap: 8px;
     }
-
     .file-item:last-child { border-bottom: none; }
-    .file-item:hover { background: #f8fafc; }
+    .file-item:hover { background: var(--hover); }
     .file-item.folder { cursor: pointer; }
-    .file-item.folder:hover { background: #eff6ff; }
+    .file-item.selected { background: rgba(37,99,235,0.1); }
 
-    .file-info {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex: 1;
-      min-width: 0;
-    }
+    .file-info { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+    .file-check { width: 18px; height: 18px; accent-color: var(--primary); flex-shrink: 0; cursor: pointer; }
 
     .file-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      background: #eff6ff;
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.95rem;
-      flex-shrink: 0;
+      width: 36px; height: 36px; border-radius: 8px;
+      background: rgba(37,99,235,0.1); color: var(--primary);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.95rem; flex-shrink: 0;
     }
-
     .file-icon.folder { background: #fef3c7; color: #d97706; }
+    [data-theme="dark"] .file-icon.folder { background: #422006; color: #fbbf24; }
     .file-icon.video { background: #f3e8ff; color: #7c3aed; }
+    [data-theme="dark"] .file-icon.video { background: #2e1065; color: #c4b5fd; }
     .file-icon.audio { background: #fce7f3; color: #db2777; }
+    [data-theme="dark"] .file-icon.audio { background: #500724; color: #f9a8d4; }
+    .file-icon.image { background: #ecfdf5; color: #059669; }
+    [data-theme="dark"] .file-icon.image { background: #064e3b; color: #6ee7b7; }
 
-    .file-name {
-      font-weight: 500;
-      font-size: 0.875rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .file-name { font-weight: 500; font-size: 0.875rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .file-meta { font-size: 0.7rem; color: var(--muted); }
+    .file-actions { display: flex; gap: 5px; flex-shrink: 0; flex-wrap: wrap; }
+
+    /* GRID VIEW */
+    .file-list.grid-view {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 10px;
     }
-
-    .file-meta {
-      font-size: 0.7rem;
-      color: var(--muted);
+    .file-list.grid-view .file-item {
+      flex-direction: column;
+      align-items: stretch;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      border-bottom: 1px solid var(--border);
+      gap: 8px;
+      position: relative;
     }
-
-    .file-actions {
-      display: flex;
+    .file-list.grid-view .file-item:hover { border-color: var(--primary); }
+    .file-list.grid-view .file-info {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
       gap: 6px;
-      flex-shrink: 0;
     }
+    .file-list.grid-view .file-check {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+    }
+    .file-list.grid-view .file-icon {
+      width: 64px;
+      height: 64px;
+      font-size: 1.6rem;
+      border-radius: 12px;
+    }
+    .file-list.grid-view .file-thumb {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: 8px;
+      background: var(--hover);
+    }
+    .file-list.grid-view .file-name {
+      font-size: 0.75rem;
+      white-space: normal;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      word-break: break-all;
+      max-width: 100%;
+    }
+    .file-list.grid-view .file-meta { font-size: 0.65rem; }
+    .file-list.grid-view .file-actions {
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .file-list.grid-view .btn-star-grid {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: rgba(0,0,0,0.4);
+      border: none;
+      color: #fff;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      padding: 0;
+      font-size: 0.75rem;
+    }
+    .file-list.grid-view .btn-star-grid.starred { color: var(--star); }
 
     .breadcrumb {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 4px;
-      padding: 8px 10px;
-      background: #f8fafc;
-      border-radius: 8px;
-      margin-bottom: 10px;
-      font-size: 0.8rem;
+      display: flex; align-items: center; flex-wrap: wrap; gap: 4px;
+      padding: 8px 10px; background: var(--hover); border-radius: 8px;
+      margin-bottom: 10px; font-size: 0.8rem;
     }
-
     .breadcrumb-item {
-      color: var(--primary);
-      cursor: pointer;
-      font-weight: 500;
-      padding: 2px 5px;
-      border-radius: 4px;
+      color: var(--primary); cursor: pointer; font-weight: 500;
+      padding: 2px 5px; border-radius: 4px;
     }
-
-    .breadcrumb-item:hover { background: #e0e7ff; }
-
-    .breadcrumb-item.current {
-      color: var(--text);
-      cursor: default;
-      font-weight: 600;
-    }
-
+    .breadcrumb-item:hover { background: rgba(37,99,235,0.12); }
+    .breadcrumb-item.current { color: var(--text); cursor: default; font-weight: 600; }
     .breadcrumb-item.current:hover { background: transparent; }
+    .breadcrumb-sep { color: var(--muted); font-size: 0.65rem; }
 
-    .breadcrumb-sep {
-      color: var(--muted);
-      font-size: 0.65rem;
+    .toolbar {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; align-items: center;
     }
+    .search-box { flex: 1; min-width: 120px; position: relative; }
+    .search-box input {
+      width: 100%; padding: 8px 12px 8px 34px; font-size: 0.85rem;
+    }
+    .search-box i {
+      position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+      color: var(--muted); font-size: 0.85rem;
+    }
+    .view-toggles { display: flex; gap: 4px; }
 
     .status {
-      padding: 10px 12px;
-      border-radius: 8px;
-      margin-bottom: 12px;
-      font-size: 0.8rem;
-      display: none;
+      padding: 10px 12px; border-radius: 8px; margin-bottom: 12px;
+      font-size: 0.8rem; display: none;
     }
-
     .status.show { display: block; }
     .status.success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
     .status.error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
     .status.info { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
+    [data-theme="dark"] .status.success { background: #14532d; color: #86efac; border-color: #166534; }
+    [data-theme="dark"] .status.error { background: #7f1d1d; color: #fca5a5; border-color: #991b1b; }
+    [data-theme="dark"] .status.info { background: #1e3a5f; color: #93c5fd; border-color: #1e40af; }
 
-    .empty-state {
-      text-align: center;
-      padding: 28px 12px;
-      color: var(--muted);
-    }
-
-    .empty-state i {
-      font-size: 2rem;
-      margin-bottom: 8px;
-      opacity: 0.35;
-    }
-
+    .empty-state { text-align: center; padding: 28px 12px; color: var(--muted); }
+    .empty-state i { font-size: 2rem; margin-bottom: 8px; opacity: 0.35; }
     .empty-state p { font-size: 0.85rem; }
 
     .config-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      user-select: none;
+      display: flex; align-items: center; justify-content: space-between;
+      cursor: pointer; user-select: none;
     }
-
     .config-header h2 { margin-bottom: 0; }
-
     .config-toggle {
-      background: transparent;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 5px 8px;
-      cursor: pointer;
-      color: var(--muted);
-      font-size: 0.8rem;
+      background: transparent; border: 1px solid var(--border); border-radius: 6px;
+      padding: 5px 8px; cursor: pointer; color: var(--muted); font-size: 0.8rem;
     }
-
     .config-body {
-      margin-top: 12px;
-      overflow: hidden;
+      margin-top: 12px; overflow: hidden;
       transition: max-height 0.3s ease, opacity 0.25s ease;
     }
-
     .config-body.collapsed {
-      max-height: 0 !important;
-      opacity: 0;
-      margin-top: 0;
-      pointer-events: none;
+      max-height: 0 !important; opacity: 0; margin-top: 0; pointer-events: none;
     }
-
     .connected-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: #dcfce7;
-      color: #166534;
-      font-size: 0.7rem;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 12px;
-      margin-left: 6px;
+      display: inline-flex; align-items: center; gap: 4px;
+      background: #dcfce7; color: #166534; font-size: 0.7rem; font-weight: 600;
+      padding: 2px 8px; border-radius: 12px; margin-left: 6px;
     }
+    [data-theme="dark"] .connected-badge { background: #14532d; color: #86efac; }
 
     .list-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-      gap: 8px;
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 10px; gap: 8px;
     }
-
     .list-header h2 { margin: 0; }
 
+    .batch-bar {
+      display: none; align-items: center; gap: 8px; padding: 8px 10px;
+      background: rgba(37,99,235,0.1); border-radius: 8px; margin-bottom: 10px;
+      font-size: 0.8rem; flex-wrap: wrap;
+    }
+    .batch-bar.show { display: flex; }
+
     footer {
-      text-align: center;
-      margin-top: 24px;
-      padding-bottom: 20px;
-      color: var(--muted);
-      font-size: 0.75rem;
+      text-align: center; margin-top: 24px; padding-bottom: 20px;
+      color: var(--muted); font-size: 0.75rem;
     }
 
     .spinner {
-      display: inline-block;
-      width: 14px;
-      height: 14px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-radius: 50%;
-      border-top-color: #fff;
-      animation: spin 0.7s linear infinite;
+      display: inline-block; width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,0.3); border-radius: 50%;
+      border-top-color: #fff; animation: spin 0.7s linear infinite;
     }
-
     @keyframes spin { to { transform: rotate(360deg); } }
-
     .hidden { display: none !important; }
 
     .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.85);
+      position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000; padding: 12px; opacity: 0; visibility: hidden; transition: all 0.25s;
+    }
+    .modal-overlay.show { opacity: 1; visibility: visible; }
+    .modal {
+      background: #1a1a2e; border-radius: 12px; width: 100%; max-width: 720px;
+      overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      transform: scale(0.96); transition: transform 0.25s;
+    }
+    .modal-overlay.show .modal { transform: scale(1); }
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px; background: #16213e; color: #fff;
+    }
+    .modal-header h3 {
+      font-size: 0.85rem; font-weight: 600; white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis; max-width: 80%;
+    }
+    .modal-close {
+      background: transparent; border: none; color: #94a3b8;
+      font-size: 1.2rem; cursor: pointer; padding: 4px 8px; border-radius: 6px; line-height: 1;
+    }
+    .modal-close:hover { background: #1e293b; color: #fff; }
+    .modal-body { background: #000; min-height: 120px; display: flex; align-items: center; justify-content: center; }
+    .modal-body img { max-width: 100%; max-height: 75vh; object-fit: contain; }
+
+    .plyr { --plyr-color-main: #7c3aed; border-radius: 0; }
+    .plyr--audio { background: linear-gradient(135deg, #1e1b4b, #312e81); padding: 16px; }
+    .plyr--audio .plyr__controls { background: transparent; color: #e0e7ff; }
+
+    .playlist-controls {
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 1000;
-      padding: 12px;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.25s;
+      gap: 12px;
+      padding: 12px 16px;
+      background: #16213e;
+      flex-wrap: wrap;
     }
-
-    .modal-overlay.show {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .modal {
-      background: #1a1a2e;
-      border-radius: 12px;
-      width: 100%;
-      max-width: 720px;
-      overflow: hidden;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-      transform: scale(0.96);
-      transition: transform 0.25s;
-    }
-
-    .modal-overlay.show .modal { transform: scale(1); }
-
-    .modal-header {
+    .pl-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: #e0e7ff;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 0.95rem;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 10px 14px;
-      background: #16213e;
-      color: #fff;
+      justify-content: center;
+      transition: all 0.2s;
     }
-
-    .modal-header h3 {
-      font-size: 0.85rem;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 80%;
-    }
-
-    .modal-close {
-      background: transparent;
-      border: none;
+    .pl-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
+    .pl-btn.active { background: var(--purple); color: #fff; }
+    .pl-info {
       color: #94a3b8;
-      font-size: 1.2rem;
-      cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 6px;
-      line-height: 1;
+      font-size: 0.8rem;
+      margin-left: 8px;
+      min-width: 50px;
     }
-
-    .modal-close:hover { background: #1e293b; color: #fff; }
-
-    .modal-body {
-      background: #000;
-      min-height: 120px;
+    .music-bar {
+      display: none;
+      gap: 8px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
     }
+    .music-bar.show { display: flex; }
 
-    .plyr {
-      --plyr-color-main: #7c3aed;
-      border-radius: 0;
+    .prompt-modal .modal { background: var(--card); max-width: 400px; }
+    .prompt-modal .modal-header { background: var(--hover); color: var(--text); }
+    .prompt-modal .modal-body {
+      background: var(--card); padding: 16px; flex-direction: column; gap: 12px; min-height: auto;
     }
-
-    .plyr--audio {
-      background: linear-gradient(135deg, #1e1b4b, #312e81);
-      padding: 16px;
+    .prompt-modal input {
+      width: 100%; padding: 10px 12px; border: 1px solid var(--border);
+      border-radius: 8px; font-size: 0.9rem; background: var(--input-bg); color: var(--text);
     }
-
-    .plyr--audio .plyr__controls {
-      background: transparent;
-      color: #e0e7ff;
-    }
+    .prompt-modal .btn-group { width: 100%; justify-content: flex-end; }
 
     @media (min-width: 600px) {
       .container { padding: 20px 16px; }
       header h1 { font-size: 1.5rem; }
-      header p { font-size: 0.9rem; }
-      .card { padding: 18px; margin-bottom: 16px; }
-      .card h2 { font-size: 1.05rem; }
+      .card { padding: 18px; }
       .btn { padding: 11px 16px; font-size: 0.9rem; }
-      .btn-danger, .btn-outline, .btn-play { padding: 8px 12px; font-size: 0.85rem; }
-      .file-icon { width: 40px; height: 40px; font-size: 1.05rem; }
+      .btn-danger, .btn-outline, .btn-play, .btn-sm, .btn-star { padding: 8px 12px; font-size: 0.85rem; }
+      .file-icon { width: 40px; height: 40px; }
       .file-name { font-size: 0.95rem; }
       .upload-zone { padding: 28px 16px; }
       .upload-zone i { font-size: 2.2rem; }
+      .file-list.grid-view { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
     }
   </style>
 </head>
@@ -512,6 +487,9 @@
     <header>
       <h1><i class="fab fa-github"></i> GitHub File Storage</h1>
       <p>Lưu trữ & quản lý file trên GitHub</p>
+      <button class="theme-btn" id="theme-btn" title="Đổi giao diện">
+        <i class="fas fa-moon" id="theme-icon"></i>
+      </button>
     </header>
 
     <div class="card" id="config-card">
@@ -522,9 +500,7 @@
             <i class="fas fa-check-circle"></i> Đã kết nối
           </span>
         </h2>
-        <button class="config-toggle" id="config-toggle" title="Thu gọn / Mở">
-          <i class="fas fa-chevron-up" id="config-toggle-icon"></i>
-        </button>
+        <button class="config-toggle" id="config-toggle"><i class="fas fa-chevron-up" id="config-toggle-icon"></i></button>
       </div>
       <div class="config-body" id="config-body">
         <div class="form-group">
@@ -541,12 +517,8 @@
           <small>GitHub → Settings → Developer settings → Personal access tokens → Generate (quyền <strong>repo</strong>)</small>
         </div>
         <div class="btn-group">
-          <button class="btn btn-primary" id="btn-connect">
-            <i class="fas fa-plug"></i> Kết nối
-          </button>
-          <button class="btn btn-outline" id="btn-save">
-            <i class="fas fa-save"></i> Lưu
-          </button>
+          <button class="btn btn-primary" id="btn-connect"><i class="fas fa-plug"></i> Kết nối</button>
+          <button class="btn btn-outline" id="btn-save"><i class="fas fa-save"></i> Lưu</button>
         </div>
       </div>
     </div>
@@ -564,35 +536,56 @@
         <div class="path-input">
           <input type="text" id="custom-path" placeholder="Thư mục (vd: photos/2024/)" />
         </div>
-        <div style="margin-top: 10px;">
-          <button class="btn btn-success" id="btn-upload" disabled>
-            <i class="fas fa-upload"></i> Upload
-          </button>
+        <div class="progress-wrap" id="progress-wrap">
+          <div class="progress-bar-bg"><div class="progress-bar" id="progress-bar"></div></div>
+          <div class="progress-text" id="progress-text">0%</div>
+        </div>
+        <div style="margin-top: 10px;" class="btn-group">
+          <button class="btn btn-success" id="btn-upload" disabled><i class="fas fa-upload"></i> Upload</button>
+          <button class="btn btn-outline btn-sm" id="btn-new-folder"><i class="fas fa-folder-plus"></i> Tạo thư mục</button>
         </div>
       </div>
 
       <div class="card">
         <div class="list-header">
           <h2><i class="fas fa-folder-open"></i> Files</h2>
-          <button class="btn btn-outline" id="btn-refresh">
-            <i class="fas fa-sync-alt"></i>
-          </button>
+          <button class="btn btn-outline" id="btn-refresh"><i class="fas fa-sync-alt"></i></button>
         </div>
 
         <div class="breadcrumb" id="breadcrumb">
           <span class="breadcrumb-item current" data-path=""><i class="fas fa-home"></i> Gốc</span>
         </div>
 
+        <div class="toolbar">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="search-input" placeholder="Tìm file..." />
+          </div>
+          <div class="view-toggles">
+            <button class="btn btn-outline btn-sm active" id="btn-view-list" title="Danh sách"><i class="fas fa-list"></i></button>
+            <button class="btn btn-outline btn-sm" id="btn-view-grid" title="Lưới"><i class="fas fa-th"></i></button>
+            <button class="btn btn-outline btn-sm" id="btn-filter-star" title="Chỉ yêu thích"><i class="fas fa-star"></i></button>
+          </div>
+        </div>
+
+        <div class="music-bar" id="music-bar">
+          <button class="btn btn-play btn-sm" id="btn-play-all" title="Phát tất cả"><i class="fas fa-play"></i> Phát tất cả</button>
+          <button class="btn btn-outline btn-sm" id="btn-shuffle-all" title="Phát ngẫu nhiên"><i class="fas fa-random"></i> Ngẫu nhiên</button>
+        </div>
+
+        <div class="batch-bar" id="batch-bar">
+          <span id="batch-count">0 đã chọn</span>
+          <button class="btn btn-danger btn-sm" id="btn-batch-delete"><i class="fas fa-trash"></i> Xóa đã chọn</button>
+          <button class="btn btn-outline btn-sm" id="btn-batch-clear">Bỏ chọn</button>
+        </div>
+
         <ul class="file-list" id="file-list">
-          <li class="empty-state">
-            <i class="fas fa-inbox"></i>
-            <p>Chưa có file nào</p>
-          </li>
+          <li class="empty-state"><i class="fas fa-inbox"></i><p>Chưa có file nào</p></li>
         </ul>
       </div>
     </div>
 
-    <footer>GitHub File Storage · Plyr + Font Awesome</footer>
+    <footer>GitHub File Storage · Grid + Favorites</footer>
   </div>
 
   <div class="modal-overlay" id="media-modal">
@@ -602,6 +595,29 @@
         <button class="modal-close" id="modal-close"><i class="fas fa-times"></i></button>
       </div>
       <div class="modal-body" id="modal-body"></div>
+      <div class="playlist-controls" id="playlist-controls" style="display:none">
+        <button class="pl-btn" id="pl-prev" title="Bài trước"><i class="fas fa-step-backward"></i></button>
+        <button class="pl-btn" id="pl-shuffle" title="Ngẫu nhiên"><i class="fas fa-random"></i></button>
+        <button class="pl-btn" id="pl-repeat" title="Lặp lại"><i class="fas fa-redo"></i></button>
+        <button class="pl-btn" id="pl-next" title="Bài sau"><i class="fas fa-step-forward"></i></button>
+        <span class="pl-info" id="pl-info">1 / 1</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay prompt-modal" id="prompt-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="prompt-title">Nhập tên</h3>
+        <button class="modal-close" id="prompt-close"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <input type="text" id="prompt-input" placeholder="Tên..." />
+        <div class="btn-group">
+          <button class="btn btn-outline btn-sm" id="prompt-cancel">Hủy</button>
+          <button class="btn btn-primary btn-sm" id="prompt-ok">OK</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -610,25 +626,82 @@
     let config = { username: '', repo: '', token: '' };
     let selectedFiles = [];
     let currentPath = '';
+    let allFiles = [];
+    let selectedPaths = new Set();
+    let favorites = new Set();
+    let viewMode = 'list'; // list | grid
+    let showOnlyStars = false;
     let plyrInstance = null;
     let configCollapsed = false;
+    let promptResolve = null;
+    // Playlist
+    let playlist = [];
+    let playlistIndex = 0;
+    let shuffleMode = false;
+    let repeatMode = false; // false | true (loop list)
+    let shuffleOrder = [];
 
     const $ = id => document.getElementById(id);
-    const statusEl = $('status');
-    const uploadZone = $('upload-zone');
-    const fileInput = $('file-input');
-    const btnUpload = $('btn-upload');
-    const fileList = $('file-list');
-    const mainArea = $('main-area');
-    const mediaModal = $('media-modal');
-    const modalBody = $('modal-body');
-    const modalTitle = $('modal-title');
-    const breadcrumbEl = $('breadcrumb');
 
-    function showStatus(msg, type = 'info') {
-      statusEl.textContent = msg;
-      statusEl.className = `status show ${type}`;
-      setTimeout(() => statusEl.classList.remove('show'), 4000);
+    function favKey() {
+      return 'gh-favs-' + (config.username || '') + '/' + (config.repo || '');
+    }
+
+    function loadFavorites() {
+      try {
+        const raw = localStorage.getItem(favKey());
+        favorites = new Set(raw ? JSON.parse(raw) : []);
+      } catch (_) { favorites = new Set(); }
+    }
+
+    function saveFavorites() {
+      localStorage.setItem(favKey(), JSON.stringify([...favorites]));
+    }
+
+    function toggleFavorite(path) {
+      if (favorites.has(path)) favorites.delete(path);
+      else favorites.add(path);
+      saveFavorites();
+      applySearch();
+    }
+
+    // ===== THEME =====
+    function initTheme() {
+      const saved = localStorage.getItem('gh-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+      $('theme-icon').className = saved === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    }
+    function toggleTheme() {
+      const cur = document.documentElement.getAttribute('data-theme');
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('gh-theme', next);
+      $('theme-icon').className = next === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    }
+    $('theme-btn').addEventListener('click', toggleTheme);
+    initTheme();
+
+    // View mode
+    function setViewMode(mode) {
+      viewMode = mode;
+      localStorage.setItem('gh-view-mode', mode);
+      $('file-list').classList.toggle('grid-view', mode === 'grid');
+      $('btn-view-list').classList.toggle('active', mode === 'list');
+      $('btn-view-grid').classList.toggle('active', mode === 'grid');
+      applySearch();
+    }
+
+    function toggleStarFilter() {
+      showOnlyStars = !showOnlyStars;
+      $('btn-filter-star').classList.toggle('active', showOnlyStars);
+      applySearch();
+    }
+
+    function showStatus(msg, type) {
+      const el = $('status');
+      el.textContent = msg;
+      el.className = 'status show ' + (type || 'info');
+      setTimeout(() => el.classList.remove('show'), 4000);
     }
 
     function formatSize(bytes) {
@@ -641,29 +714,22 @@
       return (name.split('.').pop() || '').toLowerCase();
     }
 
-    function isVideo(name) {
-      return ['mp4', 'webm', 'ogg', 'mov', 'm4v', 'mkv'].includes(getFileExt(name));
-    }
-
-    function isAudio(name) {
-      return ['mp3', 'wav', 'ogg', 'm4a', 'aac', 'flac', 'wma'].includes(getFileExt(name));
-    }
+    function isVideo(n) { return ['mp4','webm','ogg','mov','m4v','mkv'].includes(getFileExt(n)); }
+    function isAudio(n) { return ['mp3','wav','ogg','m4a','aac','flac','wma'].includes(getFileExt(n)); }
+    function isImage(n) { return ['jpg','jpeg','png','gif','webp','svg','bmp','ico'].includes(getFileExt(n)); }
 
     function getFileIcon(name) {
       if (isVideo(name)) return 'fa-file-video';
       if (isAudio(name)) return 'fa-file-audio';
+      if (isImage(name)) return 'fa-file-image';
       const ext = getFileExt(name);
       const map = {
-        pdf: 'fa-file-pdf',
-        doc: 'fa-file-word', docx: 'fa-file-word',
-        xls: 'fa-file-excel', xlsx: 'fa-file-excel',
-        ppt: 'fa-file-powerpoint', pptx: 'fa-file-powerpoint',
-        zip: 'fa-file-zipper', rar: 'fa-file-zipper', '7z': 'fa-file-zipper',
-        jpg: 'fa-file-image', jpeg: 'fa-file-image', png: 'fa-file-image',
-        gif: 'fa-file-image', webp: 'fa-file-image', svg: 'fa-file-image',
-        js: 'fa-file-code', ts: 'fa-file-code', html: 'fa-file-code',
-        css: 'fa-file-code', json: 'fa-file-code', py: 'fa-file-code',
-        txt: 'fa-file-lines', md: 'fa-file-lines'
+        pdf:'fa-file-pdf', doc:'fa-file-word', docx:'fa-file-word',
+        xls:'fa-file-excel', xlsx:'fa-file-excel',
+        ppt:'fa-file-powerpoint', pptx:'fa-file-powerpoint',
+        zip:'fa-file-zipper', rar:'fa-file-zipper', '7z':'fa-file-zipper',
+        js:'fa-file-code', ts:'fa-file-code', html:'fa-file-code', css:'fa-file-code',
+        json:'fa-file-code', py:'fa-file-code', txt:'fa-file-lines', md:'fa-file-lines'
       };
       return map[ext] || 'fa-file';
     }
@@ -671,21 +737,47 @@
     function getIconClass(name) {
       if (isVideo(name)) return 'video';
       if (isAudio(name)) return 'audio';
+      if (isImage(name)) return 'image';
       return '';
     }
 
+    // ===== PROMPT =====
+    function showPrompt(title, defaultVal) {
+      return new Promise(resolve => {
+        promptResolve = resolve;
+        $('prompt-title').textContent = title;
+        $('prompt-input').value = defaultVal || '';
+        $('prompt-modal').classList.add('show');
+        setTimeout(() => { $('prompt-input').focus(); $('prompt-input').select(); }, 100);
+      });
+    }
+    function closePrompt(val) {
+      $('prompt-modal').classList.remove('show');
+      if (promptResolve) { promptResolve(val); promptResolve = null; }
+    }
+    $('prompt-ok').addEventListener('click', () => closePrompt($('prompt-input').value.trim()));
+    $('prompt-cancel').addEventListener('click', () => closePrompt(null));
+    $('prompt-close').addEventListener('click', () => closePrompt(null));
+    $('prompt-input').addEventListener('keypress', e => {
+      if (e.key === 'Enter') closePrompt($('prompt-input').value.trim());
+    });
+    $('prompt-modal').addEventListener('click', e => {
+      if (e.target === $('prompt-modal')) closePrompt(null);
+    });
+
+    // ===== BREADCRUMB =====
     function updateBreadcrumb() {
       const parts = currentPath ? currentPath.split('/').filter(Boolean) : [];
-      let html = `<span class="breadcrumb-item ${parts.length === 0 ? 'current' : ''}" data-path=""><i class="fas fa-home"></i> Gốc</span>`;
+      let html = '<span class="breadcrumb-item ' + (parts.length === 0 ? 'current' : '') + '" data-path=""><i class="fas fa-home"></i> Gốc</span>';
       let pathSoFar = '';
       parts.forEach((part, i) => {
         pathSoFar += (pathSoFar ? '/' : '') + part;
         const isLast = i === parts.length - 1;
-        html += `<span class="breadcrumb-sep"><i class="fas fa-chevron-right"></i></span>`;
-        html += `<span class="breadcrumb-item ${isLast ? 'current' : ''}" data-path="${pathSoFar}">${part}</span>`;
+        html += '<span class="breadcrumb-sep"><i class="fas fa-chevron-right"></i></span>';
+        html += '<span class="breadcrumb-item ' + (isLast ? 'current' : '') + '" data-path="' + pathSoFar + '">' + part + '</span>';
       });
-      breadcrumbEl.innerHTML = html;
-      breadcrumbEl.querySelectorAll('.breadcrumb-item:not(.current)').forEach(el => {
+      $('breadcrumb').innerHTML = html;
+      $('breadcrumb').querySelectorAll('.breadcrumb-item:not(.current)').forEach(el => {
         el.addEventListener('click', () => navigateTo(el.dataset.path));
       });
     }
@@ -693,60 +785,197 @@
     function navigateTo(path) {
       currentPath = path || '';
       $('custom-path').value = currentPath ? currentPath + '/' : '';
+      selectedPaths.clear();
+      updateBatchBar();
       listFiles();
     }
 
-    function playMedia(url, filename) {
-      if (plyrInstance) {
-        plyrInstance.destroy();
-        plyrInstance = null;
-      }
-      modalBody.innerHTML = '';
-      modalTitle.textContent = filename;
+    // ===== MEDIA / PLAYLIST =====
+    function buildPlaylistFromFiles() {
+      return allFiles
+        .filter(f => f.type === 'file' && isAudio(f.name) && f.download_url)
+        .map(f => ({ name: f.name, url: f.download_url, path: f.path }));
+    }
 
-      if (isVideo(filename)) {
+    function updateMusicBar() {
+      const tracks = buildPlaylistFromFiles();
+      const bar = $('music-bar');
+      if (tracks.length > 0) bar.classList.add('show');
+      else bar.classList.remove('show');
+    }
+
+    function updatePlaylistUI() {
+      const controls = $('playlist-controls');
+      if (playlist.length > 1 && isAudio(playlist[playlistIndex] && playlist[playlistIndex].name || '')) {
+        controls.style.display = 'flex';
+        $('pl-info').textContent = (playlistIndex + 1) + ' / ' + playlist.length;
+        $('pl-shuffle').classList.toggle('active', shuffleMode);
+        $('pl-repeat').classList.toggle('active', repeatMode);
+      } else {
+        controls.style.display = 'none';
+      }
+    }
+
+    function getNextIndex(dir) {
+      // dir: 1 = next, -1 = prev
+      if (playlist.length === 0) return 0;
+      if (shuffleMode) {
+        if (shuffleOrder.length !== playlist.length) {
+          shuffleOrder = playlist.map((_, i) => i);
+          // Fisher-Yates
+          for (let i = shuffleOrder.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const t = shuffleOrder[i]; shuffleOrder[i] = shuffleOrder[j]; shuffleOrder[j] = t;
+          }
+          // keep current near start
+          const curPos = shuffleOrder.indexOf(playlistIndex);
+          if (curPos > 0) {
+            shuffleOrder.splice(curPos, 1);
+            shuffleOrder.unshift(playlistIndex);
+          }
+        }
+        const pos = shuffleOrder.indexOf(playlistIndex);
+        let nextPos = pos + dir;
+        if (nextPos >= shuffleOrder.length) nextPos = repeatMode ? 0 : shuffleOrder.length - 1;
+        if (nextPos < 0) nextPos = repeatMode ? shuffleOrder.length - 1 : 0;
+        return shuffleOrder[nextPos];
+      }
+      let next = playlistIndex + dir;
+      if (next >= playlist.length) next = repeatMode ? 0 : playlist.length - 1;
+      if (next < 0) next = repeatMode ? playlist.length - 1 : 0;
+      return next;
+    }
+
+    function playTrackAt(index) {
+      if (!playlist.length || index < 0 || index >= playlist.length) return;
+      playlistIndex = index;
+      const track = playlist[index];
+      playMedia(track.url, track.name, true);
+    }
+
+    function playNext() {
+      if (playlist.length <= 1 && !repeatMode) return;
+      const next = getNextIndex(1);
+      if (next === playlistIndex && !repeatMode && !shuffleMode) return;
+      playTrackAt(next);
+    }
+
+    function playPrev() {
+      const prev = getNextIndex(-1);
+      playTrackAt(prev);
+    }
+
+    function playMedia(url, filename, fromPlaylist) {
+      if (plyrInstance) { plyrInstance.destroy(); plyrInstance = null; }
+      const body = $('modal-body');
+      body.innerHTML = '';
+      $('modal-title').textContent = filename;
+
+      // Build playlist if playing audio and not already from playlist navigation
+      if (isAudio(filename) && !fromPlaylist) {
+        playlist = buildPlaylistFromFiles();
+        playlistIndex = Math.max(0, playlist.findIndex(t => t.url === url || t.name === filename));
+        if (playlistIndex < 0) {
+          playlist = [{ name: filename, url: url }];
+          playlistIndex = 0;
+        }
+        shuffleOrder = [];
+      }
+
+      if (isImage(filename)) {
+        const img = document.createElement('img');
+        img.src = url;
+        img.alt = filename;
+        body.appendChild(img);
+        $('playlist-controls').style.display = 'none';
+      } else if (isVideo(filename)) {
         const video = document.createElement('video');
         video.playsInline = true;
         video.setAttribute('playsinline', '');
         video.setAttribute('controls', '');
         video.src = url;
-        modalBody.appendChild(video);
+        body.appendChild(video);
         plyrInstance = new Plyr(video, {
-          controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
-          autoplay: true,
-          ratio: '16:9'
+          controls: ['play-large','play','progress','current-time','mute','volume','fullscreen'],
+          autoplay: true, ratio: '16:9'
         });
+        $('playlist-controls').style.display = 'none';
       } else if (isAudio(filename)) {
         const audio = document.createElement('audio');
         audio.setAttribute('controls', '');
         audio.src = url;
-        modalBody.appendChild(audio);
+        body.appendChild(audio);
         plyrInstance = new Plyr(audio, {
-          controls: ['play', 'progress', 'current-time', 'duration', 'mute', 'volume'],
+          controls: ['play','progress','current-time','duration','mute','volume'],
           autoplay: true
         });
+        // Auto next when ended
+        plyrInstance.on('ended', () => {
+          if (playlist.length > 1 || repeatMode) playNext();
+        });
+        updatePlaylistUI();
       }
 
-      mediaModal.classList.add('show');
+      $('media-modal').classList.add('show');
       document.body.style.overflow = 'hidden';
     }
 
     function closeMediaModal() {
-      if (plyrInstance) {
-        plyrInstance.destroy();
-        plyrInstance = null;
-      }
-      modalBody.innerHTML = '';
-      mediaModal.classList.remove('show');
+      if (plyrInstance) { plyrInstance.destroy(); plyrInstance = null; }
+      $('modal-body').innerHTML = '';
+      $('playlist-controls').style.display = 'none';
+      $('media-modal').classList.remove('show');
       document.body.style.overflow = '';
     }
 
-    mediaModal.addEventListener('click', e => { if (e.target === mediaModal) closeMediaModal(); });
+    function playAll(shuffle) {
+      playlist = buildPlaylistFromFiles();
+      if (playlist.length === 0) {
+        showStatus('Không có file nhạc trong thư mục này', 'info');
+        return;
+      }
+      shuffleMode = !!shuffle;
+      shuffleOrder = [];
+      if (shuffleMode) {
+        // start at random
+        playlistIndex = Math.floor(Math.random() * playlist.length);
+      } else {
+        playlistIndex = 0;
+      }
+      playTrackAt(playlistIndex);
+    }
+
+    $('media-modal').addEventListener('click', e => { if (e.target === $('media-modal')) closeMediaModal(); });
     $('modal-close').addEventListener('click', closeMediaModal);
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && mediaModal.classList.contains('show')) closeMediaModal();
+      if (e.key === 'Escape') {
+        if ($('media-modal').classList.contains('show')) closeMediaModal();
+        if ($('prompt-modal').classList.contains('show')) closePrompt(null);
+      }
+      if ($('media-modal').classList.contains('show') && playlist.length > 1) {
+        if (e.key === 'ArrowRight') playNext();
+        if (e.key === 'ArrowLeft') playPrev();
+      }
     });
 
+    // Playlist control buttons (bound after DOM)
+    document.getElementById('pl-next').addEventListener('click', e => { e.stopPropagation(); playNext(); });
+    document.getElementById('pl-prev').addEventListener('click', e => { e.stopPropagation(); playPrev(); });
+    document.getElementById('pl-shuffle').addEventListener('click', e => {
+      e.stopPropagation();
+      shuffleMode = !shuffleMode;
+      shuffleOrder = [];
+      updatePlaylistUI();
+      showStatus(shuffleMode ? 'Đã bật phát ngẫu nhiên' : 'Tắt phát ngẫu nhiên', 'info');
+    });
+    document.getElementById('pl-repeat').addEventListener('click', e => {
+      e.stopPropagation();
+      repeatMode = !repeatMode;
+      updatePlaylistUI();
+      showStatus(repeatMode ? 'Đã bật lặp lại' : 'Tắt lặp lại', 'info');
+    });
+
+    // ===== CONFIG =====
     function loadConfig() {
       const saved = localStorage.getItem('gh-file-storage');
       if (saved) {
@@ -784,21 +1013,22 @@
     }
 
     function setConnectedUI(connected) {
-      const badge = $('connected-badge');
       if (connected) {
-        badge.classList.remove('hidden');
+        $('connected-badge').classList.remove('hidden');
         if (!configCollapsed) toggleConfig();
       } else {
-        badge.classList.add('hidden');
+        $('connected-badge').classList.add('hidden');
       }
     }
 
-    async function githubFetch(path, options = {}) {
-      const url = `https://api.github.com/repos/${config.username}/${config.repo}/contents/${path}`;
+    // ===== GITHUB API =====
+    async function githubFetch(path, options) {
+      options = options || {};
+      const url = 'https://api.github.com/repos/' + config.username + '/' + config.repo + '/contents/' + path;
       return fetch(url, {
         ...options,
         headers: {
-          'Authorization': `token ${config.token}`,
+          'Authorization': 'token ' + config.token,
           'Accept': 'application/vnd.github.v3+json',
           ...(options.headers || {})
         }
@@ -810,7 +1040,8 @@
       try {
         const res = await githubFetch(currentPath);
         if (res.status === 404) {
-          fileList.innerHTML = '<li class="empty-state"><i class="fas fa-inbox"></i><p>Thư mục trống</p></li>';
+          allFiles = [];
+          renderFileList([]);
           return;
         }
         if (!res.ok) {
@@ -818,53 +1049,100 @@
           throw new Error(err.message || 'Không lấy được danh sách');
         }
         const data = await res.json();
-        renderFileList(Array.isArray(data) ? data : [data]);
+        allFiles = Array.isArray(data) ? data : [data];
+        applySearch();
       } catch (e) {
         showStatus('Lỗi: ' + e.message, 'error');
       }
     }
 
+    function applySearch() {
+      const q = ($('search-input').value || '').trim().toLowerCase();
+      let files = allFiles;
+      if (q) files = files.filter(f => f.name.toLowerCase().includes(q));
+      if (showOnlyStars) files = files.filter(f => favorites.has(f.path));
+      renderFileList(files);
+      updateMusicBar();
+    }
+
     function renderFileList(files) {
+      const listEl = $('file-list');
+      listEl.classList.toggle('grid-view', viewMode === 'grid');
+
       if (!files || files.length === 0) {
-        fileList.innerHTML = '<li class="empty-state"><i class="fas fa-inbox"></i><p>Thư mục trống</p></li>';
+        const msg = showOnlyStars ? 'Chưa có file yêu thích' :
+          (($('search-input').value || '').trim() ? 'Không tìm thấy' : 'Thư mục trống');
+        listEl.innerHTML = '<li class="empty-state"><i class="fas fa-inbox"></i><p>' + msg + '</p></li>';
         return;
       }
 
-      files.sort((a, b) => {
+      files = files.slice().sort((a, b) => {
+        // Starred first
+        const aStar = favorites.has(a.path) ? 0 : 1;
+        const bStar = favorites.has(b.path) ? 0 : 1;
+        if (aStar !== bStar) return aStar - bStar;
         if (a.type === 'dir' && b.type !== 'dir') return -1;
         if (a.type !== 'dir' && b.type === 'dir') return 1;
         return a.name.localeCompare(b.name);
       });
 
-      fileList.innerHTML = files.map(f => {
+      const isGrid = viewMode === 'grid';
+
+      listEl.innerHTML = files.map(f => {
         const isDir = f.type === 'dir';
         const icon = isDir ? 'fa-folder' : getFileIcon(f.name);
         const iconClass = isDir ? 'folder' : getIconClass(f.name);
         const size = isDir ? 'Thư mục' : formatSize(f.size);
-        const canPlay = !isDir && (isVideo(f.name) || isAudio(f.name));
+        const canPlay = !isDir && (isVideo(f.name) || isAudio(f.name) || isImage(f.name));
+        const checked = selectedPaths.has(f.path) ? 'checked' : '';
+        const selectedClass = selectedPaths.has(f.path) ? 'selected' : '';
+        const isStarred = favorites.has(f.path);
+        const starClass = isStarred ? 'starred' : '';
 
-        return '<li class="file-item ' + (isDir ? 'folder' : '') + '" data-path="' + f.path + '" data-type="' + f.type + '">' +
+        // Thumbnail for images in grid
+        let previewHtml = '';
+        if (isGrid && !isDir && isImage(f.name) && f.download_url) {
+          previewHtml = '<img class="file-thumb" src="' + f.download_url + '" alt="' + f.name + '" loading="lazy" />';
+        } else {
+          previewHtml = '<div class="file-icon ' + iconClass + '"><i class="fas ' + icon + '"></i></div>';
+        }
+
+        let actions = '';
+        if (isGrid) {
+          actions += '<button class="btn btn-star-grid ' + starClass + ' btn-star-toggle" data-path="' + f.path + '" title="Yêu thích"><i class="fas fa-star"></i></button>';
+        }
+
+        if (canPlay) {
+          actions += '<button class="btn btn-play btn-play-media" data-url="' + (f.download_url || '') + '" data-name="' + f.name + '" title="Xem/Phát"><i class="fas fa-play"></i></button>';
+        }
+        if (!isGrid) {
+          actions += '<button class="btn btn-star ' + starClass + ' btn-star-toggle" data-path="' + f.path + '" title="Yêu thích"><i class="fas fa-star"></i></button>';
+        }
+        if (!isDir) {
+          actions += '<button class="btn btn-outline btn-copy" data-url="' + (f.download_url || '') + '" title="Copy link"><i class="fas fa-link"></i></button>';
+          actions += '<a class="btn btn-outline" href="' + (f.download_url || '') + '" target="_blank" download title="Tải"><i class="fas fa-download"></i></a>';
+        }
+        actions += '<button class="btn btn-outline btn-rename" data-path="' + f.path + '" data-name="' + f.name + '" data-type="' + f.type + '" data-sha="' + (f.sha || '') + '" title="Đổi tên"><i class="fas fa-pen"></i></button>';
+        if (!isDir) {
+          actions += '<button class="btn btn-danger btn-delete" data-path="' + f.path + '" data-sha="' + f.sha + '" title="Xóa"><i class="fas fa-trash"></i></button>';
+        } else {
+          actions += '<button class="btn btn-outline btn-enter-folder" data-path="' + f.path + '" title="Mở"><i class="fas fa-folder-open"></i></button>';
+        }
+
+        return '<li class="file-item ' + (isDir ? 'folder ' : '') + selectedClass + '" data-path="' + f.path + '" data-type="' + f.type + '">' +
           '<div class="file-info">' +
-            '<div class="file-icon ' + iconClass + '"><i class="fas ' + icon + '"></i></div>' +
-            '<div style="min-width:0">' +
-              '<div class="file-name">' + f.name + '</div>' +
-              '<div class="file-meta">' + size + '</div>' +
-            '</div>' +
+            '<input type="checkbox" class="file-check" data-path="' + f.path + '" data-sha="' + (f.sha || '') + '" data-type="' + f.type + '" ' + checked + ' />' +
+            previewHtml +
+            '<div style="min-width:0"><div class="file-name">' + f.name + '</div><div class="file-meta">' + size + '</div></div>' +
           '</div>' +
-          '<div class="file-actions">' +
-            (canPlay ? '<button class="btn btn-play btn-play-media" data-url="' + f.download_url + '" data-name="' + f.name + '" title="Phát"><i class="fas fa-play"></i></button>' : '') +
-            (!isDir
-              ? '<a class="btn btn-outline" href="' + f.download_url + '" target="_blank" download title="Tải"><i class="fas fa-download"></i></a>' +
-                '<button class="btn btn-danger btn-delete" data-path="' + f.path + '" data-sha="' + f.sha + '" title="Xóa"><i class="fas fa-trash"></i></button>'
-              : '<button class="btn btn-outline btn-enter-folder" data-path="' + f.path + '" title="Mở"><i class="fas fa-folder-open"></i></button>'
-            ) +
-          '</div>' +
+          '<div class="file-actions">' + actions + '</div>' +
         '</li>';
       }).join('');
 
+      // Events
       document.querySelectorAll('.file-item.folder').forEach(item => {
         item.addEventListener('click', e => {
-          if (e.target.closest('button') || e.target.closest('a')) return;
+          if (e.target.closest('button') || e.target.closest('a') || e.target.closest('input')) return;
           navigateTo(item.dataset.path);
         });
       });
@@ -880,19 +1158,188 @@
       document.querySelectorAll('.btn-play-media').forEach(btn => {
         btn.addEventListener('click', e => { e.stopPropagation(); playMedia(btn.dataset.url, btn.dataset.name); });
       });
+
+      document.querySelectorAll('.btn-copy').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          navigator.clipboard.writeText(btn.dataset.url).then(() => {
+            showStatus('Đã copy link!', 'success');
+          }).catch(() => showStatus('Không copy được', 'error'));
+        });
+      });
+
+      document.querySelectorAll('.btn-rename').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          renameItem(btn.dataset.path, btn.dataset.name, btn.dataset.type, btn.dataset.sha);
+        });
+      });
+
+      document.querySelectorAll('.btn-star-toggle').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          toggleFavorite(btn.dataset.path);
+        });
+      });
+
+      // Click thumbnail/image in grid to preview
+      if (isGrid) {
+        document.querySelectorAll('.file-thumb').forEach(img => {
+          img.addEventListener('click', e => {
+            e.stopPropagation();
+            const item = img.closest('.file-item');
+            if (!item) return;
+            const playBtn = item.querySelector('.btn-play-media');
+            if (playBtn) playMedia(playBtn.dataset.url, playBtn.dataset.name);
+          });
+        });
+      }
+
+      document.querySelectorAll('.file-check').forEach(cb => {
+        cb.addEventListener('change', e => {
+          e.stopPropagation();
+          if (cb.checked) selectedPaths.add(cb.dataset.path);
+          else selectedPaths.delete(cb.dataset.path);
+          updateBatchBar();
+          const item = cb.closest('.file-item');
+          if (item) item.classList.toggle('selected', cb.checked);
+        });
+        cb.addEventListener('click', e => e.stopPropagation());
+      });
     }
 
+    function updateBatchBar() {
+      const bar = $('batch-bar');
+      const count = selectedPaths.size;
+      if (count > 0) {
+        bar.classList.add('show');
+        $('batch-count').textContent = count + ' đã chọn';
+      } else {
+        bar.classList.remove('show');
+      }
+    }
+
+    // ===== CREATE FOLDER =====
+    async function createFolder() {
+      const name = await showPrompt('Tên thư mục mới', '');
+      if (!name) return;
+      const clean = name.replace(/[\\/:*?"<>|]/g, '').trim();
+      if (!clean) { showStatus('Tên không hợp lệ', 'error'); return; }
+
+      const path = currentPath ? currentPath + '/' + clean + '/.gitkeep' : clean + '/.gitkeep';
+      try {
+        const content = btoa('');
+        const res = await githubFetch(path, {
+          method: 'PUT',
+          body: JSON.stringify({ message: 'Add files via upload', content: content })
+        });
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.message);
+        }
+        showStatus('Đã tạo thư mục: ' + clean, 'success');
+        listFiles();
+      } catch (e) {
+        showStatus('Lỗi tạo thư mục: ' + e.message, 'error');
+      }
+    }
+
+    // ===== RENAME =====
+    async function renameItem(oldPath, oldName, type, sha) {
+      const newName = await showPrompt('Đổi tên', oldName);
+      if (!newName || newName === oldName) return;
+      const clean = newName.replace(/[\\/:*?"<>|]/g, '').trim();
+      if (!clean) { showStatus('Tên không hợp lệ', 'error'); return; }
+
+      const parent = oldPath.includes('/') ? oldPath.substring(0, oldPath.lastIndexOf('/')) : '';
+      const newPath = parent ? parent + '/' + clean : clean;
+
+      try {
+        if (type === 'dir') {
+          showStatus('Đang đổi tên thư mục...', 'info');
+          const res = await githubFetch(oldPath);
+          if (!res.ok) throw new Error('Không đọc được thư mục');
+          const items = await res.json();
+          const list = Array.isArray(items) ? items : [items];
+
+          for (const item of list) {
+            if (item.type === 'file') {
+              const fileRes = await githubFetch(item.path);
+              const fileData = await fileRes.json();
+              const content = fileData.content;
+              const destPath = item.path.replace(oldPath, newPath);
+              await githubFetch(destPath, {
+                method: 'PUT',
+                body: JSON.stringify({ message: 'Add files via upload', content: content, encoding: 'base64' })
+              });
+              await githubFetch(item.path, {
+                method: 'DELETE',
+                body: JSON.stringify({ message: 'Delete file via upload', sha: item.sha })
+              });
+            }
+          }
+          // Update favorite path if needed
+          if (favorites.has(oldPath)) {
+            favorites.delete(oldPath);
+            favorites.add(newPath);
+            saveFavorites();
+          }
+          showStatus('Đã đổi tên thư mục thành: ' + clean, 'success');
+        } else {
+          const fileRes = await githubFetch(oldPath);
+          if (!fileRes.ok) throw new Error('Không đọc được file');
+          const fileData = await fileRes.json();
+          const content = fileData.content;
+
+          const putRes = await githubFetch(newPath, {
+            method: 'PUT',
+            body: JSON.stringify({ message: 'Add files via upload', content: content, encoding: 'base64' })
+          });
+          if (!putRes.ok) {
+            const err = await putRes.json();
+            throw new Error(err.message);
+          }
+          await githubFetch(oldPath, {
+            method: 'DELETE',
+            body: JSON.stringify({ message: 'Delete file via upload', sha: sha })
+          });
+          if (favorites.has(oldPath)) {
+            favorites.delete(oldPath);
+            favorites.add(newPath);
+            saveFavorites();
+          }
+          showStatus('Đã đổi tên thành: ' + clean, 'success');
+        }
+        listFiles();
+      } catch (e) {
+        showStatus('Lỗi đổi tên: ' + e.message, 'error');
+      }
+    }
+
+    // ===== UPLOAD =====
     async function uploadFiles() {
       if (selectedFiles.length === 0) return;
       let customPath = $('custom-path').value.trim().replace(/^\/+|\/+$/g, '');
       if (!customPath && currentPath) customPath = currentPath;
 
-      btnUpload.disabled = true;
-      btnUpload.innerHTML = '<span class="spinner"></span> Uploading...';
+      const progressWrap = $('progress-wrap');
+      const progressBar = $('progress-bar');
+      const progressText = $('progress-text');
+      progressWrap.classList.add('show');
+      progressBar.style.width = '0%';
+      progressText.textContent = '0%';
+
+      $('btn-upload').disabled = true;
+      $('btn-upload').innerHTML = '<span class="spinner"></span> Uploading...';
 
       let success = 0, fail = 0;
+      const total = selectedFiles.length;
 
-      for (const file of selectedFiles) {
+      for (let i = 0; i < selectedFiles.length; i++) {
+        const file = selectedFiles[i];
+        progressBar.style.width = Math.round((i / total) * 100) + '%';
+        progressText.textContent = 'Đang upload ' + (i + 1) + '/' + total + ' (' + file.name + ')';
+
         try {
           const content = await readFileAsBase64(file);
           const path = customPath ? customPath + '/' + file.name : file.name;
@@ -906,10 +1353,7 @@
             }
           } catch (_) {}
 
-          const body = {
-            message: 'Add files via upload',
-            content: content
-          };
+          const body = { message: 'Add files via upload', content: content };
           if (sha) body.sha = sha;
 
           const res = await githubFetch(path, { method: 'PUT', body: JSON.stringify(body) });
@@ -922,13 +1366,21 @@
           console.error(e);
           fail++;
         }
+
+        progressBar.style.width = Math.round(((i + 1) / total) * 100) + '%';
+        progressText.textContent = Math.round(((i + 1) / total) * 100) + '% (' + (i + 1) + '/' + total + ')';
       }
 
-      btnUpload.disabled = false;
-      btnUpload.innerHTML = '<i class="fas fa-upload"></i> Upload';
+      $('btn-upload').disabled = false;
+      $('btn-upload').innerHTML = '<i class="fas fa-upload"></i> Upload';
       selectedFiles = [];
-      fileInput.value = '';
+      $('file-input').value = '';
       updateUploadButton();
+
+      setTimeout(() => {
+        progressWrap.classList.remove('show');
+        progressBar.style.width = '0%';
+      }, 1500);
 
       if (success > 0) {
         showStatus('Upload thành công ' + success + ' file' + (fail ? ', lỗi ' + fail : ''), fail ? 'info' : 'success');
@@ -947,6 +1399,7 @@
       });
     }
 
+    // ===== DELETE =====
     async function deleteFile(path, sha) {
       if (!confirm('Xóa "' + path + '"?')) return;
       try {
@@ -958,6 +1411,10 @@
           const err = await res.json();
           throw new Error(err.message);
         }
+        selectedPaths.delete(path);
+        favorites.delete(path);
+        saveFavorites();
+        updateBatchBar();
         showStatus('Đã xóa: ' + path, 'success');
         listFiles();
       } catch (e) {
@@ -965,6 +1422,40 @@
       }
     }
 
+    async function batchDelete() {
+      if (selectedPaths.size === 0) return;
+      if (!confirm('Xóa ' + selectedPaths.size + ' mục đã chọn?')) return;
+
+      showStatus('Đang xóa...', 'info');
+      let ok = 0, fail = 0;
+      const toDelete = [];
+      document.querySelectorAll('.file-check:checked').forEach(cb => {
+        if (cb.dataset.type === 'file') {
+          toDelete.push({ path: cb.dataset.path, sha: cb.dataset.sha });
+        }
+      });
+
+      for (const item of toDelete) {
+        try {
+          const res = await githubFetch(item.path, {
+            method: 'DELETE',
+            body: JSON.stringify({ message: 'Delete file via upload', sha: item.sha })
+          });
+          if (res.ok) {
+            ok++;
+            favorites.delete(item.path);
+          } else fail++;
+        } catch (_) { fail++; }
+      }
+
+      saveFavorites();
+      selectedPaths.clear();
+      updateBatchBar();
+      showStatus('Đã xóa ' + ok + ' file' + (fail ? ', lỗi ' + fail : ''), fail ? 'info' : 'success');
+      listFiles();
+    }
+
+    // ===== CONNECT =====
     async function connect(silent) {
       if (silent === undefined) silent = false;
       config.username = $('username').value.trim();
@@ -989,66 +1480,87 @@
           throw new Error(err.message || 'Không truy cập được repo');
         }
         localStorage.setItem('gh-file-storage', JSON.stringify(config));
+        loadFavorites();
         if (!silent) showStatus('Kết nối thành công!', 'success');
-        mainArea.classList.remove('hidden');
+        $('main-area').classList.remove('hidden');
         setConnectedUI(true);
         currentPath = '';
+        selectedPaths.clear();
         listFiles();
         return true;
       } catch (e) {
         if (!silent) showStatus('Thất bại: ' + e.message, 'error');
-        mainArea.classList.add('hidden');
+        $('main-area').classList.add('hidden');
         setConnectedUI(false);
         return false;
       }
     }
 
     function updateUploadButton() {
-      btnUpload.disabled = selectedFiles.length === 0;
-      uploadZone.querySelector('p').innerHTML = selectedFiles.length > 0
+      $('btn-upload').disabled = selectedFiles.length === 0;
+      $('upload-zone').querySelector('p').innerHTML = selectedFiles.length > 0
         ? 'Đã chọn <strong>' + selectedFiles.length + '</strong> file'
         : 'Kéo thả hoặc <strong>chạm để chọn</strong>';
     }
 
-    uploadZone.addEventListener('click', function() { fileInput.click(); });
-    uploadZone.addEventListener('dragover', function(e) { e.preventDefault(); uploadZone.classList.add('dragover'); });
-    uploadZone.addEventListener('dragleave', function() { uploadZone.classList.remove('dragover'); });
-    uploadZone.addEventListener('drop', function(e) {
+    // ===== EVENTS =====
+    const uploadZone = $('upload-zone');
+    const fileInput = $('file-input');
+
+    uploadZone.addEventListener('click', () => fileInput.click());
+    uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+    uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+    uploadZone.addEventListener('drop', e => {
       e.preventDefault();
       uploadZone.classList.remove('dragover');
       selectedFiles = Array.from(e.dataTransfer.files);
       updateUploadButton();
     });
-    fileInput.addEventListener('change', function() {
+    fileInput.addEventListener('change', () => {
       selectedFiles = Array.from(fileInput.files);
       updateUploadButton();
     });
 
-    $('btn-connect').addEventListener('click', function() { connect(false); });
+    $('btn-connect').addEventListener('click', () => connect(false));
     $('btn-save').addEventListener('click', saveConfig);
     $('btn-upload').addEventListener('click', uploadFiles);
     $('btn-refresh').addEventListener('click', listFiles);
+    $('btn-new-folder').addEventListener('click', createFolder);
+    $('btn-batch-delete').addEventListener('click', batchDelete);
+    $('btn-batch-clear').addEventListener('click', () => {
+      selectedPaths.clear();
+      document.querySelectorAll('.file-check').forEach(cb => { cb.checked = false; });
+      document.querySelectorAll('.file-item').forEach(el => el.classList.remove('selected'));
+      updateBatchBar();
+    });
+    $('search-input').addEventListener('input', applySearch);
+    $('btn-view-list').addEventListener('click', () => setViewMode('list'));
+    $('btn-view-grid').addEventListener('click', () => setViewMode('grid'));
+    $('btn-filter-star').addEventListener('click', toggleStarFilter);
+    $('btn-play-all').addEventListener('click', () => playAll(false));
+    $('btn-shuffle-all').addEventListener('click', () => playAll(true));
 
-    $('config-header').addEventListener('click', function(e) {
+    $('config-header').addEventListener('click', e => {
       if (e.target.closest('input, button.btn')) return;
       toggleConfig();
     });
-    $('config-toggle').addEventListener('click', function(e) {
-      e.stopPropagation();
-      toggleConfig();
-    });
+    $('config-toggle').addEventListener('click', e => { e.stopPropagation(); toggleConfig(); });
 
-    ['username', 'repo', 'token'].forEach(function(id) {
-      $(id).addEventListener('keypress', function(e) { if (e.key === 'Enter') connect(false); });
+    ['username','repo','token'].forEach(id => {
+      $(id).addEventListener('keypress', e => { if (e.key === 'Enter') connect(false); });
     });
 
     (async function init() {
-      var hasConfig = loadConfig();
+      const hasConfig = loadConfig();
+      const savedView = localStorage.getItem('gh-view-mode') || 'list';
+      setViewMode(savedView);
+
       if (localStorage.getItem('gh-config-collapsed') === '1') {
         configCollapsed = false;
         toggleConfig();
       }
       if (hasConfig && config.username && config.repo && config.token) {
+        loadFavorites();
         await connect(true);
       }
     })();
