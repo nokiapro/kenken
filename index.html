@@ -158,6 +158,17 @@
       background: #f8fafc;
     }
 
+    .btn-play {
+      background: #7c3aed;
+      color: white;
+      padding: 8px 12px;
+      font-size: 0.85rem;
+    }
+
+    .btn-play:hover {
+      background: #6d28d9;
+    }
+
     .btn:disabled {
       opacity: 0.6;
       cursor: not-allowed;
@@ -236,6 +247,16 @@
       justify-content: center;
       font-size: 1.1rem;
       flex-shrink: 0;
+    }
+
+    .file-icon.video {
+      background: #f3e8ff;
+      color: #7c3aed;
+    }
+
+    .file-icon.audio {
+      background: #fce7f3;
+      color: #db2777;
     }
 
     .file-name {
@@ -334,6 +355,121 @@
       display: none !important;
     }
 
+    /* ===== MEDIA PLAYER MODAL ===== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 16px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.25s;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: #0f172a;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 800px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+      transform: scale(0.95);
+      transition: transform 0.25s;
+    }
+
+    .modal-overlay.show .modal {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      background: #1e293b;
+      color: white;
+    }
+
+    .modal-header h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 80%;
+    }
+
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 1.4rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .modal-close:hover {
+      background: #334155;
+      color: white;
+    }
+
+    .modal-body {
+      padding: 0;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+    }
+
+    .modal-body video {
+      width: 100%;
+      max-height: 70vh;
+      display: block;
+      background: #000;
+    }
+
+    .modal-body audio {
+      width: 100%;
+      padding: 40px 24px;
+      outline: none;
+    }
+
+    .audio-player-wrapper {
+      width: 100%;
+      padding: 40px 24px;
+      background: linear-gradient(135deg, #1e1b4b, #312e81);
+      text-align: center;
+    }
+
+    .audio-player-wrapper i {
+      font-size: 4rem;
+      color: #a78bfa;
+      margin-bottom: 20px;
+    }
+
+    .audio-player-wrapper p {
+      color: #c4b5fd;
+      margin-bottom: 24px;
+      font-size: 1.1rem;
+    }
+
+    .audio-player-wrapper audio {
+      width: 100%;
+      max-width: 500px;
+    }
+
     @media (max-width: 600px) {
       header h1 {
         font-size: 1.4rem;
@@ -345,6 +481,10 @@
       }
       .file-actions {
         width: 100%;
+        flex-wrap: wrap;
+      }
+      .modal {
+        max-width: 100%;
       }
     }
   </style>
@@ -387,7 +527,7 @@
     <!-- Thông báo -->
     <div id="status" class="status"></div>
 
-    <!-- Khu vực chính (ẩn đến khi kết nối thành công) -->
+    <!-- Khu vực chính -->
     <div id="main-area" class="hidden">
       <!-- Upload -->
       <div class="card">
@@ -425,8 +565,23 @@
     </div>
 
     <footer>
-      Tạo bởi Grok · Dữ liệu lưu trữ 100% trên GitHub của bạn
+      Tạo bởi Grok · Hỗ trợ phát Video & MP3 trực tiếp
     </footer>
+  </div>
+
+  <!-- MEDIA PLAYER MODAL -->
+  <div class="modal-overlay" id="media-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modal-title">Đang phát...</h3>
+        <button class="modal-close" id="modal-close" title="Đóng">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body" id="modal-body">
+        <!-- Video hoặc Audio sẽ được chèn vào đây -->
+      </div>
+    </div>
   </div>
 
   <script>
@@ -446,6 +601,9 @@
     const btnUpload = $('btn-upload');
     const fileList = $('file-list');
     const mainArea = $('main-area');
+    const mediaModal = $('media-modal');
+    const modalBody = $('modal-body');
+    const modalTitle = $('modal-title');
 
     // ==================== HELPERS ====================
     function showStatus(msg, type = 'info') {
@@ -460,8 +618,24 @@
       return (bytes / 1048576).toFixed(1) + ' MB';
     }
 
+    function getFileExt(name) {
+      return name.split('.').pop().toLowerCase();
+    }
+
+    function isVideo(name) {
+      const ext = getFileExt(name);
+      return ['mp4', 'webm', 'ogg', 'mov', 'm4v', 'mkv'].includes(ext);
+    }
+
+    function isAudio(name) {
+      const ext = getFileExt(name);
+      return ['mp3', 'wav', 'ogg', 'm4a', 'aac', 'flac', 'wma'].includes(ext);
+    }
+
     function getFileIcon(name) {
-      const ext = name.split('.').pop().toLowerCase();
+      if (isVideo(name)) return 'fa-file-video';
+      if (isAudio(name)) return 'fa-file-audio';
+      const ext = getFileExt(name);
       const map = {
         pdf: 'fa-file-pdf',
         doc: 'fa-file-word', docx: 'fa-file-word',
@@ -469,13 +643,77 @@
         ppt: 'fa-file-powerpoint', pptx: 'fa-file-powerpoint',
         zip: 'fa-file-archive', rar: 'fa-file-archive', '7z': 'fa-file-archive',
         jpg: 'fa-file-image', jpeg: 'fa-file-image', png: 'fa-file-image', gif: 'fa-file-image', webp: 'fa-file-image',
-        mp4: 'fa-file-video', mov: 'fa-file-video', avi: 'fa-file-video',
-        mp3: 'fa-file-audio', wav: 'fa-file-audio',
         js: 'fa-file-code', ts: 'fa-file-code', html: 'fa-file-code', css: 'fa-file-code', json: 'fa-file-code', py: 'fa-file-code',
         txt: 'fa-file-alt', md: 'fa-file-alt'
       };
       return map[ext] || 'fa-file';
     }
+
+    function getIconClass(name) {
+      if (isVideo(name)) return 'video';
+      if (isAudio(name)) return 'audio';
+      return '';
+    }
+
+    // ==================== MEDIA PLAYER ====================
+    function playMedia(url, filename) {
+      modalTitle.textContent = filename;
+      modalBody.innerHTML = '';
+
+      if (isVideo(filename)) {
+        const video = document.createElement('video');
+        video.src = url;
+        video.controls = true;
+        video.autoplay = true;
+        video.playsInline = true;
+        video.style.width = '100%';
+        video.style.maxHeight = '70vh';
+        modalBody.appendChild(video);
+      } else if (isAudio(filename)) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'audio-player-wrapper';
+        wrapper.innerHTML = `
+          <i class="fas fa-music"></i>
+          <p>${filename}</p>
+        `;
+        const audio = document.createElement('audio');
+        audio.src = url;
+        audio.controls = true;
+        audio.autoplay = true;
+        audio.style.width = '100%';
+        audio.style.maxWidth = '500px';
+        wrapper.appendChild(audio);
+        modalBody.appendChild(wrapper);
+      }
+
+      mediaModal.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMediaModal() {
+      // Dừng media đang phát
+      const media = modalBody.querySelector('video, audio');
+      if (media) {
+        media.pause();
+        media.src = '';
+      }
+      modalBody.innerHTML = '';
+      mediaModal.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    // Đóng modal khi click ngoài hoặc nút X
+    mediaModal.addEventListener('click', (e) => {
+      if (e.target === mediaModal) closeMediaModal();
+    });
+    $('modal-close').addEventListener('click', closeMediaModal);
+
+    // Đóng bằng phím Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && mediaModal.classList.contains('show')) {
+        closeMediaModal();
+      }
+    });
 
     // ==================== LOCAL STORAGE ====================
     function loadConfig() {
@@ -514,7 +752,6 @@
       try {
         const res = await githubFetch('');
         if (res.status === 404) {
-          // Repo trống hoặc chưa có content
           fileList.innerHTML = `
             <li class="empty-state">
               <i class="fas fa-inbox"></i>
@@ -543,7 +780,6 @@
         return;
       }
 
-      // Sắp xếp: folder trước, rồi file theo tên
       files.sort((a, b) => {
         if (a.type === 'dir' && b.type !== 'dir') return -1;
         if (a.type !== 'dir' && b.type === 'dir') return 1;
@@ -553,22 +789,30 @@
       fileList.innerHTML = files.map(f => {
         const isDir = f.type === 'dir';
         const icon = isDir ? 'fa-folder' : getFileIcon(f.name);
+        const iconClass = isDir ? '' : getIconClass(f.name);
         const size = isDir ? 'Thư mục' : formatSize(f.size);
+        const canPlay = !isDir && (isVideo(f.name) || isAudio(f.name));
+
         return `
           <li class="file-item" data-path="${f.path}" data-sha="${f.sha || ''}">
             <div class="file-info">
-              <div class="file-icon"><i class="fas ${icon}"></i></div>
+              <div class="file-icon ${iconClass}"><i class="fas ${icon}"></i></div>
               <div>
                 <div class="file-name">${f.name}</div>
                 <div class="file-meta">${size}</div>
               </div>
             </div>
             <div class="file-actions">
+              ${canPlay ? `
+                <button class="btn btn-play btn-play-media" data-url="${f.download_url}" data-name="${f.name}" title="Phát">
+                  <i class="fas fa-play"></i>
+                </button>
+              ` : ''}
               ${!isDir ? `
-                <a class="btn btn-outline" href="${f.download_url}" target="_blank" download style="padding: 8px 12px; text-decoration: none;">
+                <a class="btn btn-outline" href="${f.download_url}" target="_blank" download style="padding: 8px 12px; text-decoration: none;" title="Tải về">
                   <i class="fas fa-download"></i>
                 </a>
-                <button class="btn btn-danger btn-delete" data-path="${f.path}" data-sha="${f.sha}">
+                <button class="btn btn-danger btn-delete" data-path="${f.path}" data-sha="${f.sha}" title="Xóa">
                   <i class="fas fa-trash"></i>
                 </button>
               ` : ''}
@@ -579,6 +823,13 @@
       // Gắn sự kiện xóa
       document.querySelectorAll('.btn-delete').forEach(btn => {
         btn.addEventListener('click', () => deleteFile(btn.dataset.path, btn.dataset.sha));
+      });
+
+      // Gắn sự kiện phát media
+      document.querySelectorAll('.btn-play-media').forEach(btn => {
+        btn.addEventListener('click', () => {
+          playMedia(btn.dataset.url, btn.dataset.name);
+        });
       });
     }
 
@@ -597,7 +848,6 @@
           const content = await readFileAsBase64(file);
           const path = customPath ? `${customPath}/${file.name}` : file.name;
 
-          // Kiểm tra file đã tồn tại chưa để lấy SHA (ghi đè)
           let sha = null;
           try {
             const check = await githubFetch(path);
@@ -689,7 +939,6 @@
 
       showStatus('Đang kết nối...', 'info');
       try {
-        // Kiểm tra quyền truy cập repo
         const res = await fetch(`https://api.github.com/repos/${config.username}/${config.repo}`, {
           headers: {
             'Authorization': `token ${config.token}`,
@@ -742,7 +991,6 @@
     $('btn-upload').addEventListener('click', uploadFiles);
     $('btn-refresh').addEventListener('click', listFiles);
 
-    // Enter key
     ['username', 'repo', 'token'].forEach(id => {
       $(id).addEventListener('keypress', e => {
         if (e.key === 'Enter') connect();
