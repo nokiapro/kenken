@@ -228,6 +228,14 @@
       background: #f8fafc;
     }
 
+    .file-item.folder {
+      cursor: pointer;
+    }
+
+    .file-item.folder:hover {
+      background: #eff6ff;
+    }
+
     .file-info {
       display: flex;
       align-items: center;
@@ -247,6 +255,11 @@
       justify-content: center;
       font-size: 1.1rem;
       flex-shrink: 0;
+    }
+
+    .file-icon.folder {
+      background: #fef3c7;
+      color: #d97706;
     }
 
     .file-icon.video {
@@ -327,6 +340,47 @@
 
     .path-input input {
       flex: 1;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 12px 16px;
+      background: #f8fafc;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+    }
+
+    .breadcrumb-item {
+      color: var(--primary);
+      cursor: pointer;
+      font-weight: 500;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: background 0.15s;
+    }
+
+    .breadcrumb-item:hover {
+      background: #e0e7ff;
+    }
+
+    .breadcrumb-item.current {
+      color: var(--text);
+      cursor: default;
+      font-weight: 600;
+    }
+
+    .breadcrumb-item.current:hover {
+      background: transparent;
+    }
+
+    .breadcrumb-sep {
+      color: var(--muted);
+      font-size: 0.75rem;
     }
 
     footer {
@@ -440,12 +494,6 @@
       background: #000;
     }
 
-    .modal-body audio {
-      width: 100%;
-      padding: 40px 24px;
-      outline: none;
-    }
-
     .audio-player-wrapper {
       width: 100%;
       padding: 40px 24px;
@@ -468,6 +516,60 @@
     .audio-player-wrapper audio {
       width: 100%;
       max-width: 500px;
+    }
+
+    /* Config collapsible */
+    .config-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .config-header h2 {
+      margin-bottom: 0;
+    }
+
+    .config-toggle {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 10px;
+      cursor: pointer;
+      color: var(--muted);
+      transition: all 0.2s;
+    }
+
+    .config-toggle:hover {
+      background: #f8fafc;
+      color: var(--text);
+    }
+
+    .config-body {
+      margin-top: 16px;
+      overflow: hidden;
+      transition: max-height 0.3s ease, opacity 0.3s ease;
+    }
+
+    .config-body.collapsed {
+      max-height: 0 !important;
+      opacity: 0;
+      margin-top: 0;
+      pointer-events: none;
+    }
+
+    .connected-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #dcfce7;
+      color: #166534;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-left: 8px;
     }
 
     @media (max-width: 600px) {
@@ -498,29 +600,41 @@
 
     <!-- Cấu hình -->
     <div class="card" id="config-card">
-      <h2><i class="fas fa-cog"></i> Cấu hình kết nối</h2>
-      <div class="form-group">
-        <label for="username">Tên người dùng GitHub</label>
-        <input type="text" id="username" placeholder="ví dụ: your-username" />
-      </div>
-      <div class="form-group">
-        <label for="repo">Tên Repository</label>
-        <input type="text" id="repo" placeholder="ví dụ: my-file-storage" />
-      </div>
-      <div class="form-group">
-        <label for="token">Personal Access Token (PAT)</label>
-        <input type="password" id="token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" />
-        <small style="color: var(--muted); font-size: 0.8rem; display: block; margin-top: 6px;">
-          Tạo token tại: GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token (cần quyền <strong>repo</strong>)
-        </small>
-      </div>
-      <div class="btn-group">
-        <button class="btn btn-primary" id="btn-connect">
-          <i class="fas fa-plug"></i> Kết nối
+      <div class="config-header" id="config-header">
+        <h2>
+          <i class="fas fa-cog"></i> Cấu hình kết nối
+          <span class="connected-badge hidden" id="connected-badge">
+            <i class="fas fa-check-circle"></i> Đã kết nối
+          </span>
+        </h2>
+        <button class="config-toggle" id="config-toggle" title="Thu gọn / Mở rộng">
+          <i class="fas fa-chevron-up" id="config-toggle-icon"></i>
         </button>
-        <button class="btn btn-outline" id="btn-save">
-          <i class="fas fa-save"></i> Lưu cấu hình
-        </button>
+      </div>
+      <div class="config-body" id="config-body">
+        <div class="form-group">
+          <label for="username">Tên người dùng GitHub</label>
+          <input type="text" id="username" placeholder="ví dụ: your-username" />
+        </div>
+        <div class="form-group">
+          <label for="repo">Tên Repository</label>
+          <input type="text" id="repo" placeholder="ví dụ: my-file-storage" />
+        </div>
+        <div class="form-group">
+          <label for="token">Personal Access Token (PAT)</label>
+          <input type="password" id="token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" />
+          <small style="color: var(--muted); font-size: 0.8rem; display: block; margin-top: 6px;">
+            Tạo token tại: GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token (cần quyền <strong>repo</strong>)
+          </small>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-primary" id="btn-connect">
+            <i class="fas fa-plug"></i> Kết nối
+          </button>
+          <button class="btn btn-outline" id="btn-save">
+            <i class="fas fa-save"></i> Lưu cấu hình
+          </button>
+        </div>
       </div>
     </div>
 
@@ -549,12 +663,18 @@
 
       <!-- Danh sách file -->
       <div class="card">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
           <h2 style="margin: 0;"><i class="fas fa-folder-open"></i> Danh sách file</h2>
           <button class="btn btn-outline" id="btn-refresh" style="padding: 8px 14px;">
             <i class="fas fa-sync-alt"></i> Làm mới
           </button>
         </div>
+
+        <!-- Breadcrumb -->
+        <div class="breadcrumb" id="breadcrumb">
+          <span class="breadcrumb-item current" data-path="">🏠 Gốc</span>
+        </div>
+
         <ul class="file-list" id="file-list">
           <li class="empty-state">
             <i class="fas fa-inbox"></i>
@@ -565,7 +685,7 @@
     </div>
 
     <footer>
-      Tạo bởi Grok · Hỗ trợ phát Video & MP3 trực tiếp
+      Tạo bởi Grok · Hỗ trợ thư mục + phát Video & MP3
     </footer>
   </div>
 
@@ -578,20 +698,15 @@
           <i class="fas fa-times"></i>
         </button>
       </div>
-      <div class="modal-body" id="modal-body">
-        <!-- Video hoặc Audio sẽ được chèn vào đây -->
-      </div>
+      <div class="modal-body" id="modal-body"></div>
     </div>
   </div>
 
   <script>
     // ==================== STATE ====================
-    let config = {
-      username: '',
-      repo: '',
-      token: ''
-    };
+    let config = { username: '', repo: '', token: '' };
     let selectedFiles = [];
+    let currentPath = ''; // Đường dẫn thư mục hiện tại
 
     // ==================== DOM ====================
     const $ = id => document.getElementById(id);
@@ -604,6 +719,7 @@
     const mediaModal = $('media-modal');
     const modalBody = $('modal-body');
     const modalTitle = $('modal-title');
+    const breadcrumbEl = $('breadcrumb');
 
     // ==================== HELPERS ====================
     function showStatus(msg, type = 'info') {
@@ -623,13 +739,11 @@
     }
 
     function isVideo(name) {
-      const ext = getFileExt(name);
-      return ['mp4', 'webm', 'ogg', 'mov', 'm4v', 'mkv'].includes(ext);
+      return ['mp4', 'webm', 'ogg', 'mov', 'm4v', 'mkv'].includes(getFileExt(name));
     }
 
     function isAudio(name) {
-      const ext = getFileExt(name);
-      return ['mp3', 'wav', 'ogg', 'm4a', 'aac', 'flac', 'wma'].includes(ext);
+      return ['mp3', 'wav', 'ogg', 'm4a', 'aac', 'flac', 'wma'].includes(getFileExt(name));
     }
 
     function getFileIcon(name) {
@@ -655,6 +769,36 @@
       return '';
     }
 
+    // ==================== BREADCRUMB ====================
+    function updateBreadcrumb() {
+      const parts = currentPath ? currentPath.split('/').filter(Boolean) : [];
+      let html = `<span class="breadcrumb-item ${parts.length === 0 ? 'current' : ''}" data-path="">🏠 Gốc</span>`;
+
+      let pathSoFar = '';
+      parts.forEach((part, i) => {
+        pathSoFar += (pathSoFar ? '/' : '') + part;
+        const isLast = i === parts.length - 1;
+        html += `<span class="breadcrumb-sep"><i class="fas fa-chevron-right"></i></span>`;
+        html += `<span class="breadcrumb-item ${isLast ? 'current' : ''}" data-path="${pathSoFar}">${part}</span>`;
+      });
+
+      breadcrumbEl.innerHTML = html;
+
+      // Gắn sự kiện click
+      breadcrumbEl.querySelectorAll('.breadcrumb-item:not(.current)').forEach(el => {
+        el.addEventListener('click', () => {
+          navigateTo(el.dataset.path);
+        });
+      });
+    }
+
+    function navigateTo(path) {
+      currentPath = path || '';
+      // Cập nhật input path khi upload
+      $('custom-path').value = currentPath ? currentPath + '/' : '';
+      listFiles();
+    }
+
     // ==================== MEDIA PLAYER ====================
     function playMedia(url, filename) {
       modalTitle.textContent = filename;
@@ -672,10 +816,7 @@
       } else if (isAudio(filename)) {
         const wrapper = document.createElement('div');
         wrapper.className = 'audio-player-wrapper';
-        wrapper.innerHTML = `
-          <i class="fas fa-music"></i>
-          <p>${filename}</p>
-        `;
+        wrapper.innerHTML = `<i class="fas fa-music"></i><p>${filename}</p>`;
         const audio = document.createElement('audio');
         audio.src = url;
         audio.controls = true;
@@ -691,7 +832,6 @@
     }
 
     function closeMediaModal() {
-      // Dừng media đang phát
       const media = modalBody.querySelector('video, audio');
       if (media) {
         media.pause();
@@ -702,17 +842,12 @@
       document.body.style.overflow = '';
     }
 
-    // Đóng modal khi click ngoài hoặc nút X
     mediaModal.addEventListener('click', (e) => {
       if (e.target === mediaModal) closeMediaModal();
     });
     $('modal-close').addEventListener('click', closeMediaModal);
-
-    // Đóng bằng phím Escape
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && mediaModal.classList.contains('show')) {
-        closeMediaModal();
-      }
+      if (e.key === 'Escape' && mediaModal.classList.contains('show')) closeMediaModal();
     });
 
     // ==================== LOCAL STORAGE ====================
@@ -723,7 +858,9 @@
         $('username').value = config.username || '';
         $('repo').value = config.repo || '';
         $('token').value = config.token || '';
+        return true; // có config
       }
+      return false;
     }
 
     function saveConfig() {
@@ -732,6 +869,36 @@
       config.token = $('token').value.trim();
       localStorage.setItem('gh-file-storage', JSON.stringify(config));
       showStatus('Đã lưu cấu hình vào trình duyệt', 'success');
+    }
+
+    // ==================== CONFIG TOGGLE ====================
+    let configCollapsed = false;
+
+    function toggleConfig() {
+      configCollapsed = !configCollapsed;
+      const body = $('config-body');
+      const icon = $('config-toggle-icon');
+      if (configCollapsed) {
+        body.classList.add('collapsed');
+        body.style.maxHeight = '0';
+        icon.className = 'fas fa-chevron-down';
+      } else {
+        body.classList.remove('collapsed');
+        body.style.maxHeight = body.scrollHeight + 40 + 'px';
+        icon.className = 'fas fa-chevron-up';
+      }
+      localStorage.setItem('gh-config-collapsed', configCollapsed ? '1' : '0');
+    }
+
+    function setConnectedUI(connected) {
+      const badge = $('connected-badge');
+      if (connected) {
+        badge.classList.remove('hidden');
+        // Tự thu gọn cấu hình sau khi kết nối thành công
+        if (!configCollapsed) toggleConfig();
+      } else {
+        badge.classList.add('hidden');
+      }
     }
 
     // ==================== GITHUB API ====================
@@ -749,13 +916,14 @@
     }
 
     async function listFiles() {
+      updateBreadcrumb();
       try {
-        const res = await githubFetch('');
+        const res = await githubFetch(currentPath);
         if (res.status === 404) {
           fileList.innerHTML = `
             <li class="empty-state">
               <i class="fas fa-inbox"></i>
-              <p>Repository trống. Hãy upload file đầu tiên!</p>
+              <p>Thư mục trống hoặc không tồn tại</p>
             </li>`;
           return;
         }
@@ -775,11 +943,12 @@
         fileList.innerHTML = `
           <li class="empty-state">
             <i class="fas fa-inbox"></i>
-            <p>Chưa có file nào</p>
+            <p>Thư mục trống</p>
           </li>`;
         return;
       }
 
+      // Sắp xếp: thư mục trước, rồi file
       files.sort((a, b) => {
         if (a.type === 'dir' && b.type !== 'dir') return -1;
         if (a.type !== 'dir' && b.type === 'dir') return 1;
@@ -789,12 +958,12 @@
       fileList.innerHTML = files.map(f => {
         const isDir = f.type === 'dir';
         const icon = isDir ? 'fa-folder' : getFileIcon(f.name);
-        const iconClass = isDir ? '' : getIconClass(f.name);
+        const iconClass = isDir ? 'folder' : getIconClass(f.name);
         const size = isDir ? 'Thư mục' : formatSize(f.size);
         const canPlay = !isDir && (isVideo(f.name) || isAudio(f.name));
 
         return `
-          <li class="file-item" data-path="${f.path}" data-sha="${f.sha || ''}">
+          <li class="file-item ${isDir ? 'folder' : ''}" data-path="${f.path}" data-sha="${f.sha || ''}" data-type="${f.type}">
             <div class="file-info">
               <div class="file-icon ${iconClass}"><i class="fas ${icon}"></i></div>
               <div>
@@ -815,19 +984,44 @@
                 <button class="btn btn-danger btn-delete" data-path="${f.path}" data-sha="${f.sha}" title="Xóa">
                   <i class="fas fa-trash"></i>
                 </button>
-              ` : ''}
+              ` : `
+                <button class="btn btn-outline btn-enter-folder" data-path="${f.path}" style="padding: 8px 12px;" title="Vào thư mục">
+                  <i class="fas fa-folder-open"></i>
+                </button>
+              `}
             </div>
           </li>`;
       }).join('');
 
-      // Gắn sự kiện xóa
-      document.querySelectorAll('.btn-delete').forEach(btn => {
-        btn.addEventListener('click', () => deleteFile(btn.dataset.path, btn.dataset.sha));
+      // Click vào cả dòng thư mục cũng vào được
+      document.querySelectorAll('.file-item.folder').forEach(item => {
+        item.addEventListener('click', (e) => {
+          // Không trigger nếu bấm nút
+          if (e.target.closest('button') || e.target.closest('a')) return;
+          navigateTo(item.dataset.path);
+        });
       });
 
-      // Gắn sự kiện phát media
+      // Nút vào thư mục
+      document.querySelectorAll('.btn-enter-folder').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          navigateTo(btn.dataset.path);
+        });
+      });
+
+      // Xóa file
+      document.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          deleteFile(btn.dataset.path, btn.dataset.sha);
+        });
+      });
+
+      // Phát media
       document.querySelectorAll('.btn-play-media').forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
           playMedia(btn.dataset.url, btn.dataset.name);
         });
       });
@@ -836,7 +1030,12 @@
     async function uploadFiles() {
       if (selectedFiles.length === 0) return;
 
-      const customPath = $('custom-path').value.trim().replace(/^\/+|\/+$/g, '');
+      let customPath = $('custom-path').value.trim().replace(/^\/+|\/+$/g, '');
+      // Nếu đang ở trong thư mục và không ghi path, dùng currentPath
+      if (!customPath && currentPath) {
+        customPath = currentPath;
+      }
+
       btnUpload.disabled = true;
       btnUpload.innerHTML = '<span class="spinner"></span> Đang upload...';
 
@@ -858,7 +1057,7 @@
           } catch (_) {}
 
           const body = {
-            message: `Upload ${file.name} via GitHub File Storage`,
+            message: `Add files via upload`,
             content: content,
             ...(sha ? { sha } : {})
           };
@@ -896,10 +1095,7 @@
     function readFileAsBase64(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = () => {
-          const base64 = reader.result.split(',')[1];
-          resolve(base64);
-        };
+        reader.onload = () => resolve(reader.result.split(',')[1]);
         reader.onerror = reject;
         reader.readAsDataURL(file);
       });
@@ -927,17 +1123,17 @@
       }
     }
 
-    async function connect() {
+    async function connect(silent = false) {
       config.username = $('username').value.trim();
       config.repo = $('repo').value.trim();
       config.token = $('token').value.trim();
 
       if (!config.username || !config.repo || !config.token) {
-        showStatus('Vui lòng điền đầy đủ thông tin', 'error');
-        return;
+        if (!silent) showStatus('Vui lòng điền đầy đủ thông tin', 'error');
+        return false;
       }
 
-      showStatus('Đang kết nối...', 'info');
+      if (!silent) showStatus('Đang kết nối...', 'info');
       try {
         const res = await fetch(`https://api.github.com/repos/${config.username}/${config.repo}`, {
           headers: {
@@ -949,12 +1145,19 @@
           const err = await res.json();
           throw new Error(err.message || 'Không thể truy cập repository');
         }
-        showStatus('Kết nối thành công!', 'success');
+        // Tự động lưu cấu hình khi kết nối thành công
+        localStorage.setItem('gh-file-storage', JSON.stringify(config));
+        if (!silent) showStatus('Kết nối thành công!', 'success');
         mainArea.classList.remove('hidden');
+        setConnectedUI(true);
+        currentPath = '';
         listFiles();
+        return true;
       } catch (e) {
-        showStatus('Kết nối thất bại: ' + e.message, 'error');
+        if (!silent) showStatus('Kết nối thất bại: ' + e.message, 'error');
         mainArea.classList.add('hidden');
+        setConnectedUI(false);
+        return false;
       }
     }
 
@@ -986,19 +1189,42 @@
     });
 
     // ==================== EVENTS ====================
-    $('btn-connect').addEventListener('click', connect);
+    $('btn-connect').addEventListener('click', () => connect(false));
     $('btn-save').addEventListener('click', saveConfig);
     $('btn-upload').addEventListener('click', uploadFiles);
     $('btn-refresh').addEventListener('click', listFiles);
 
+    // Toggle thu gọn / mở rộng cấu hình
+    $('config-header').addEventListener('click', (e) => {
+      // Không toggle nếu click vào input/button bên trong (trừ nút toggle)
+      if (e.target.closest('input, button.btn')) return;
+      toggleConfig();
+    });
+    $('config-toggle').addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleConfig();
+    });
+
     ['username', 'repo', 'token'].forEach(id => {
       $(id).addEventListener('keypress', e => {
-        if (e.key === 'Enter') connect();
+        if (e.key === 'Enter') connect(false);
       });
     });
 
-    // Load config khi mở trang
-    loadConfig();
+    // Khởi tạo: load config + tự kết nối nếu có sẵn
+    (async function init() {
+      const hasConfig = loadConfig();
+
+      // Khôi phục trạng thái thu gọn
+      if (localStorage.getItem('gh-config-collapsed') === '1') {
+        configCollapsed = false; // sẽ đảo trong toggle
+        toggleConfig();
+      }
+
+      if (hasConfig && config.username && config.repo && config.token) {
+        await connect(true); // silent auto-connect
+      }
+    })();
   </script>
 </body>
 </html>
