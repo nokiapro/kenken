@@ -8,323 +8,131 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css" />
   <style>
     :root {
-      --primary: #2563eb;
-      --primary-dark: #1d4ed8;
-      --success: #16a34a;
-      --danger: #dc2626;
-      --purple: #7c3aed;
-      --star: #f59e0b;
-      --bg: #f1f5f9;
-      --card: #ffffff;
-      --text: #0f172a;
-      --muted: #64748b;
-      --border: #e2e8f0;
-      --radius: 12px;
-      --hover: #f8fafc;
-      --input-bg: #fff;
+      --primary: #2563eb; --primary-dark: #1d4ed8; --success: #16a34a; --danger: #dc2626;
+      --purple: #7c3aed; --star: #f59e0b; --bg: #f1f5f9; --card: #ffffff; --text: #0f172a;
+      --muted: #64748b; --border: #e2e8f0; --radius: 12px; --hover: #f8fafc; --input-bg: #fff;
     }
-
     [data-theme="dark"] {
-      --primary: #3b82f6;
-      --primary-dark: #2563eb;
-      --bg: #0f172a;
-      --card: #1e293b;
-      --text: #f1f5f9;
-      --muted: #94a3b8;
-      --border: #334155;
-      --hover: #334155;
-      --input-bg: #0f172a;
+      --primary: #3b82f6; --primary-dark: #2563eb; --bg: #0f172a; --card: #1e293b; --text: #f1f5f9;
+      --muted: #94a3b8; --border: #334155; --hover: #334155; --input-bg: #0f172a;
     }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      line-height: 1.5;
-      -webkit-tap-highlight-color: transparent;
-      transition: background 0.25s, color 0.25s;
+      background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.5;
+      -webkit-tap-highlight-color: transparent; transition: background .25s, color .25s;
+      padding-bottom: 80px;
     }
-
     .container { max-width: 720px; margin: 0 auto; padding: 12px; }
-
-    header {
-      text-align: center;
-      margin-bottom: 16px;
-      padding-top: 8px;
-      position: relative;
-    }
-
-    header h1 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    header h1 i { font-size: 1.3rem; }
-    header p { color: var(--muted); margin-top: 4px; font-size: 0.8rem; }
-
+    header { text-align: center; margin-bottom: 16px; padding-top: 8px; position: relative; }
+    header h1 { font-size: 1.25rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; justify-content: center; gap: 8px; }
+    header p { color: var(--muted); margin-top: 4px; font-size: .8rem; }
     .theme-btn {
-      position: absolute;
-      right: 0;
-      top: 8px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: var(--muted);
-      font-size: 1rem;
+      position: absolute; right: 0; top: 8px; background: var(--card); border: 1px solid var(--border);
+      border-radius: 8px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--muted); font-size: 1rem;
     }
     .theme-btn:hover { color: var(--text); background: var(--hover); }
-
     .card {
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: 0 1px 8px rgba(0,0,0,0.06);
-      padding: 14px;
-      margin-bottom: 12px;
-      border: 1px solid var(--border);
+      background: var(--card); border-radius: var(--radius); box-shadow: 0 1px 8px rgba(0,0,0,.06);
+      padding: 14px; margin-bottom: 12px; border: 1px solid var(--border);
     }
-
-    .card h2 {
-      font-size: 0.95rem;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
+    .card h2 { font-size: .95rem; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
     .form-group { margin-bottom: 12px; }
-    label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; }
-
+    label { display: block; font-size: .8rem; font-weight: 600; margin-bottom: 4px; }
     input[type="text"], input[type="password"] {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.9rem;
-      background: var(--input-bg);
-      color: var(--text);
+      width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px;
+      font-size: .9rem; background: var(--input-bg); color: var(--text);
     }
-    input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
-    }
-    small { color: var(--muted); font-size: 0.7rem; display: block; margin-top: 4px; line-height: 1.4; }
-
+    input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
+    small { color: var(--muted); font-size: .7rem; display: block; margin-top: 4px; line-height: 1.4; }
     .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 10px 14px;
-      border: none;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      white-space: nowrap;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 14px;
+      border: none; border-radius: 8px; font-size: .85rem; font-weight: 600; cursor: pointer; white-space: nowrap;
     }
-    .btn i { font-size: 0.85rem; }
     .btn-primary { background: var(--primary); color: #fff; }
-    .btn-primary:hover { background: var(--primary-dark); }
     .btn-success { background: var(--success); color: #fff; }
-    .btn-danger { background: var(--danger); color: #fff; padding: 7px 10px; font-size: 0.8rem; }
-    .btn-outline {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 7px 10px;
-      font-size: 0.8rem;
-    }
+    .btn-danger { background: var(--danger); color: #fff; padding: 7px 10px; font-size: .8rem; }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); padding: 7px 10px; font-size: .8rem; }
     .btn-outline:hover { background: var(--hover); }
     .btn-outline.active { background: var(--primary); color: #fff; border-color: var(--primary); }
-    .btn-play { background: var(--purple); color: #fff; padding: 7px 10px; font-size: 0.8rem; }
-    .btn-star { background: transparent; border: 1px solid var(--border); color: var(--muted); padding: 7px 10px; font-size: 0.8rem; }
+    .btn-play { background: var(--purple); color: #fff; padding: 7px 10px; font-size: .8rem; }
+    .btn-star { background: transparent; border: 1px solid var(--border); color: var(--muted); padding: 7px 10px; font-size: .8rem; }
     .btn-star.starred { color: var(--star); border-color: var(--star); }
-    .btn-star:hover { color: var(--star); }
-    .btn-sm { padding: 6px 10px; font-size: 0.8rem; }
-    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+    .btn-sm { padding: 6px 10px; font-size: .8rem; }
+    .btn:disabled { opacity: .55; cursor: not-allowed; }
     .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
-
     .upload-zone {
-      border: 2px dashed var(--border);
-      border-radius: 10px;
-      padding: 20px 12px;
-      text-align: center;
-      cursor: pointer;
-      background: var(--hover);
+      border: 2px dashed var(--border); border-radius: 10px; padding: 20px 12px; text-align: center;
+      cursor: pointer; background: var(--hover);
     }
-    .upload-zone:hover, .upload-zone.dragover {
-      border-color: var(--primary);
-      background: rgba(37,99,235,0.08);
-    }
+    .upload-zone:hover, .upload-zone.dragover { border-color: var(--primary); background: rgba(37,99,235,.08); }
     .upload-zone i { font-size: 1.8rem; color: var(--primary); margin-bottom: 8px; }
-    .upload-zone p { color: var(--muted); font-size: 0.85rem; }
-
+    .upload-zone p { color: var(--muted); font-size: .85rem; }
     .path-input { margin-top: 10px; }
-    .path-input input { width: 100%; font-size: 0.85rem; padding: 9px 12px; }
-
+    .path-input input { width: 100%; font-size: .85rem; padding: 9px 12px; }
     .progress-wrap { display: none; margin-top: 12px; }
     .progress-wrap.show { display: block; }
     .progress-bar-bg { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
-    .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; border-radius: 4px; }
-    .progress-text { font-size: 0.75rem; color: var(--muted); margin-top: 6px; text-align: center; }
-
-    /* LIST VIEW */
+    .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: width .3s; border-radius: 4px; }
+    .progress-text { font-size: .75rem; color: var(--muted); margin-top: 6px; text-align: center; }
     .file-list { list-style: none; }
-
     .file-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 8px;
-      border-bottom: 1px solid var(--border);
-      gap: 8px;
+      display: flex; align-items: center; justify-content: space-between; padding: 10px 8px;
+      border-bottom: 1px solid var(--border); gap: 8px;
     }
     .file-item:last-child { border-bottom: none; }
     .file-item:hover { background: var(--hover); }
     .file-item.folder { cursor: pointer; }
-    .file-item.selected { background: rgba(37,99,235,0.1); }
-
+    .file-item.selected { background: rgba(37,99,235,.1); }
     .file-info { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
     .file-check { width: 18px; height: 18px; accent-color: var(--primary); flex-shrink: 0; cursor: pointer; }
-
     .file-icon {
-      width: 36px; height: 36px; border-radius: 8px;
-      background: rgba(37,99,235,0.1); color: var(--primary);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.95rem; flex-shrink: 0;
+      width: 36px; height: 36px; border-radius: 8px; background: rgba(37,99,235,.1); color: var(--primary);
+      display: flex; align-items: center; justify-content: center; font-size: .95rem; flex-shrink: 0;
     }
     .file-icon.folder { background: #fef3c7; color: #d97706; }
     [data-theme="dark"] .file-icon.folder { background: #422006; color: #fbbf24; }
     .file-icon.video { background: #f3e8ff; color: #7c3aed; }
-    [data-theme="dark"] .file-icon.video { background: #2e1065; color: #c4b5fd; }
     .file-icon.audio { background: #fce7f3; color: #db2777; }
-    [data-theme="dark"] .file-icon.audio { background: #500724; color: #f9a8d4; }
     .file-icon.image { background: #ecfdf5; color: #059669; }
-    [data-theme="dark"] .file-icon.image { background: #064e3b; color: #6ee7b7; }
-
-    .file-name { font-weight: 500; font-size: 0.875rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .file-meta { font-size: 0.7rem; color: var(--muted); }
+    .file-name { font-weight: 500; font-size: .875rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .file-meta { font-size: .7rem; color: var(--muted); }
     .file-actions { display: flex; gap: 5px; flex-shrink: 0; flex-wrap: wrap; }
-
-    /* GRID VIEW */
     .file-list.grid-view {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      gap: 10px;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px;
     }
     .file-list.grid-view .file-item {
-      flex-direction: column;
-      align-items: stretch;
-      padding: 10px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      border-bottom: 1px solid var(--border);
-      gap: 8px;
-      position: relative;
+      flex-direction: column; align-items: stretch; padding: 10px; border: 1px solid var(--border);
+      border-radius: 10px; gap: 8px; position: relative;
     }
-    .file-list.grid-view .file-item:hover { border-color: var(--primary); }
-    .file-list.grid-view .file-info {
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 6px;
-    }
-    .file-list.grid-view .file-check {
-      position: absolute;
-      top: 8px;
-      left: 8px;
-    }
-    .file-list.grid-view .file-icon {
-      width: 64px;
-      height: 64px;
-      font-size: 1.6rem;
-      border-radius: 12px;
-    }
-    .file-list.grid-view .file-thumb {
-      width: 100%;
-      aspect-ratio: 1;
-      object-fit: cover;
-      border-radius: 8px;
-      background: var(--hover);
-    }
+    .file-list.grid-view .file-info { flex-direction: column; align-items: center; text-align: center; gap: 6px; }
+    .file-list.grid-view .file-check { position: absolute; top: 8px; left: 8px; }
+    .file-list.grid-view .file-icon { width: 64px; height: 64px; font-size: 1.6rem; border-radius: 12px; }
+    .file-list.grid-view .file-thumb { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; }
     .file-list.grid-view .file-name {
-      font-size: 0.75rem;
-      white-space: normal;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      word-break: break-all;
-      max-width: 100%;
+      font-size: .75rem; white-space: normal; display: -webkit-box; -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical; overflow: hidden; word-break: break-all;
     }
-    .file-list.grid-view .file-meta { font-size: 0.65rem; }
-    .file-list.grid-view .file-actions {
-      justify-content: center;
-      flex-wrap: wrap;
-    }
+    .file-list.grid-view .file-actions { justify-content: center; }
     .file-list.grid-view .btn-star-grid {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      background: rgba(0,0,0,0.4);
-      border: none;
-      color: #fff;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      padding: 0;
-      font-size: 0.75rem;
+      position: absolute; top: 6px; right: 6px; background: rgba(0,0,0,.4); border: none; color: #fff;
+      width: 28px; height: 28px; border-radius: 50%; padding: 0; font-size: .75rem;
     }
     .file-list.grid-view .btn-star-grid.starred { color: var(--star); }
-
     .breadcrumb {
-      display: flex; align-items: center; flex-wrap: wrap; gap: 4px;
-      padding: 8px 10px; background: var(--hover); border-radius: 8px;
-      margin-bottom: 10px; font-size: 0.8rem;
+      display: flex; align-items: center; flex-wrap: wrap; gap: 4px; padding: 8px 10px;
+      background: var(--hover); border-radius: 8px; margin-bottom: 10px; font-size: .8rem;
     }
-    .breadcrumb-item {
-      color: var(--primary); cursor: pointer; font-weight: 500;
-      padding: 2px 5px; border-radius: 4px;
-    }
-    .breadcrumb-item:hover { background: rgba(37,99,235,0.12); }
+    .breadcrumb-item { color: var(--primary); cursor: pointer; font-weight: 500; padding: 2px 5px; border-radius: 4px; }
     .breadcrumb-item.current { color: var(--text); cursor: default; font-weight: 600; }
-    .breadcrumb-item.current:hover { background: transparent; }
-    .breadcrumb-sep { color: var(--muted); font-size: 0.65rem; }
-
-    .toolbar {
-      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; align-items: center;
-    }
+    .breadcrumb-sep { color: var(--muted); font-size: .65rem; }
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; align-items: center; }
     .search-box { flex: 1; min-width: 120px; position: relative; }
-    .search-box input {
-      width: 100%; padding: 8px 12px 8px 34px; font-size: 0.85rem;
-    }
-    .search-box i {
-      position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
-      color: var(--muted); font-size: 0.85rem;
-    }
+    .search-box input { width: 100%; padding: 8px 12px 8px 34px; font-size: .85rem; }
+    .search-box i { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: .85rem; }
     .view-toggles { display: flex; gap: 4px; }
-
-    .status {
-      padding: 10px 12px; border-radius: 8px; margin-bottom: 12px;
-      font-size: 0.8rem; display: none;
-    }
+    .status { padding: 10px 12px; border-radius: 8px; margin-bottom: 12px; font-size: .8rem; display: none; }
     .status.show { display: block; }
     .status.success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
     .status.error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
@@ -332,189 +140,176 @@
     [data-theme="dark"] .status.success { background: #14532d; color: #86efac; border-color: #166534; }
     [data-theme="dark"] .status.error { background: #7f1d1d; color: #fca5a5; border-color: #991b1b; }
     [data-theme="dark"] .status.info { background: #1e3a5f; color: #93c5fd; border-color: #1e40af; }
-
     .empty-state { text-align: center; padding: 28px 12px; color: var(--muted); }
-    .empty-state i { font-size: 2rem; margin-bottom: 8px; opacity: 0.35; }
-    .empty-state p { font-size: 0.85rem; }
-
-    .config-header {
-      display: flex; align-items: center; justify-content: space-between;
-      cursor: pointer; user-select: none;
-    }
+    .empty-state i { font-size: 2rem; margin-bottom: 8px; opacity: .35; }
+    .config-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; }
     .config-header h2 { margin-bottom: 0; }
     .config-toggle {
-      background: transparent; border: 1px solid var(--border); border-radius: 6px;
-      padding: 5px 8px; cursor: pointer; color: var(--muted); font-size: 0.8rem;
+      background: transparent; border: 1px solid var(--border); border-radius: 6px; padding: 5px 8px;
+      cursor: pointer; color: var(--muted); font-size: .8rem;
     }
-    .config-body {
-      margin-top: 12px; overflow: hidden;
-      transition: max-height 0.3s ease, opacity 0.25s ease;
-    }
-    .config-body.collapsed {
-      max-height: 0 !important; opacity: 0; margin-top: 0; pointer-events: none;
-    }
+    .config-body { margin-top: 12px; overflow: hidden; transition: max-height .3s ease, opacity .25s ease; }
+    .config-body.collapsed { max-height: 0 !important; opacity: 0; margin-top: 0; pointer-events: none; }
     .connected-badge {
-      display: inline-flex; align-items: center; gap: 4px;
-      background: #dcfce7; color: #166534; font-size: 0.7rem; font-weight: 600;
-      padding: 2px 8px; border-radius: 12px; margin-left: 6px;
+      display: inline-flex; align-items: center; gap: 4px; background: #dcfce7; color: #166534;
+      font-size: .7rem; font-weight: 600; padding: 2px 8px; border-radius: 12px; margin-left: 6px;
     }
     [data-theme="dark"] .connected-badge { background: #14532d; color: #86efac; }
-
-    .list-header {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 10px; gap: 8px;
-    }
+    .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 8px; }
     .list-header h2 { margin: 0; }
-
     .batch-bar {
-      display: none; align-items: center; gap: 8px; padding: 8px 10px;
-      background: rgba(37,99,235,0.1); border-radius: 8px; margin-bottom: 10px;
-      font-size: 0.8rem; flex-wrap: wrap;
+      display: none; align-items: center; gap: 8px; padding: 8px 10px; background: rgba(37,99,235,.1);
+      border-radius: 8px; margin-bottom: 10px; font-size: .8rem; flex-wrap: wrap;
     }
     .batch-bar.show { display: flex; }
-
-    footer {
-      text-align: center; margin-top: 24px; padding-bottom: 20px;
-      color: var(--muted); font-size: 0.75rem;
+    .music-bar { display: none; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+    .music-bar.show { display: flex; }
+    .quota-bar {
+      font-size: .75rem; color: var(--muted); margin-bottom: 10px; display: none; align-items: center; gap: 8px;
     }
-
+    .quota-bar.show { display: flex; }
+    .quota-bar .quota-fill {
+      flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden;
+    }
+    .quota-bar .quota-fill span { display: block; height: 100%; background: var(--primary); border-radius: 3px; }
+    footer { text-align: center; margin-top: 24px; padding-bottom: 20px; color: var(--muted); font-size: .75rem; }
     .spinner {
-      display: inline-block; width: 14px; height: 14px;
-      border: 2px solid rgba(255,255,255,0.3); border-radius: 50%;
-      border-top-color: #fff; animation: spin 0.7s linear infinite;
+      display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.3);
+      border-radius: 50%; border-top-color: #fff; animation: spin .7s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
     .hidden { display: none !important; }
 
+    /* Lock screen */
+    #lock-screen {
+      position: fixed; inset: 0; background: var(--bg); z-index: 2000;
+      display: flex; align-items: center; justify-content: center; padding: 20px;
+    }
+    #lock-screen .lock-box {
+      background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+      padding: 28px 24px; width: 100%; max-width: 340px; text-align: center;
+    }
+    #lock-screen h2 { font-size: 1.1rem; margin-bottom: 8px; }
+    #lock-screen p { color: var(--muted); font-size: .85rem; margin-bottom: 16px; }
+    #lock-screen input { margin-bottom: 12px; text-align: center; letter-spacing: 2px; }
+
+    /* Mini player */
+    #mini-player {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 900;
+      background: var(--card); border-top: 1px solid var(--border);
+      box-shadow: 0 -4px 20px rgba(0,0,0,.12); display: none; padding: 10px 14px;
+    }
+    #mini-player.show { display: block; }
+    .mini-inner { max-width: 720px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
+    .mini-info { flex: 1; min-width: 0; }
+    .mini-title { font-size: .85rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mini-sub { font-size: .7rem; color: var(--muted); }
+    .mini-controls { display: flex; gap: 6px; align-items: center; }
+    .mini-btn {
+      width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--hover);
+      color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .mini-btn.play { background: var(--purple); color: #fff; width: 40px; height: 40px; }
+    .mini-progress {
+      position: absolute; top: 0; left: 0; height: 3px; background: var(--purple); width: 0%;
+    }
+    .sleep-badge {
+      font-size: .65rem; background: var(--purple); color: #fff; padding: 2px 6px;
+      border-radius: 8px; margin-left: 4px;
+    }
+
     .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.85);
-      display: flex; align-items: center; justify-content: center;
-      z-index: 1000; padding: 12px; opacity: 0; visibility: hidden; transition: all 0.25s;
+      position: fixed; inset: 0; background: rgba(0,0,0,.85); display: flex; align-items: center;
+      justify-content: center; z-index: 1000; padding: 12px; opacity: 0; visibility: hidden; transition: all .25s;
     }
     .modal-overlay.show { opacity: 1; visibility: visible; }
     .modal {
-      background: #1a1a2e; border-radius: 12px; width: 100%; max-width: 720px;
-      overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-      transform: scale(0.96); transition: transform 0.25s;
+      background: #1a1a2e; border-radius: 12px; width: 100%; max-width: 720px; overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,.5); transform: scale(.96); transition: transform .25s;
     }
     .modal-overlay.show .modal { transform: scale(1); }
     .modal-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 10px 14px; background: #16213e; color: #fff;
+      display: flex; align-items: center; justify-content: space-between; padding: 10px 14px;
+      background: #16213e; color: #fff;
     }
-    .modal-header h3 {
-      font-size: 0.85rem; font-weight: 600; white-space: nowrap;
-      overflow: hidden; text-overflow: ellipsis; max-width: 80%;
-    }
-    .modal-close {
-      background: transparent; border: none; color: #94a3b8;
-      font-size: 1.2rem; cursor: pointer; padding: 4px 8px; border-radius: 6px; line-height: 1;
-    }
-    .modal-close:hover { background: #1e293b; color: #fff; }
+    .modal-header h3 { font-size: .85rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80%; }
+    .modal-close { background: transparent; border: none; color: #94a3b8; font-size: 1.2rem; cursor: pointer; padding: 4px 8px; }
     .modal-body { background: #000; min-height: 120px; display: flex; align-items: center; justify-content: center; }
     .modal-body img { max-width: 100%; max-height: 75vh; object-fit: contain; }
-
-    .plyr { --plyr-color-main: #7c3aed; border-radius: 0; }
+    .plyr { --plyr-color-main: #7c3aed; }
     .plyr--audio { background: linear-gradient(135deg, #1e1b4b, #312e81); padding: 16px; }
-    .plyr--audio .plyr__controls { background: transparent; color: #e0e7ff; }
-
     .playlist-controls {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      padding: 12px 16px;
-      background: #16213e;
-      flex-wrap: wrap;
+      display: flex; align-items: center; justify-content: center; gap: 12px; padding: 12px 16px;
+      background: #16213e; flex-wrap: wrap;
     }
     .pl-btn {
-      background: rgba(255,255,255,0.1);
-      border: none;
-      color: #e0e7ff;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 0.95rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
+      background: rgba(255,255,255,.1); border: none; color: #e0e7ff; width: 40px; height: 40px;
+      border-radius: 50%; cursor: pointer; font-size: .95rem; display: flex; align-items: center; justify-content: center;
     }
-    .pl-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
     .pl-btn.active { background: var(--purple); color: #fff; }
-    .pl-info {
-      color: #94a3b8;
-      font-size: 0.8rem;
-      margin-left: 8px;
-      min-width: 50px;
-    }
-    .music-bar {
-      display: none;
-      gap: 8px;
-      margin-bottom: 10px;
-      flex-wrap: wrap;
-    }
-    .music-bar.show { display: flex; }
-
+    .pl-info { color: #94a3b8; font-size: .8rem; margin-left: 8px; }
     .prompt-modal .modal { background: var(--card); max-width: 400px; }
     .prompt-modal .modal-header { background: var(--hover); color: var(--text); }
-    .prompt-modal .modal-body {
-      background: var(--card); padding: 16px; flex-direction: column; gap: 12px; min-height: auto;
-    }
+    .prompt-modal .modal-body { background: var(--card); padding: 16px; flex-direction: column; gap: 12px; min-height: auto; }
     .prompt-modal input {
-      width: 100%; padding: 10px 12px; border: 1px solid var(--border);
-      border-radius: 8px; font-size: 0.9rem; background: var(--input-bg); color: var(--text);
+      width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px;
+      font-size: .9rem; background: var(--input-bg); color: var(--text);
     }
     .prompt-modal .btn-group { width: 100%; justify-content: flex-end; }
-
     @media (min-width: 600px) {
       .container { padding: 20px 16px; }
       header h1 { font-size: 1.5rem; }
       .card { padding: 18px; }
-      .btn { padding: 11px 16px; font-size: 0.9rem; }
-      .btn-danger, .btn-outline, .btn-play, .btn-sm, .btn-star { padding: 8px 12px; font-size: 0.85rem; }
-      .file-icon { width: 40px; height: 40px; }
-      .file-name { font-size: 0.95rem; }
-      .upload-zone { padding: 28px 16px; }
-      .upload-zone i { font-size: 2.2rem; }
       .file-list.grid-view { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <!-- LOCK SCREEN -->
+  <div id="lock-screen" class="hidden">
+    <div class="lock-box">
+      <i class="fas fa-lock" style="font-size:2rem;color:var(--primary);margin-bottom:12px"></i>
+      <h2>Nhập mật khẩu</h2>
+      <p>Web đã được bảo vệ</p>
+      <input type="password" id="lock-input" placeholder="Mật khẩu" />
+      <button class="btn btn-primary" id="lock-btn" style="width:100%">Mở khóa</button>
+      <p id="lock-error" style="color:var(--danger);font-size:.8rem;margin-top:8px;display:none">Sai mật khẩu</p>
+    </div>
+  </div>
+
+  <div class="container" id="app-root">
     <header>
       <h1><i class="fab fa-github"></i> GitHub File Storage</h1>
       <p>Lưu trữ & quản lý file trên GitHub</p>
-      <button class="theme-btn" id="theme-btn" title="Đổi giao diện">
-        <i class="fas fa-moon" id="theme-icon"></i>
-      </button>
+      <button class="theme-btn" id="theme-btn" title="Đổi giao diện"><i class="fas fa-moon" id="theme-icon"></i></button>
     </header>
 
     <div class="card" id="config-card">
       <div class="config-header" id="config-header">
         <h2>
           <i class="fas fa-cog"></i> Cấu hình
-          <span class="connected-badge hidden" id="connected-badge">
-            <i class="fas fa-check-circle"></i> Đã kết nối
-          </span>
+          <span class="connected-badge hidden" id="connected-badge"><i class="fas fa-check-circle"></i> Đã kết nối</span>
         </h2>
         <button class="config-toggle" id="config-toggle"><i class="fas fa-chevron-up" id="config-toggle-icon"></i></button>
       </div>
       <div class="config-body" id="config-body">
         <div class="form-group">
-          <label for="username">Username GitHub</label>
-          <input type="text" id="username" placeholder="your-username" autocomplete="username" />
+          <label>Username GitHub</label>
+          <input type="text" id="username" placeholder="your-username" />
         </div>
         <div class="form-group">
-          <label for="repo">Tên Repository</label>
+          <label>Tên Repository</label>
           <input type="text" id="repo" placeholder="my-file-storage" />
         </div>
         <div class="form-group">
-          <label for="token">Personal Access Token</label>
-          <input type="password" id="token" placeholder="ghp_xxxx..." autocomplete="off" />
-          <small>GitHub → Settings → Developer settings → Personal access tokens → Generate (quyền <strong>repo</strong>)</small>
+          <label>Personal Access Token</label>
+          <input type="password" id="token" placeholder="ghp_xxxx..." />
+          <small>Cần quyền <strong>repo</strong></small>
+        </div>
+        <div class="form-group">
+          <label>Mật khẩu khóa web (tùy chọn)</label>
+          <input type="password" id="app-password" placeholder="Để trống = không khóa" />
+          <small>Ai mở link cũng phải nhập mật khẩu này</small>
         </div>
         <div class="btn-group">
           <button class="btn btn-primary" id="btn-connect"><i class="fas fa-plug"></i> Kết nối</button>
@@ -533,14 +328,12 @@
           <p>Kéo thả hoặc <strong>chạm để chọn</strong></p>
           <input type="file" id="file-input" multiple hidden />
         </div>
-        <div class="path-input">
-          <input type="text" id="custom-path" placeholder="Thư mục (vd: photos/2024/)" />
-        </div>
+        <div class="path-input"><input type="text" id="custom-path" placeholder="Thư mục (vd: photos/2024/)" /></div>
         <div class="progress-wrap" id="progress-wrap">
           <div class="progress-bar-bg"><div class="progress-bar" id="progress-bar"></div></div>
           <div class="progress-text" id="progress-text">0%</div>
         </div>
-        <div style="margin-top: 10px;" class="btn-group">
+        <div style="margin-top:10px" class="btn-group">
           <button class="btn btn-success" id="btn-upload" disabled><i class="fas fa-upload"></i> Upload</button>
           <button class="btn btn-outline btn-sm" id="btn-new-folder"><i class="fas fa-folder-plus"></i> Tạo thư mục</button>
         </div>
@@ -551,43 +344,65 @@
           <h2><i class="fas fa-folder-open"></i> Files</h2>
           <button class="btn btn-outline" id="btn-refresh"><i class="fas fa-sync-alt"></i></button>
         </div>
-
+        <div class="quota-bar" id="quota-bar">
+          <i class="fas fa-database"></i>
+          <div class="quota-fill"><span id="quota-fill" style="width:0%"></span></div>
+          <span id="quota-text">—</span>
+        </div>
         <div class="breadcrumb" id="breadcrumb">
           <span class="breadcrumb-item current" data-path=""><i class="fas fa-home"></i> Gốc</span>
         </div>
-
         <div class="toolbar">
           <div class="search-box">
             <i class="fas fa-search"></i>
             <input type="text" id="search-input" placeholder="Tìm file..." />
           </div>
           <div class="view-toggles">
-            <button class="btn btn-outline btn-sm active" id="btn-view-list" title="Danh sách"><i class="fas fa-list"></i></button>
-            <button class="btn btn-outline btn-sm" id="btn-view-grid" title="Lưới"><i class="fas fa-th"></i></button>
-            <button class="btn btn-outline btn-sm" id="btn-filter-star" title="Chỉ yêu thích"><i class="fas fa-star"></i></button>
+            <button class="btn btn-outline btn-sm active" id="btn-view-list"><i class="fas fa-list"></i></button>
+            <button class="btn btn-outline btn-sm" id="btn-view-grid"><i class="fas fa-th"></i></button>
+            <button class="btn btn-outline btn-sm" id="btn-filter-star"><i class="fas fa-star"></i></button>
           </div>
         </div>
-
         <div class="music-bar" id="music-bar">
-          <button class="btn btn-play btn-sm" id="btn-play-all" title="Phát tất cả"><i class="fas fa-play"></i> Phát tất cả</button>
-          <button class="btn btn-outline btn-sm" id="btn-shuffle-all" title="Phát ngẫu nhiên"><i class="fas fa-random"></i> Ngẫu nhiên</button>
+          <button class="btn btn-play btn-sm" id="btn-play-all"><i class="fas fa-play"></i> Phát tất cả</button>
+          <button class="btn btn-outline btn-sm" id="btn-shuffle-all"><i class="fas fa-random"></i> Ngẫu nhiên</button>
+          <button class="btn btn-outline btn-sm" id="btn-sleep" title="Hẹn giờ tắt"><i class="fas fa-moon"></i> Sleep</button>
         </div>
-
         <div class="batch-bar" id="batch-bar">
           <span id="batch-count">0 đã chọn</span>
-          <button class="btn btn-danger btn-sm" id="btn-batch-delete"><i class="fas fa-trash"></i> Xóa đã chọn</button>
+          <button class="btn btn-danger btn-sm" id="btn-batch-delete"><i class="fas fa-trash"></i> Xóa</button>
           <button class="btn btn-outline btn-sm" id="btn-batch-clear">Bỏ chọn</button>
         </div>
-
         <ul class="file-list" id="file-list">
           <li class="empty-state"><i class="fas fa-inbox"></i><p>Chưa có file nào</p></li>
         </ul>
       </div>
     </div>
-
-    <footer>GitHub File Storage · Grid + Favorites</footer>
+    <footer>GitHub File Storage</footer>
   </div>
 
+  <!-- MINI PLAYER -->
+  <div id="mini-player">
+    <div class="mini-progress" id="mini-progress"></div>
+    <div class="mini-inner">
+      <div class="mini-info">
+        <div class="mini-title" id="mini-title">—</div>
+        <div class="mini-sub" id="mini-sub">
+          <span id="mini-time">0:00</span>
+          <span id="sleep-badge" class="sleep-badge hidden"></span>
+        </div>
+      </div>
+      <div class="mini-controls">
+        <button class="mini-btn" id="mini-prev"><i class="fas fa-step-backward"></i></button>
+        <button class="mini-btn play" id="mini-play"><i class="fas fa-play" id="mini-play-icon"></i></button>
+        <button class="mini-btn" id="mini-next"><i class="fas fa-step-forward"></i></button>
+        <button class="mini-btn" id="mini-expand" title="Mở rộng"><i class="fas fa-expand"></i></button>
+        <button class="mini-btn" id="mini-close"><i class="fas fa-times"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FULL MEDIA MODAL -->
   <div class="modal-overlay" id="media-modal">
     <div class="modal">
       <div class="modal-header">
@@ -596,10 +411,10 @@
       </div>
       <div class="modal-body" id="modal-body"></div>
       <div class="playlist-controls" id="playlist-controls" style="display:none">
-        <button class="pl-btn" id="pl-prev" title="Bài trước"><i class="fas fa-step-backward"></i></button>
-        <button class="pl-btn" id="pl-shuffle" title="Ngẫu nhiên"><i class="fas fa-random"></i></button>
-        <button class="pl-btn" id="pl-repeat" title="Lặp lại"><i class="fas fa-redo"></i></button>
-        <button class="pl-btn" id="pl-next" title="Bài sau"><i class="fas fa-step-forward"></i></button>
+        <button class="pl-btn" id="pl-prev"><i class="fas fa-step-backward"></i></button>
+        <button class="pl-btn" id="pl-shuffle"><i class="fas fa-random"></i></button>
+        <button class="pl-btn" id="pl-repeat"><i class="fas fa-redo"></i></button>
+        <button class="pl-btn" id="pl-next"><i class="fas fa-step-forward"></i></button>
         <span class="pl-info" id="pl-info">1 / 1</span>
       </div>
     </div>
@@ -624,64 +439,75 @@
   <script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.js"></script>
   <script>
     let config = { username: '', repo: '', token: '' };
-    let selectedFiles = [];
-    let currentPath = '';
-    let allFiles = [];
-    let selectedPaths = new Set();
-    let favorites = new Set();
-    let viewMode = 'list'; // list | grid
-    let showOnlyStars = false;
-    let plyrInstance = null;
-    let configCollapsed = false;
-    let promptResolve = null;
-    // Playlist
-    let playlist = [];
-    let playlistIndex = 0;
-    let shuffleMode = false;
-    let repeatMode = false; // false | true (loop list)
-    let shuffleOrder = [];
+    let selectedFiles = [], currentPath = '', allFiles = [];
+    let selectedPaths = new Set(), favorites = new Set();
+    let viewMode = 'list', showOnlyStars = false;
+    let plyrInstance = null, configCollapsed = false, promptResolve = null;
+    let playlist = [], playlistIndex = 0, shuffleMode = false, repeatMode = false, shuffleOrder = [];
+    let sleepTimer = null, sleepEndsAt = 0;
+    let audioEl = null; // current HTMLAudioElement for mini player
+    let isPlaying = false;
 
     const $ = id => document.getElementById(id);
 
-    function favKey() {
-      return 'gh-favs-' + (config.username || '') + '/' + (config.repo || '');
+    // ===== PASSWORD LOCK =====
+    function checkLock() {
+      const hash = localStorage.getItem('gh-app-pass');
+      if (!hash) return true;
+      if (sessionStorage.getItem('gh-unlocked') === '1') return true;
+      $('lock-screen').classList.remove('hidden');
+      return false;
     }
-
-    function loadFavorites() {
-      try {
-        const raw = localStorage.getItem(favKey());
-        favorites = new Set(raw ? JSON.parse(raw) : []);
-      } catch (_) { favorites = new Set(); }
+    function setAppPassword(pw) {
+      if (!pw) {
+        localStorage.removeItem('gh-app-pass');
+        return;
+      }
+      // simple hash
+      let h = 0;
+      for (let i = 0; i < pw.length; i++) h = ((h << 5) - h) + pw.charCodeAt(i) | 0;
+      localStorage.setItem('gh-app-pass', String(h));
     }
-
-    function saveFavorites() {
-      localStorage.setItem(favKey(), JSON.stringify([...favorites]));
+    function tryUnlock() {
+      const pw = $('lock-input').value;
+      let h = 0;
+      for (let i = 0; i < pw.length; i++) h = ((h << 5) - h) + pw.charCodeAt(i) | 0;
+      if (String(h) === localStorage.getItem('gh-app-pass')) {
+        sessionStorage.setItem('gh-unlocked', '1');
+        $('lock-screen').classList.add('hidden');
+        $('lock-error').style.display = 'none';
+      } else {
+        $('lock-error').style.display = 'block';
+      }
     }
-
-    function toggleFavorite(path) {
-      if (favorites.has(path)) favorites.delete(path);
-      else favorites.add(path);
-      saveFavorites();
-      applySearch();
-    }
+    $('lock-btn').addEventListener('click', tryUnlock);
+    $('lock-input').addEventListener('keypress', e => { if (e.key === 'Enter') tryUnlock(); });
 
     // ===== THEME =====
     function initTheme() {
-      const saved = localStorage.getItem('gh-theme') || 'light';
-      document.documentElement.setAttribute('data-theme', saved);
-      $('theme-icon').className = saved === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+      const s = localStorage.getItem('gh-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', s);
+      $('theme-icon').className = s === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
     }
-    function toggleTheme() {
-      const cur = document.documentElement.getAttribute('data-theme');
-      const next = cur === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('gh-theme', next);
-      $('theme-icon').className = next === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-    }
-    $('theme-btn').addEventListener('click', toggleTheme);
+    $('theme-btn').addEventListener('click', () => {
+      const n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', n);
+      localStorage.setItem('gh-theme', n);
+      $('theme-icon').className = n === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    });
     initTheme();
 
-    // View mode
+    function favKey() { return 'gh-favs-' + (config.username||'') + '/' + (config.repo||''); }
+    function loadFavorites() {
+      try { favorites = new Set(JSON.parse(localStorage.getItem(favKey()) || '[]')); }
+      catch(_) { favorites = new Set(); }
+    }
+    function saveFavorites() { localStorage.setItem(favKey(), JSON.stringify([...favorites])); }
+    function toggleFavorite(path) {
+      if (favorites.has(path)) favorites.delete(path); else favorites.add(path);
+      saveFavorites(); applySearch();
+    }
+
     function setViewMode(mode) {
       viewMode = mode;
       localStorage.setItem('gh-view-mode', mode);
@@ -690,7 +516,6 @@
       $('btn-view-grid').classList.toggle('active', mode === 'grid');
       applySearch();
     }
-
     function toggleStarFilter() {
       showOnlyStars = !showOnlyStars;
       $('btn-filter-star').classList.toggle('active', showOnlyStars);
@@ -699,365 +524,404 @@
 
     function showStatus(msg, type) {
       const el = $('status');
-      el.textContent = msg;
-      el.className = 'status show ' + (type || 'info');
+      el.textContent = msg; el.className = 'status show ' + (type||'info');
       setTimeout(() => el.classList.remove('show'), 4000);
     }
-
-    function formatSize(bytes) {
-      if (bytes < 1024) return bytes + ' B';
-      if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
-      return (bytes / 1048576).toFixed(1) + ' MB';
+    function formatSize(b) {
+      if (b < 1024) return b + ' B';
+      if (b < 1048576) return (b/1024).toFixed(1) + ' KB';
+      if (b < 1073741824) return (b/1048576).toFixed(1) + ' MB';
+      return (b/1073741824).toFixed(2) + ' GB';
     }
-
-    function getFileExt(name) {
-      return (name.split('.').pop() || '').toLowerCase();
-    }
-
+    function getFileExt(n) { return (n.split('.').pop()||'').toLowerCase(); }
     function isVideo(n) { return ['mp4','webm','ogg','mov','m4v','mkv'].includes(getFileExt(n)); }
     function isAudio(n) { return ['mp3','wav','ogg','m4a','aac','flac','wma'].includes(getFileExt(n)); }
     function isImage(n) { return ['jpg','jpeg','png','gif','webp','svg','bmp','ico'].includes(getFileExt(n)); }
-
     function getFileIcon(name) {
       if (isVideo(name)) return 'fa-file-video';
       if (isAudio(name)) return 'fa-file-audio';
       if (isImage(name)) return 'fa-file-image';
-      const ext = getFileExt(name);
-      const map = {
-        pdf:'fa-file-pdf', doc:'fa-file-word', docx:'fa-file-word',
-        xls:'fa-file-excel', xlsx:'fa-file-excel',
-        ppt:'fa-file-powerpoint', pptx:'fa-file-powerpoint',
-        zip:'fa-file-zipper', rar:'fa-file-zipper', '7z':'fa-file-zipper',
-        js:'fa-file-code', ts:'fa-file-code', html:'fa-file-code', css:'fa-file-code',
-        json:'fa-file-code', py:'fa-file-code', txt:'fa-file-lines', md:'fa-file-lines'
-      };
-      return map[ext] || 'fa-file';
+      const m = { pdf:'fa-file-pdf', zip:'fa-file-zipper', rar:'fa-file-zipper', txt:'fa-file-lines', md:'fa-file-lines', js:'fa-file-code', json:'fa-file-code', html:'fa-file-code', css:'fa-file-code', py:'fa-file-code' };
+      return m[getFileExt(name)] || 'fa-file';
     }
-
-    function getIconClass(name) {
-      if (isVideo(name)) return 'video';
-      if (isAudio(name)) return 'audio';
-      if (isImage(name)) return 'image';
-      return '';
+    function getIconClass(n) {
+      if (isVideo(n)) return 'video'; if (isAudio(n)) return 'audio'; if (isImage(n)) return 'image'; return '';
+    }
+    function fmtTime(s) {
+      s = Math.floor(s||0);
+      return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
     }
 
     // ===== PROMPT =====
-    function showPrompt(title, defaultVal) {
-      return new Promise(resolve => {
-        promptResolve = resolve;
+    function showPrompt(title, def) {
+      return new Promise(r => {
+        promptResolve = r;
         $('prompt-title').textContent = title;
-        $('prompt-input').value = defaultVal || '';
+        $('prompt-input').value = def||'';
         $('prompt-modal').classList.add('show');
-        setTimeout(() => { $('prompt-input').focus(); $('prompt-input').select(); }, 100);
+        setTimeout(() => { $('prompt-input').focus(); $('prompt-input').select(); }, 80);
       });
     }
-    function closePrompt(val) {
+    function closePrompt(v) {
       $('prompt-modal').classList.remove('show');
-      if (promptResolve) { promptResolve(val); promptResolve = null; }
+      if (promptResolve) { promptResolve(v); promptResolve = null; }
     }
-    $('prompt-ok').addEventListener('click', () => closePrompt($('prompt-input').value.trim()));
-    $('prompt-cancel').addEventListener('click', () => closePrompt(null));
-    $('prompt-close').addEventListener('click', () => closePrompt(null));
-    $('prompt-input').addEventListener('keypress', e => {
-      if (e.key === 'Enter') closePrompt($('prompt-input').value.trim());
-    });
-    $('prompt-modal').addEventListener('click', e => {
-      if (e.target === $('prompt-modal')) closePrompt(null);
-    });
+    $('prompt-ok').onclick = () => closePrompt($('prompt-input').value.trim());
+    $('prompt-cancel').onclick = () => closePrompt(null);
+    $('prompt-close').onclick = () => closePrompt(null);
+    $('prompt-input').onkeypress = e => { if (e.key==='Enter') closePrompt($('prompt-input').value.trim()); };
 
     // ===== BREADCRUMB =====
     function updateBreadcrumb() {
       const parts = currentPath ? currentPath.split('/').filter(Boolean) : [];
-      let html = '<span class="breadcrumb-item ' + (parts.length === 0 ? 'current' : '') + '" data-path=""><i class="fas fa-home"></i> Gốc</span>';
-      let pathSoFar = '';
-      parts.forEach((part, i) => {
-        pathSoFar += (pathSoFar ? '/' : '') + part;
-        const isLast = i === parts.length - 1;
+      let html = '<span class="breadcrumb-item '+(parts.length===0?'current':'')+'" data-path=""><i class="fas fa-home"></i> Gốc</span>';
+      let p = '';
+      parts.forEach((part,i) => {
+        p += (p?'/':'')+part;
         html += '<span class="breadcrumb-sep"><i class="fas fa-chevron-right"></i></span>';
-        html += '<span class="breadcrumb-item ' + (isLast ? 'current' : '') + '" data-path="' + pathSoFar + '">' + part + '</span>';
+        html += '<span class="breadcrumb-item '+(i===parts.length-1?'current':'')+'" data-path="'+p+'">'+part+'</span>';
       });
       $('breadcrumb').innerHTML = html;
       $('breadcrumb').querySelectorAll('.breadcrumb-item:not(.current)').forEach(el => {
-        el.addEventListener('click', () => navigateTo(el.dataset.path));
+        el.onclick = () => navigateTo(el.dataset.path);
       });
     }
-
     function navigateTo(path) {
-      currentPath = path || '';
-      $('custom-path').value = currentPath ? currentPath + '/' : '';
-      selectedPaths.clear();
-      updateBatchBar();
-      listFiles();
+      currentPath = path||'';
+      $('custom-path').value = currentPath ? currentPath+'/' : '';
+      selectedPaths.clear(); updateBatchBar(); listFiles();
     }
 
-    // ===== MEDIA / PLAYLIST =====
+    // ===== QUOTA =====
+    async function updateQuota() {
+      try {
+        const res = await fetch('https://api.github.com/repos/'+config.username+'/'+config.repo, {
+          headers: { 'Authorization': 'token '+config.token, 'Accept': 'application/vnd.github.v3+json' }
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        const sizeKB = data.size || 0; // GitHub returns KB
+        const sizeBytes = sizeKB * 1024;
+        // Soft limit display ~1GB warning visual
+        const limit = 1024 * 1024 * 1024; // 1GB visual
+        const pct = Math.min(100, (sizeBytes / limit) * 100);
+        $('quota-bar').classList.add('show');
+        $('quota-fill').style.width = pct.toFixed(1) + '%';
+        $('quota-text').textContent = formatSize(sizeBytes);
+      } catch(_) {}
+    }
+
+    // ===== SLEEP TIMER =====
+    function setSleep(minutes) {
+      if (sleepTimer) clearTimeout(sleepTimer);
+      if (!minutes) {
+        sleepEndsAt = 0;
+        $('sleep-badge').classList.add('hidden');
+        showStatus('Đã tắt sleep timer', 'info');
+        return;
+      }
+      sleepEndsAt = Date.now() + minutes * 60 * 1000;
+      $('sleep-badge').textContent = minutes + 'p';
+      $('sleep-badge').classList.remove('hidden');
+      sleepTimer = setTimeout(() => {
+        if (audioEl) { audioEl.pause(); isPlaying = false; updateMiniUI(); }
+        if (plyrInstance) try { plyrInstance.pause(); } catch(_){}
+        sleepEndsAt = 0;
+        $('sleep-badge').classList.add('hidden');
+        showStatus('Sleep timer: đã dừng phát', 'info');
+      }, minutes * 60 * 1000);
+      showStatus('Sleep timer: tắt sau ' + minutes + ' phút', 'success');
+    }
+    async function pickSleep() {
+      const v = await showPrompt('Sleep timer (phút: 15 / 30 / 60, 0 = tắt)', '30');
+      if (v === null) return;
+      const m = parseInt(v, 10);
+      if (isNaN(m) || m < 0) return;
+      setSleep(m);
+    }
+
+    // ===== MEDIA SESSION =====
+    function updateMediaSession(track) {
+      if (!('mediaSession' in navigator) || !track) return;
+      try {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: track.name,
+          artist: config.repo || 'GitHub File Storage',
+          album: currentPath || 'Root'
+        });
+        navigator.mediaSession.setActionHandler('play', () => { if (audioEl) { audioEl.play(); isPlaying = true; updateMiniUI(); } });
+        navigator.mediaSession.setActionHandler('pause', () => { if (audioEl) { audioEl.pause(); isPlaying = false; updateMiniUI(); } });
+        navigator.mediaSession.setActionHandler('previoustrack', () => playPrev());
+        navigator.mediaSession.setActionHandler('nexttrack', () => playNext());
+      } catch(_) {}
+    }
+
+    // ===== MINI PLAYER =====
+    function showMini(track) {
+      $('mini-player').classList.add('show');
+      $('mini-title').textContent = track.name;
+      updateMiniUI();
+    }
+    function hideMini() {
+      $('mini-player').classList.remove('show');
+      $('mini-progress').style.width = '0%';
+    }
+    function updateMiniUI() {
+      $('mini-play-icon').className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
+      if (audioEl) {
+        const cur = audioEl.currentTime || 0, dur = audioEl.duration || 0;
+        $('mini-time').textContent = fmtTime(cur) + ' / ' + fmtTime(dur);
+        $('mini-progress').style.width = (dur ? (cur/dur*100) : 0) + '%';
+      }
+    }
+    function bindAudioEvents(el) {
+      audioEl = el;
+      el.ontimeupdate = updateMiniUI;
+      el.onplay = () => { isPlaying = true; updateMiniUI(); };
+      el.onpause = () => { isPlaying = false; updateMiniUI(); };
+      el.onended = () => {
+        if (playlist.length > 1 || repeatMode) playNext();
+        else { isPlaying = false; updateMiniUI(); }
+      };
+    }
+
+    // ===== PLAYLIST =====
     function buildPlaylistFromFiles() {
-      return allFiles
-        .filter(f => f.type === 'file' && isAudio(f.name) && f.download_url)
+      return allFiles.filter(f => f.type==='file' && isAudio(f.name) && f.download_url)
         .map(f => ({ name: f.name, url: f.download_url, path: f.path }));
     }
-
     function updateMusicBar() {
-      const tracks = buildPlaylistFromFiles();
-      const bar = $('music-bar');
-      if (tracks.length > 0) bar.classList.add('show');
-      else bar.classList.remove('show');
+      $('music-bar').classList.toggle('show', buildPlaylistFromFiles().length > 0);
     }
-
     function updatePlaylistUI() {
-      const controls = $('playlist-controls');
-      if (playlist.length > 1 && isAudio(playlist[playlistIndex] && playlist[playlistIndex].name || '')) {
-        controls.style.display = 'flex';
-        $('pl-info').textContent = (playlistIndex + 1) + ' / ' + playlist.length;
+      const c = $('playlist-controls');
+      if (playlist.length > 1) {
+        c.style.display = 'flex';
+        $('pl-info').textContent = (playlistIndex+1)+' / '+playlist.length;
         $('pl-shuffle').classList.toggle('active', shuffleMode);
         $('pl-repeat').classList.toggle('active', repeatMode);
-      } else {
-        controls.style.display = 'none';
-      }
+      } else c.style.display = 'none';
     }
-
     function getNextIndex(dir) {
-      // dir: 1 = next, -1 = prev
-      if (playlist.length === 0) return 0;
+      if (!playlist.length) return 0;
       if (shuffleMode) {
         if (shuffleOrder.length !== playlist.length) {
-          shuffleOrder = playlist.map((_, i) => i);
-          // Fisher-Yates
-          for (let i = shuffleOrder.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            const t = shuffleOrder[i]; shuffleOrder[i] = shuffleOrder[j]; shuffleOrder[j] = t;
+          shuffleOrder = playlist.map((_,i)=>i);
+          for (let i=shuffleOrder.length-1;i>0;i--) {
+            const j=Math.floor(Math.random()*(i+1));
+            [shuffleOrder[i],shuffleOrder[j]]=[shuffleOrder[j],shuffleOrder[i]];
           }
-          // keep current near start
-          const curPos = shuffleOrder.indexOf(playlistIndex);
-          if (curPos > 0) {
-            shuffleOrder.splice(curPos, 1);
-            shuffleOrder.unshift(playlistIndex);
-          }
+          const cur=shuffleOrder.indexOf(playlistIndex);
+          if (cur>0) { shuffleOrder.splice(cur,1); shuffleOrder.unshift(playlistIndex); }
         }
         const pos = shuffleOrder.indexOf(playlistIndex);
-        let nextPos = pos + dir;
-        if (nextPos >= shuffleOrder.length) nextPos = repeatMode ? 0 : shuffleOrder.length - 1;
-        if (nextPos < 0) nextPos = repeatMode ? shuffleOrder.length - 1 : 0;
-        return shuffleOrder[nextPos];
+        let np = pos + dir;
+        if (np >= shuffleOrder.length) np = repeatMode ? 0 : shuffleOrder.length-1;
+        if (np < 0) np = repeatMode ? shuffleOrder.length-1 : 0;
+        return shuffleOrder[np];
       }
-      let next = playlistIndex + dir;
-      if (next >= playlist.length) next = repeatMode ? 0 : playlist.length - 1;
-      if (next < 0) next = repeatMode ? playlist.length - 1 : 0;
-      return next;
+      let n = playlistIndex + dir;
+      if (n >= playlist.length) n = repeatMode ? 0 : playlist.length-1;
+      if (n < 0) n = repeatMode ? playlist.length-1 : 0;
+      return n;
     }
-
     function playTrackAt(index) {
-      if (!playlist.length || index < 0 || index >= playlist.length) return;
+      if (!playlist.length) return;
       playlistIndex = index;
-      const track = playlist[index];
-      playMedia(track.url, track.name, true);
+      playMedia(playlist[index].url, playlist[index].name, true);
     }
-
-    function playNext() {
-      if (playlist.length <= 1 && !repeatMode) return;
-      const next = getNextIndex(1);
-      if (next === playlistIndex && !repeatMode && !shuffleMode) return;
-      playTrackAt(next);
-    }
-
-    function playPrev() {
-      const prev = getNextIndex(-1);
-      playTrackAt(prev);
-    }
+    function playNext() { playTrackAt(getNextIndex(1)); }
+    function playPrev() { playTrackAt(getNextIndex(-1)); }
 
     function playMedia(url, filename, fromPlaylist) {
-      if (plyrInstance) { plyrInstance.destroy(); plyrInstance = null; }
+      if (plyrInstance) { try { plyrInstance.destroy(); } catch(_){} plyrInstance = null; }
       const body = $('modal-body');
       body.innerHTML = '';
       $('modal-title').textContent = filename;
 
-      // Build playlist if playing audio and not already from playlist navigation
       if (isAudio(filename) && !fromPlaylist) {
         playlist = buildPlaylistFromFiles();
-        playlistIndex = Math.max(0, playlist.findIndex(t => t.url === url || t.name === filename));
-        if (playlistIndex < 0) {
-          playlist = [{ name: filename, url: url }];
-          playlistIndex = 0;
-        }
+        playlistIndex = Math.max(0, playlist.findIndex(t => t.url===url || t.name===filename));
+        if (playlistIndex < 0) { playlist = [{name:filename,url}]; playlistIndex = 0; }
         shuffleOrder = [];
       }
 
       if (isImage(filename)) {
         const img = document.createElement('img');
-        img.src = url;
-        img.alt = filename;
+        img.src = url; img.alt = filename;
         body.appendChild(img);
         $('playlist-controls').style.display = 'none';
-      } else if (isVideo(filename)) {
+        $('media-modal').classList.add('show');
+        return;
+      }
+      if (isVideo(filename)) {
         const video = document.createElement('video');
-        video.playsInline = true;
-        video.setAttribute('playsinline', '');
-        video.setAttribute('controls', '');
-        video.src = url;
+        video.playsInline = true; video.controls = true; video.src = url;
         body.appendChild(video);
         plyrInstance = new Plyr(video, {
           controls: ['play-large','play','progress','current-time','mute','volume','fullscreen'],
           autoplay: true, ratio: '16:9'
         });
         $('playlist-controls').style.display = 'none';
-      } else if (isAudio(filename)) {
+        hideMini();
+        $('media-modal').classList.add('show');
+        return;
+      }
+      if (isAudio(filename)) {
+        // Prefer mini player — don't force full modal
         const audio = document.createElement('audio');
-        audio.setAttribute('controls', '');
         audio.src = url;
+        audio.autoplay = true;
         body.appendChild(audio);
+        bindAudioEvents(audio);
+        isPlaying = true;
+        showMini({ name: filename, url });
+        updateMediaSession({ name: filename });
+        updatePlaylistUI();
+        // Also setup plyr if modal open
         plyrInstance = new Plyr(audio, {
           controls: ['play','progress','current-time','duration','mute','volume'],
           autoplay: true
         });
-        // Auto next when ended
+        // Keep mini in sync with plyr
+        plyrInstance.on('play', () => { isPlaying = true; updateMiniUI(); });
+        plyrInstance.on('pause', () => { isPlaying = false; updateMiniUI(); });
         plyrInstance.on('ended', () => {
           if (playlist.length > 1 || repeatMode) playNext();
         });
-        updatePlaylistUI();
+        // Don't auto-open modal for audio — use mini player
       }
-
-      $('media-modal').classList.add('show');
-      document.body.style.overflow = 'hidden';
     }
 
     function closeMediaModal() {
-      if (plyrInstance) { plyrInstance.destroy(); plyrInstance = null; }
-      $('modal-body').innerHTML = '';
-      $('playlist-controls').style.display = 'none';
+      // Closing modal doesn't stop audio — mini player keeps going
       $('media-modal').classList.remove('show');
       document.body.style.overflow = '';
+    }
+    function stopAllMedia() {
+      if (plyrInstance) { try { plyrInstance.destroy(); } catch(_){} plyrInstance = null; }
+      if (audioEl) { audioEl.pause(); audioEl.src = ''; audioEl = null; }
+      isPlaying = false;
+      hideMini();
+      $('modal-body').innerHTML = '';
+      $('media-modal').classList.remove('show');
     }
 
     function playAll(shuffle) {
       playlist = buildPlaylistFromFiles();
-      if (playlist.length === 0) {
-        showStatus('Không có file nhạc trong thư mục này', 'info');
-        return;
-      }
-      shuffleMode = !!shuffle;
-      shuffleOrder = [];
-      if (shuffleMode) {
-        // start at random
-        playlistIndex = Math.floor(Math.random() * playlist.length);
-      } else {
-        playlistIndex = 0;
-      }
+      if (!playlist.length) { showStatus('Không có file nhạc', 'info'); return; }
+      shuffleMode = !!shuffle; shuffleOrder = [];
+      playlistIndex = shuffle ? Math.floor(Math.random()*playlist.length) : 0;
       playTrackAt(playlistIndex);
     }
 
-    $('media-modal').addEventListener('click', e => { if (e.target === $('media-modal')) closeMediaModal(); });
-    $('modal-close').addEventListener('click', closeMediaModal);
+    // Mini controls
+    $('mini-play').onclick = () => {
+      if (!audioEl) return;
+      if (audioEl.paused) { audioEl.play(); isPlaying = true; }
+      else { audioEl.pause(); isPlaying = false; }
+      updateMiniUI();
+    };
+    $('mini-prev').onclick = () => playPrev();
+    $('mini-next').onclick = () => playNext();
+    $('mini-close').onclick = () => stopAllMedia();
+    $('mini-expand').onclick = () => {
+      if (playlist[playlistIndex]) {
+        $('media-modal').classList.add('show');
+        updatePlaylistUI();
+      }
+    };
+
+    $('media-modal').onclick = e => { if (e.target === $('media-modal')) closeMediaModal(); };
+    $('modal-close').onclick = closeMediaModal;
+    $('pl-next').onclick = e => { e.stopPropagation(); playNext(); };
+    $('pl-prev').onclick = e => { e.stopPropagation(); playPrev(); };
+    $('pl-shuffle').onclick = e => {
+      e.stopPropagation(); shuffleMode = !shuffleMode; shuffleOrder = []; updatePlaylistUI();
+      showStatus(shuffleMode ? 'Bật ngẫu nhiên' : 'Tắt ngẫu nhiên', 'info');
+    };
+    $('pl-repeat').onclick = e => {
+      e.stopPropagation(); repeatMode = !repeatMode; updatePlaylistUI();
+      showStatus(repeatMode ? 'Bật lặp lại' : 'Tắt lặp lại', 'info');
+    };
+
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') {
         if ($('media-modal').classList.contains('show')) closeMediaModal();
         if ($('prompt-modal').classList.contains('show')) closePrompt(null);
       }
-      if ($('media-modal').classList.contains('show') && playlist.length > 1) {
+      if (playlist.length > 1) {
         if (e.key === 'ArrowRight') playNext();
         if (e.key === 'ArrowLeft') playPrev();
       }
     });
 
-    // Playlist control buttons (bound after DOM)
-    document.getElementById('pl-next').addEventListener('click', e => { e.stopPropagation(); playNext(); });
-    document.getElementById('pl-prev').addEventListener('click', e => { e.stopPropagation(); playPrev(); });
-    document.getElementById('pl-shuffle').addEventListener('click', e => {
-      e.stopPropagation();
-      shuffleMode = !shuffleMode;
-      shuffleOrder = [];
-      updatePlaylistUI();
-      showStatus(shuffleMode ? 'Đã bật phát ngẫu nhiên' : 'Tắt phát ngẫu nhiên', 'info');
-    });
-    document.getElementById('pl-repeat').addEventListener('click', e => {
-      e.stopPropagation();
-      repeatMode = !repeatMode;
-      updatePlaylistUI();
-      showStatus(repeatMode ? 'Đã bật lặp lại' : 'Tắt lặp lại', 'info');
-    });
-
     // ===== CONFIG =====
     function loadConfig() {
-      const saved = localStorage.getItem('gh-file-storage');
-      if (saved) {
-        config = JSON.parse(saved);
-        $('username').value = config.username || '';
-        $('repo').value = config.repo || '';
-        $('token').value = config.token || '';
+      const s = localStorage.getItem('gh-file-storage');
+      if (s) {
+        config = JSON.parse(s);
+        $('username').value = config.username||'';
+        $('repo').value = config.repo||'';
+        $('token').value = config.token||'';
         return true;
       }
       return false;
     }
-
     function saveConfig() {
       config.username = $('username').value.trim();
       config.repo = $('repo').value.trim();
       config.token = $('token').value.trim();
       localStorage.setItem('gh-file-storage', JSON.stringify(config));
+      const pw = $('app-password').value;
+      if (pw) setAppPassword(pw);
       showStatus('Đã lưu cấu hình', 'success');
     }
-
     function toggleConfig() {
       configCollapsed = !configCollapsed;
-      const body = $('config-body');
-      const icon = $('config-toggle-icon');
+      const body = $('config-body'), icon = $('config-toggle-icon');
       if (configCollapsed) {
-        body.classList.add('collapsed');
-        body.style.maxHeight = '0';
+        body.classList.add('collapsed'); body.style.maxHeight = '0';
         icon.className = 'fas fa-chevron-down';
       } else {
-        body.classList.remove('collapsed');
-        body.style.maxHeight = body.scrollHeight + 50 + 'px';
+        body.classList.remove('collapsed'); body.style.maxHeight = body.scrollHeight+50+'px';
         icon.className = 'fas fa-chevron-up';
       }
-      localStorage.setItem('gh-config-collapsed', configCollapsed ? '1' : '0');
+      localStorage.setItem('gh-config-collapsed', configCollapsed?'1':'0');
     }
-
-    function setConnectedUI(connected) {
-      if (connected) {
+    function setConnectedUI(ok) {
+      if (ok) {
         $('connected-badge').classList.remove('hidden');
         if (!configCollapsed) toggleConfig();
-      } else {
-        $('connected-badge').classList.add('hidden');
-      }
+      } else $('connected-badge').classList.add('hidden');
     }
 
-    // ===== GITHUB API =====
+    // ===== GITHUB =====
     async function githubFetch(path, options) {
-      options = options || {};
-      const url = 'https://api.github.com/repos/' + config.username + '/' + config.repo + '/contents/' + path;
-      return fetch(url, {
+      options = options||{};
+      return fetch('https://api.github.com/repos/'+config.username+'/'+config.repo+'/contents/'+path, {
         ...options,
         headers: {
-          'Authorization': 'token ' + config.token,
+          'Authorization': 'token '+config.token,
           'Accept': 'application/vnd.github.v3+json',
-          ...(options.headers || {})
+          ...(options.headers||{})
         }
       });
     }
-
     async function listFiles() {
       updateBreadcrumb();
       try {
         const res = await githubFetch(currentPath);
-        if (res.status === 404) {
-          allFiles = [];
-          renderFileList([]);
-          return;
-        }
-        if (!res.ok) {
-          const err = await res.json();
-          throw new Error(err.message || 'Không lấy được danh sách');
-        }
+        if (res.status === 404) { allFiles = []; renderFileList([]); updateMusicBar(); return; }
+        if (!res.ok) throw new Error((await res.json()).message || 'Lỗi');
         const data = await res.json();
         allFiles = Array.isArray(data) ? data : [data];
         applySearch();
-      } catch (e) {
-        showStatus('Lỗi: ' + e.message, 'error');
-      }
+        updateQuota();
+      } catch(e) { showStatus('Lỗi: '+e.message, 'error'); }
     }
-
     function applySearch() {
-      const q = ($('search-input').value || '').trim().toLowerCase();
+      const q = ($('search-input').value||'').trim().toLowerCase();
       let files = allFiles;
       if (q) files = files.filter(f => f.name.toLowerCase().includes(q));
       if (showOnlyStars) files = files.filter(f => favorites.has(f.path));
@@ -1067,499 +931,270 @@
 
     function renderFileList(files) {
       const listEl = $('file-list');
-      listEl.classList.toggle('grid-view', viewMode === 'grid');
-
-      if (!files || files.length === 0) {
-        const msg = showOnlyStars ? 'Chưa có file yêu thích' :
-          (($('search-input').value || '').trim() ? 'Không tìm thấy' : 'Thư mục trống');
-        listEl.innerHTML = '<li class="empty-state"><i class="fas fa-inbox"></i><p>' + msg + '</p></li>';
+      listEl.classList.toggle('grid-view', viewMode==='grid');
+      if (!files || !files.length) {
+        listEl.innerHTML = '<li class="empty-state"><i class="fas fa-inbox"></i><p>'+
+          (showOnlyStars?'Chưa có yêu thích':(($('search-input').value||'').trim()?'Không tìm thấy':'Thư mục trống'))+
+          '</p></li>';
         return;
       }
-
-      files = files.slice().sort((a, b) => {
-        // Starred first
-        const aStar = favorites.has(a.path) ? 0 : 1;
-        const bStar = favorites.has(b.path) ? 0 : 1;
-        if (aStar !== bStar) return aStar - bStar;
-        if (a.type === 'dir' && b.type !== 'dir') return -1;
-        if (a.type !== 'dir' && b.type === 'dir') return 1;
+      files = files.slice().sort((a,b) => {
+        const as = favorites.has(a.path)?0:1, bs = favorites.has(b.path)?0:1;
+        if (as!==bs) return as-bs;
+        if (a.type==='dir' && b.type!=='dir') return -1;
+        if (a.type!=='dir' && b.type==='dir') return 1;
         return a.name.localeCompare(b.name);
       });
-
-      const isGrid = viewMode === 'grid';
-
+      const isGrid = viewMode==='grid';
       listEl.innerHTML = files.map(f => {
-        const isDir = f.type === 'dir';
-        const icon = isDir ? 'fa-folder' : getFileIcon(f.name);
-        const iconClass = isDir ? 'folder' : getIconClass(f.name);
-        const size = isDir ? 'Thư mục' : formatSize(f.size);
-        const canPlay = !isDir && (isVideo(f.name) || isAudio(f.name) || isImage(f.name));
-        const checked = selectedPaths.has(f.path) ? 'checked' : '';
-        const selectedClass = selectedPaths.has(f.path) ? 'selected' : '';
-        const isStarred = favorites.has(f.path);
-        const starClass = isStarred ? 'starred' : '';
-
-        // Thumbnail for images in grid
-        let previewHtml = '';
-        if (isGrid && !isDir && isImage(f.name) && f.download_url) {
-          previewHtml = '<img class="file-thumb" src="' + f.download_url + '" alt="' + f.name + '" loading="lazy" />';
-        } else {
-          previewHtml = '<div class="file-icon ' + iconClass + '"><i class="fas ' + icon + '"></i></div>';
-        }
-
+        const isDir = f.type==='dir';
+        const icon = isDir?'fa-folder':getFileIcon(f.name);
+        const iconClass = isDir?'folder':getIconClass(f.name);
+        const size = isDir?'Thư mục':formatSize(f.size);
+        const canPlay = !isDir && (isVideo(f.name)||isAudio(f.name)||isImage(f.name));
+        const checked = selectedPaths.has(f.path)?'checked':'';
+        const selectedClass = selectedPaths.has(f.path)?'selected':'';
+        const starClass = favorites.has(f.path)?'starred':'';
+        let preview = (isGrid && !isDir && isImage(f.name) && f.download_url)
+          ? '<img class="file-thumb" src="'+f.download_url+'" alt="'+f.name+'" loading="lazy" />'
+          : '<div class="file-icon '+iconClass+'"><i class="fas '+icon+'"></i></div>';
         let actions = '';
-        if (isGrid) {
-          actions += '<button class="btn btn-star-grid ' + starClass + ' btn-star-toggle" data-path="' + f.path + '" title="Yêu thích"><i class="fas fa-star"></i></button>';
-        }
-
-        if (canPlay) {
-          actions += '<button class="btn btn-play btn-play-media" data-url="' + (f.download_url || '') + '" data-name="' + f.name + '" title="Xem/Phát"><i class="fas fa-play"></i></button>';
-        }
-        if (!isGrid) {
-          actions += '<button class="btn btn-star ' + starClass + ' btn-star-toggle" data-path="' + f.path + '" title="Yêu thích"><i class="fas fa-star"></i></button>';
-        }
+        if (isGrid) actions += '<button class="btn btn-star-grid '+starClass+' btn-star-toggle" data-path="'+f.path+'"><i class="fas fa-star"></i></button>';
+        if (canPlay) actions += '<button class="btn btn-play btn-play-media" data-url="'+(f.download_url||'')+'" data-name="'+f.name+'"><i class="fas fa-play"></i></button>';
+        if (!isGrid) actions += '<button class="btn btn-star '+starClass+' btn-star-toggle" data-path="'+f.path+'"><i class="fas fa-star"></i></button>';
         if (!isDir) {
-          actions += '<button class="btn btn-outline btn-copy" data-url="' + (f.download_url || '') + '" title="Copy link"><i class="fas fa-link"></i></button>';
-          actions += '<a class="btn btn-outline" href="' + (f.download_url || '') + '" target="_blank" download title="Tải"><i class="fas fa-download"></i></a>';
+          actions += '<button class="btn btn-outline btn-copy" data-url="'+(f.download_url||'')+'"><i class="fas fa-link"></i></button>';
+          actions += '<a class="btn btn-outline" href="'+(f.download_url||'')+'" target="_blank" download><i class="fas fa-download"></i></a>';
         }
-        actions += '<button class="btn btn-outline btn-rename" data-path="' + f.path + '" data-name="' + f.name + '" data-type="' + f.type + '" data-sha="' + (f.sha || '') + '" title="Đổi tên"><i class="fas fa-pen"></i></button>';
-        if (!isDir) {
-          actions += '<button class="btn btn-danger btn-delete" data-path="' + f.path + '" data-sha="' + f.sha + '" title="Xóa"><i class="fas fa-trash"></i></button>';
-        } else {
-          actions += '<button class="btn btn-outline btn-enter-folder" data-path="' + f.path + '" title="Mở"><i class="fas fa-folder-open"></i></button>';
-        }
-
-        return '<li class="file-item ' + (isDir ? 'folder ' : '') + selectedClass + '" data-path="' + f.path + '" data-type="' + f.type + '">' +
-          '<div class="file-info">' +
-            '<input type="checkbox" class="file-check" data-path="' + f.path + '" data-sha="' + (f.sha || '') + '" data-type="' + f.type + '" ' + checked + ' />' +
-            previewHtml +
-            '<div style="min-width:0"><div class="file-name">' + f.name + '</div><div class="file-meta">' + size + '</div></div>' +
-          '</div>' +
-          '<div class="file-actions">' + actions + '</div>' +
-        '</li>';
+        actions += '<button class="btn btn-outline btn-rename" data-path="'+f.path+'" data-name="'+f.name+'" data-type="'+f.type+'" data-sha="'+(f.sha||'')+'"><i class="fas fa-pen"></i></button>';
+        if (!isDir) actions += '<button class="btn btn-danger btn-delete" data-path="'+f.path+'" data-sha="'+f.sha+'"><i class="fas fa-trash"></i></button>';
+        else actions += '<button class="btn btn-outline btn-enter-folder" data-path="'+f.path+'"><i class="fas fa-folder-open"></i></button>';
+        return '<li class="file-item '+(isDir?'folder ':'')+selectedClass+'" data-path="'+f.path+'">'+
+          '<div class="file-info">'+
+            '<input type="checkbox" class="file-check" data-path="'+f.path+'" data-sha="'+(f.sha||'')+'" data-type="'+f.type+'" '+checked+' />'+
+            preview+
+            '<div style="min-width:0"><div class="file-name">'+f.name+'</div><div class="file-meta">'+size+'</div></div>'+
+          '</div><div class="file-actions">'+actions+'</div></li>';
       }).join('');
 
-      // Events
       document.querySelectorAll('.file-item.folder').forEach(item => {
-        item.addEventListener('click', e => {
-          if (e.target.closest('button') || e.target.closest('a') || e.target.closest('input')) return;
+        item.onclick = e => {
+          if (e.target.closest('button,a,input')) return;
           navigateTo(item.dataset.path);
-        });
+        };
       });
-
-      document.querySelectorAll('.btn-enter-folder').forEach(btn => {
-        btn.addEventListener('click', e => { e.stopPropagation(); navigateTo(btn.dataset.path); });
+      document.querySelectorAll('.btn-enter-folder').forEach(b => b.onclick = e => { e.stopPropagation(); navigateTo(b.dataset.path); });
+      document.querySelectorAll('.btn-delete').forEach(b => b.onclick = e => { e.stopPropagation(); deleteFile(b.dataset.path, b.dataset.sha); });
+      document.querySelectorAll('.btn-play-media').forEach(b => b.onclick = e => { e.stopPropagation(); playMedia(b.dataset.url, b.dataset.name); });
+      document.querySelectorAll('.btn-copy').forEach(b => b.onclick = e => {
+        e.stopPropagation();
+        navigator.clipboard.writeText(b.dataset.url).then(() => showStatus('Đã copy link!', 'success'));
       });
-
-      document.querySelectorAll('.btn-delete').forEach(btn => {
-        btn.addEventListener('click', e => { e.stopPropagation(); deleteFile(btn.dataset.path, btn.dataset.sha); });
+      document.querySelectorAll('.btn-rename').forEach(b => b.onclick = e => {
+        e.stopPropagation(); renameItem(b.dataset.path, b.dataset.name, b.dataset.type, b.dataset.sha);
       });
-
-      document.querySelectorAll('.btn-play-media').forEach(btn => {
-        btn.addEventListener('click', e => { e.stopPropagation(); playMedia(btn.dataset.url, btn.dataset.name); });
-      });
-
-      document.querySelectorAll('.btn-copy').forEach(btn => {
-        btn.addEventListener('click', e => {
+      document.querySelectorAll('.btn-star-toggle').forEach(b => b.onclick = e => { e.stopPropagation(); toggleFavorite(b.dataset.path); });
+      document.querySelectorAll('.file-check').forEach(cb => {
+        cb.onchange = e => {
           e.stopPropagation();
-          navigator.clipboard.writeText(btn.dataset.url).then(() => {
-            showStatus('Đã copy link!', 'success');
-          }).catch(() => showStatus('Không copy được', 'error'));
-        });
+          if (cb.checked) selectedPaths.add(cb.dataset.path); else selectedPaths.delete(cb.dataset.path);
+          updateBatchBar();
+          cb.closest('.file-item').classList.toggle('selected', cb.checked);
+        };
+        cb.onclick = e => e.stopPropagation();
       });
-
-      document.querySelectorAll('.btn-rename').forEach(btn => {
-        btn.addEventListener('click', e => {
-          e.stopPropagation();
-          renameItem(btn.dataset.path, btn.dataset.name, btn.dataset.type, btn.dataset.sha);
-        });
-      });
-
-      document.querySelectorAll('.btn-star-toggle').forEach(btn => {
-        btn.addEventListener('click', e => {
-          e.stopPropagation();
-          toggleFavorite(btn.dataset.path);
-        });
-      });
-
-      // Click thumbnail/image in grid to preview
       if (isGrid) {
         document.querySelectorAll('.file-thumb').forEach(img => {
-          img.addEventListener('click', e => {
+          img.onclick = e => {
             e.stopPropagation();
-            const item = img.closest('.file-item');
-            if (!item) return;
-            const playBtn = item.querySelector('.btn-play-media');
-            if (playBtn) playMedia(playBtn.dataset.url, playBtn.dataset.name);
-          });
+            const btn = img.closest('.file-item').querySelector('.btn-play-media');
+            if (btn) playMedia(btn.dataset.url, btn.dataset.name);
+          };
         });
       }
-
-      document.querySelectorAll('.file-check').forEach(cb => {
-        cb.addEventListener('change', e => {
-          e.stopPropagation();
-          if (cb.checked) selectedPaths.add(cb.dataset.path);
-          else selectedPaths.delete(cb.dataset.path);
-          updateBatchBar();
-          const item = cb.closest('.file-item');
-          if (item) item.classList.toggle('selected', cb.checked);
-        });
-        cb.addEventListener('click', e => e.stopPropagation());
-      });
     }
 
     function updateBatchBar() {
-      const bar = $('batch-bar');
-      const count = selectedPaths.size;
-      if (count > 0) {
-        bar.classList.add('show');
-        $('batch-count').textContent = count + ' đã chọn';
-      } else {
-        bar.classList.remove('show');
-      }
+      const n = selectedPaths.size;
+      $('batch-bar').classList.toggle('show', n>0);
+      $('batch-count').textContent = n+' đã chọn';
     }
 
-    // ===== CREATE FOLDER =====
     async function createFolder() {
-      const name = await showPrompt('Tên thư mục mới', '');
+      const name = await showPrompt('Tên thư mục mới','');
       if (!name) return;
-      const clean = name.replace(/[\\/:*?"<>|]/g, '').trim();
-      if (!clean) { showStatus('Tên không hợp lệ', 'error'); return; }
-
-      const path = currentPath ? currentPath + '/' + clean + '/.gitkeep' : clean + '/.gitkeep';
+      const clean = name.replace(/[\\/:*?"<>|]/g,'').trim();
+      if (!clean) return showStatus('Tên không hợp lệ','error');
+      const path = currentPath ? currentPath+'/'+clean+'/.gitkeep' : clean+'/.gitkeep';
       try {
-        const content = btoa('');
-        const res = await githubFetch(path, {
-          method: 'PUT',
-          body: JSON.stringify({ message: 'Add files via upload', content: content })
-        });
-        if (!res.ok) {
-          const err = await res.json();
-          throw new Error(err.message);
-        }
-        showStatus('Đã tạo thư mục: ' + clean, 'success');
-        listFiles();
-      } catch (e) {
-        showStatus('Lỗi tạo thư mục: ' + e.message, 'error');
-      }
+        const res = await githubFetch(path, { method:'PUT', body: JSON.stringify({ message:'Add files via upload', content: btoa('') }) });
+        if (!res.ok) throw new Error((await res.json()).message);
+        showStatus('Đã tạo thư mục: '+clean,'success'); listFiles();
+      } catch(e) { showStatus('Lỗi: '+e.message,'error'); }
     }
 
-    // ===== RENAME =====
     async function renameItem(oldPath, oldName, type, sha) {
       const newName = await showPrompt('Đổi tên', oldName);
-      if (!newName || newName === oldName) return;
-      const clean = newName.replace(/[\\/:*?"<>|]/g, '').trim();
-      if (!clean) { showStatus('Tên không hợp lệ', 'error'); return; }
-
-      const parent = oldPath.includes('/') ? oldPath.substring(0, oldPath.lastIndexOf('/')) : '';
-      const newPath = parent ? parent + '/' + clean : clean;
-
+      if (!newName || newName===oldName) return;
+      const clean = newName.replace(/[\\/:*?"<>|]/g,'').trim();
+      if (!clean) return showStatus('Tên không hợp lệ','error');
+      const parent = oldPath.includes('/') ? oldPath.slice(0, oldPath.lastIndexOf('/')) : '';
+      const newPath = parent ? parent+'/'+clean : clean;
       try {
-        if (type === 'dir') {
-          showStatus('Đang đổi tên thư mục...', 'info');
+        if (type==='dir') {
           const res = await githubFetch(oldPath);
-          if (!res.ok) throw new Error('Không đọc được thư mục');
-          const items = await res.json();
-          const list = Array.isArray(items) ? items : [items];
-
-          for (const item of list) {
-            if (item.type === 'file') {
-              const fileRes = await githubFetch(item.path);
-              const fileData = await fileRes.json();
-              const content = fileData.content;
-              const destPath = item.path.replace(oldPath, newPath);
-              await githubFetch(destPath, {
-                method: 'PUT',
-                body: JSON.stringify({ message: 'Add files via upload', content: content, encoding: 'base64' })
-              });
-              await githubFetch(item.path, {
-                method: 'DELETE',
-                body: JSON.stringify({ message: 'Delete file via upload', sha: item.sha })
-              });
-            }
+          if (!res.ok) throw new Error('Không đọc thư mục');
+          const list = await res.json();
+          for (const item of (Array.isArray(list)?list:[list])) {
+            if (item.type!=='file') continue;
+            const fd = await (await githubFetch(item.path)).json();
+            const dest = item.path.replace(oldPath, newPath);
+            await githubFetch(dest, { method:'PUT', body: JSON.stringify({ message:'Add files via upload', content: fd.content, encoding:'base64' }) });
+            await githubFetch(item.path, { method:'DELETE', body: JSON.stringify({ message:'Delete file via upload', sha: item.sha }) });
           }
-          // Update favorite path if needed
-          if (favorites.has(oldPath)) {
-            favorites.delete(oldPath);
-            favorites.add(newPath);
-            saveFavorites();
-          }
-          showStatus('Đã đổi tên thư mục thành: ' + clean, 'success');
         } else {
-          const fileRes = await githubFetch(oldPath);
-          if (!fileRes.ok) throw new Error('Không đọc được file');
-          const fileData = await fileRes.json();
-          const content = fileData.content;
-
-          const putRes = await githubFetch(newPath, {
-            method: 'PUT',
-            body: JSON.stringify({ message: 'Add files via upload', content: content, encoding: 'base64' })
-          });
-          if (!putRes.ok) {
-            const err = await putRes.json();
-            throw new Error(err.message);
-          }
-          await githubFetch(oldPath, {
-            method: 'DELETE',
-            body: JSON.stringify({ message: 'Delete file via upload', sha: sha })
-          });
-          if (favorites.has(oldPath)) {
-            favorites.delete(oldPath);
-            favorites.add(newPath);
-            saveFavorites();
-          }
-          showStatus('Đã đổi tên thành: ' + clean, 'success');
+          const fd = await (await githubFetch(oldPath)).json();
+          const put = await githubFetch(newPath, { method:'PUT', body: JSON.stringify({ message:'Add files via upload', content: fd.content, encoding:'base64' }) });
+          if (!put.ok) throw new Error((await put.json()).message);
+          await githubFetch(oldPath, { method:'DELETE', body: JSON.stringify({ message:'Delete file via upload', sha }) });
         }
-        listFiles();
-      } catch (e) {
-        showStatus('Lỗi đổi tên: ' + e.message, 'error');
-      }
+        if (favorites.has(oldPath)) { favorites.delete(oldPath); favorites.add(newPath); saveFavorites(); }
+        showStatus('Đã đổi tên: '+clean,'success'); listFiles();
+      } catch(e) { showStatus('Lỗi: '+e.message,'error'); }
     }
 
-    // ===== UPLOAD =====
     async function uploadFiles() {
-      if (selectedFiles.length === 0) return;
-      let customPath = $('custom-path').value.trim().replace(/^\/+|\/+$/g, '');
+      if (!selectedFiles.length) return;
+      let customPath = $('custom-path').value.trim().replace(/^\/+|\/+$/g,'');
       if (!customPath && currentPath) customPath = currentPath;
-
-      const progressWrap = $('progress-wrap');
-      const progressBar = $('progress-bar');
-      const progressText = $('progress-text');
-      progressWrap.classList.add('show');
-      progressBar.style.width = '0%';
-      progressText.textContent = '0%';
-
+      const wrap = $('progress-wrap'), bar = $('progress-bar'), txt = $('progress-text');
+      wrap.classList.add('show'); bar.style.width='0%';
       $('btn-upload').disabled = true;
       $('btn-upload').innerHTML = '<span class="spinner"></span> Uploading...';
-
-      let success = 0, fail = 0;
-      const total = selectedFiles.length;
-
-      for (let i = 0; i < selectedFiles.length; i++) {
+      let ok=0, fail=0, total=selectedFiles.length;
+      for (let i=0;i<selectedFiles.length;i++) {
         const file = selectedFiles[i];
-        progressBar.style.width = Math.round((i / total) * 100) + '%';
-        progressText.textContent = 'Đang upload ' + (i + 1) + '/' + total + ' (' + file.name + ')';
-
+        txt.textContent = 'Upload '+(i+1)+'/'+total+' ('+file.name+')';
         try {
-          const content = await readFileAsBase64(file);
-          const path = customPath ? customPath + '/' + file.name : file.name;
-
-          let sha = null;
-          try {
-            const check = await githubFetch(path);
-            if (check.ok) {
-              const existing = await check.json();
-              sha = existing.sha;
-            }
-          } catch (_) {}
-
-          const body = { message: 'Add files via upload', content: content };
-          if (sha) body.sha = sha;
-
-          const res = await githubFetch(path, { method: 'PUT', body: JSON.stringify(body) });
-          if (!res.ok) {
-            const err = await res.json();
-            throw new Error(err.message);
-          }
-          success++;
-        } catch (e) {
-          console.error(e);
-          fail++;
-        }
-
-        progressBar.style.width = Math.round(((i + 1) / total) * 100) + '%';
-        progressText.textContent = Math.round(((i + 1) / total) * 100) + '% (' + (i + 1) + '/' + total + ')';
-      }
-
-      $('btn-upload').disabled = false;
-      $('btn-upload').innerHTML = '<i class="fas fa-upload"></i> Upload';
-      selectedFiles = [];
-      $('file-input').value = '';
-      updateUploadButton();
-
-      setTimeout(() => {
-        progressWrap.classList.remove('show');
-        progressBar.style.width = '0%';
-      }, 1500);
-
-      if (success > 0) {
-        showStatus('Upload thành công ' + success + ' file' + (fail ? ', lỗi ' + fail : ''), fail ? 'info' : 'success');
-        listFiles();
-      } else {
-        showStatus('Upload thất bại. Kiểm tra token & quyền repo.', 'error');
-      }
-    }
-
-    function readFileAsBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result.split(',')[1]);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    }
-
-    // ===== DELETE =====
-    async function deleteFile(path, sha) {
-      if (!confirm('Xóa "' + path + '"?')) return;
-      try {
-        const res = await githubFetch(path, {
-          method: 'DELETE',
-          body: JSON.stringify({ message: 'Delete file via upload', sha: sha })
-        });
-        if (!res.ok) {
-          const err = await res.json();
-          throw new Error(err.message);
-        }
-        selectedPaths.delete(path);
-        favorites.delete(path);
-        saveFavorites();
-        updateBatchBar();
-        showStatus('Đã xóa: ' + path, 'success');
-        listFiles();
-      } catch (e) {
-        showStatus('Lỗi xóa: ' + e.message, 'error');
-      }
-    }
-
-    async function batchDelete() {
-      if (selectedPaths.size === 0) return;
-      if (!confirm('Xóa ' + selectedPaths.size + ' mục đã chọn?')) return;
-
-      showStatus('Đang xóa...', 'info');
-      let ok = 0, fail = 0;
-      const toDelete = [];
-      document.querySelectorAll('.file-check:checked').forEach(cb => {
-        if (cb.dataset.type === 'file') {
-          toDelete.push({ path: cb.dataset.path, sha: cb.dataset.sha });
-        }
-      });
-
-      for (const item of toDelete) {
-        try {
-          const res = await githubFetch(item.path, {
-            method: 'DELETE',
-            body: JSON.stringify({ message: 'Delete file via upload', sha: item.sha })
+          const content = await new Promise((res,rej) => {
+            const r = new FileReader();
+            r.onload = () => res(r.result.split(',')[1]);
+            r.onerror = rej; r.readAsDataURL(file);
           });
-          if (res.ok) {
-            ok++;
-            favorites.delete(item.path);
-          } else fail++;
-        } catch (_) { fail++; }
+          const path = customPath ? customPath+'/'+file.name : file.name;
+          let sha=null;
+          try { const c=await githubFetch(path); if(c.ok) sha=(await c.json()).sha; } catch(_){}
+          const body = { message:'Add files via upload', content }; if (sha) body.sha=sha;
+          const res = await githubFetch(path, { method:'PUT', body: JSON.stringify(body) });
+          if (!res.ok) throw new Error((await res.json()).message);
+          ok++;
+        } catch(e) { console.error(e); fail++; }
+        bar.style.width = Math.round(((i+1)/total)*100)+'%';
+        txt.textContent = Math.round(((i+1)/total)*100)+'%';
       }
-
-      saveFavorites();
-      selectedPaths.clear();
-      updateBatchBar();
-      showStatus('Đã xóa ' + ok + ' file' + (fail ? ', lỗi ' + fail : ''), fail ? 'info' : 'success');
-      listFiles();
+      $('btn-upload').disabled=false;
+      $('btn-upload').innerHTML='<i class="fas fa-upload"></i> Upload';
+      selectedFiles=[]; $('file-input').value=''; updateUploadButton();
+      setTimeout(()=>{ wrap.classList.remove('show'); bar.style.width='0%'; },1500);
+      if (ok) { showStatus('Upload '+ok+' file'+(fail?', lỗi '+fail:''), fail?'info':'success'); listFiles(); }
+      else showStatus('Upload thất bại','error');
     }
 
-    // ===== CONNECT =====
-    async function connect(silent) {
-      if (silent === undefined) silent = false;
-      config.username = $('username').value.trim();
-      config.repo = $('repo').value.trim();
-      config.token = $('token').value.trim();
-
-      if (!config.username || !config.repo || !config.token) {
-        if (!silent) showStatus('Điền đầy đủ thông tin', 'error');
-        return false;
-      }
-
-      if (!silent) showStatus('Đang kết nối...', 'info');
+    async function deleteFile(path, sha) {
+      if (!confirm('Xóa "'+path+'"?')) return;
       try {
-        const res = await fetch('https://api.github.com/repos/' + config.username + '/' + config.repo, {
-          headers: {
-            'Authorization': 'token ' + config.token,
-            'Accept': 'application/vnd.github.v3+json'
-          }
+        const res = await githubFetch(path, { method:'DELETE', body: JSON.stringify({ message:'Delete file via upload', sha }) });
+        if (!res.ok) throw new Error((await res.json()).message);
+        selectedPaths.delete(path); favorites.delete(path); saveFavorites(); updateBatchBar();
+        showStatus('Đã xóa: '+path,'success'); listFiles();
+      } catch(e) { showStatus('Lỗi: '+e.message,'error'); }
+    }
+    async function batchDelete() {
+      if (!selectedPaths.size) return;
+      if (!confirm('Xóa '+selectedPaths.size+' mục?')) return;
+      let ok=0,fail=0;
+      document.querySelectorAll('.file-check:checked').forEach(async ()=>{});
+      const items = [];
+      document.querySelectorAll('.file-check:checked').forEach(cb => {
+        if (cb.dataset.type==='file') items.push({ path: cb.dataset.path, sha: cb.dataset.sha });
+      });
+      for (const it of items) {
+        try {
+          const res = await githubFetch(it.path, { method:'DELETE', body: JSON.stringify({ message:'Delete file via upload', sha: it.sha }) });
+          if (res.ok) { ok++; favorites.delete(it.path); } else fail++;
+        } catch(_){ fail++; }
+      }
+      saveFavorites(); selectedPaths.clear(); updateBatchBar();
+      showStatus('Đã xóa '+ok+(fail?', lỗi '+fail:''), fail?'info':'success'); listFiles();
+    }
+
+    async function connect(silent) {
+      config.username=$('username').value.trim();
+      config.repo=$('repo').value.trim();
+      config.token=$('token').value.trim();
+      if (!config.username||!config.repo||!config.token) {
+        if (!silent) showStatus('Điền đầy đủ thông tin','error'); return false;
+      }
+      if (!silent) showStatus('Đang kết nối...','info');
+      try {
+        const res = await fetch('https://api.github.com/repos/'+config.username+'/'+config.repo, {
+          headers: { 'Authorization':'token '+config.token, 'Accept':'application/vnd.github.v3+json' }
         });
-        if (!res.ok) {
-          const err = await res.json();
-          throw new Error(err.message || 'Không truy cập được repo');
-        }
+        if (!res.ok) throw new Error((await res.json()).message||'Lỗi');
         localStorage.setItem('gh-file-storage', JSON.stringify(config));
+        const pw = $('app-password').value;
+        if (pw) setAppPassword(pw);
         loadFavorites();
-        if (!silent) showStatus('Kết nối thành công!', 'success');
+        if (!silent) showStatus('Kết nối thành công!','success');
         $('main-area').classList.remove('hidden');
         setConnectedUI(true);
-        currentPath = '';
-        selectedPaths.clear();
+        currentPath=''; selectedPaths.clear();
         listFiles();
         return true;
-      } catch (e) {
-        if (!silent) showStatus('Thất bại: ' + e.message, 'error');
-        $('main-area').classList.add('hidden');
-        setConnectedUI(false);
-        return false;
+      } catch(e) {
+        if (!silent) showStatus('Thất bại: '+e.message,'error');
+        $('main-area').classList.add('hidden'); setConnectedUI(false); return false;
       }
     }
 
     function updateUploadButton() {
-      $('btn-upload').disabled = selectedFiles.length === 0;
-      $('upload-zone').querySelector('p').innerHTML = selectedFiles.length > 0
-        ? 'Đã chọn <strong>' + selectedFiles.length + '</strong> file'
-        : 'Kéo thả hoặc <strong>chạm để chọn</strong>';
+      $('btn-upload').disabled = !selectedFiles.length;
+      $('upload-zone').querySelector('p').innerHTML = selectedFiles.length
+        ? 'Đã chọn <strong>'+selectedFiles.length+'</strong> file' : 'Kéo thả hoặc <strong>chạm để chọn</strong>';
     }
 
-    // ===== EVENTS =====
-    const uploadZone = $('upload-zone');
-    const fileInput = $('file-input');
+    // Events
+    const uz=$('upload-zone'), fi=$('file-input');
+    uz.onclick=()=>fi.click();
+    uz.ondragover=e=>{e.preventDefault();uz.classList.add('dragover');};
+    uz.ondragleave=()=>uz.classList.remove('dragover');
+    uz.ondrop=e=>{e.preventDefault();uz.classList.remove('dragover');selectedFiles=Array.from(e.dataTransfer.files);updateUploadButton();};
+    fi.onchange=()=>{selectedFiles=Array.from(fi.files);updateUploadButton();};
 
-    uploadZone.addEventListener('click', () => fileInput.click());
-    uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('dragover'); });
-    uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
-    uploadZone.addEventListener('drop', e => {
-      e.preventDefault();
-      uploadZone.classList.remove('dragover');
-      selectedFiles = Array.from(e.dataTransfer.files);
-      updateUploadButton();
-    });
-    fileInput.addEventListener('change', () => {
-      selectedFiles = Array.from(fileInput.files);
-      updateUploadButton();
-    });
-
-    $('btn-connect').addEventListener('click', () => connect(false));
-    $('btn-save').addEventListener('click', saveConfig);
-    $('btn-upload').addEventListener('click', uploadFiles);
-    $('btn-refresh').addEventListener('click', listFiles);
-    $('btn-new-folder').addEventListener('click', createFolder);
-    $('btn-batch-delete').addEventListener('click', batchDelete);
-    $('btn-batch-clear').addEventListener('click', () => {
-      selectedPaths.clear();
-      document.querySelectorAll('.file-check').forEach(cb => { cb.checked = false; });
-      document.querySelectorAll('.file-item').forEach(el => el.classList.remove('selected'));
-      updateBatchBar();
-    });
-    $('search-input').addEventListener('input', applySearch);
-    $('btn-view-list').addEventListener('click', () => setViewMode('list'));
-    $('btn-view-grid').addEventListener('click', () => setViewMode('grid'));
-    $('btn-filter-star').addEventListener('click', toggleStarFilter);
-    $('btn-play-all').addEventListener('click', () => playAll(false));
-    $('btn-shuffle-all').addEventListener('click', () => playAll(true));
-
-    $('config-header').addEventListener('click', e => {
-      if (e.target.closest('input, button.btn')) return;
-      toggleConfig();
-    });
-    $('config-toggle').addEventListener('click', e => { e.stopPropagation(); toggleConfig(); });
-
-    ['username','repo','token'].forEach(id => {
-      $(id).addEventListener('keypress', e => { if (e.key === 'Enter') connect(false); });
-    });
+    $('btn-connect').onclick=()=>connect(false);
+    $('btn-save').onclick=saveConfig;
+    $('btn-upload').onclick=uploadFiles;
+    $('btn-refresh').onclick=listFiles;
+    $('btn-new-folder').onclick=createFolder;
+    $('btn-batch-delete').onclick=batchDelete;
+    $('btn-batch-clear').onclick=()=>{selectedPaths.clear();document.querySelectorAll('.file-check').forEach(c=>c.checked=false);document.querySelectorAll('.file-item').forEach(e=>e.classList.remove('selected'));updateBatchBar();};
+    $('search-input').oninput=applySearch;
+    $('btn-view-list').onclick=()=>setViewMode('list');
+    $('btn-view-grid').onclick=()=>setViewMode('grid');
+    $('btn-filter-star').onclick=toggleStarFilter;
+    $('btn-play-all').onclick=()=>playAll(false);
+    $('btn-shuffle-all').onclick=()=>playAll(true);
+    $('btn-sleep').onclick=pickSleep;
+    $('config-header').onclick=e=>{if(e.target.closest('input,button.btn'))return;toggleConfig();};
+    $('config-toggle').onclick=e=>{e.stopPropagation();toggleConfig();};
+    ['username','repo','token'].forEach(id=>$(id).onkeypress=e=>{if(e.key==='Enter')connect(false);});
 
     (async function init() {
-      const hasConfig = loadConfig();
-      const savedView = localStorage.getItem('gh-view-mode') || 'list';
-      setViewMode(savedView);
-
-      if (localStorage.getItem('gh-config-collapsed') === '1') {
-        configCollapsed = false;
-        toggleConfig();
-      }
-      if (hasConfig && config.username && config.repo && config.token) {
+      if (!checkLock()) return;
+      const has = loadConfig();
+      setViewMode(localStorage.getItem('gh-view-mode')||'list');
+      if (localStorage.getItem('gh-config-collapsed')==='1') { configCollapsed=false; toggleConfig(); }
+      if (has && config.username && config.repo && config.token) {
         loadFavorites();
         await connect(true);
       }
