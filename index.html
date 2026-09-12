@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GitHub File Storage - Lưu trữ file trên GitHub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    header p {
+      color: var(--muted);
+      margin-top: 8px;
+      font-size: 0.95rem;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      padding: 24px;
+      margin-bottom: 24px;
+      border: 1px solid var(--border);
+    }
+
+    .card h2 {
+      font-size: 1.15rem;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background: #fff;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #15803d;
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+      padding: 8px 12px;
+      font-size: 0.85rem;
+    }
+
+    .btn-danger:hover {
+      background: #b91c1c;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      background: #f8fafc;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 32px 20px;
+      text-align: center;
+      transition: all 0.2s;
+      cursor: pointer;
+      background: #fafbfc;
+    }
+
+    .upload-zone:hover,
+    .upload-zone.dragover {
+      border-color: var(--primary);
+      background: #eff6ff;
+    }
+
+    .upload-zone i {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .upload-zone p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .file-list {
+      list-style: none;
+    }
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+
+    .file-item:last-child {
+      border-bottom: none;
+    }
+
+    .file-item:hover {
+      background: #f8fafc;
+    }
+
+    .file-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .file-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: #eff6ff;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .file-name {
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .file-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .file-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .status {
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    .status.show {
+      display: block;
+    }
+
+    .status.success {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    .status.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .status.info {
+      background: #dbeafe;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      margin-bottom: 12px;
+      opacity: 0.4;
+    }
+
+    .path-input {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .path-input input {
+      flex: 1;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      padding-bottom: 24px;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.4rem;
+      }
+      .file-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .file-actions {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><i class="fab fa-github"></i> GitHub File Storage</h1>
+      <p>Lưu trữ & quản lý file trực tiếp trên repository GitHub</p>
+    </header>
+
+    <!-- Cấu hình -->
+    <div class="card" id="config-card">
+      <h2><i class="fas fa-cog"></i> Cấu hình kết nối</h2>
+      <div class="form-group">
+        <label for="username">Tên người dùng GitHub</label>
+        <input type="text" id="username" placeholder="ví dụ: your-username" />
+      </div>
+      <div class="form-group">
+        <label for="repo">Tên Repository</label>
+        <input type="text" id="repo" placeholder="ví dụ: my-file-storage" />
+      </div>
+      <div class="form-group">
+        <label for="token">Personal Access Token (PAT)</label>
+        <input type="password" id="token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" />
+        <small style="color: var(--muted); font-size: 0.8rem; display: block; margin-top: 6px;">
+          Tạo token tại: GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token (cần quyền <strong>repo</strong>)
+        </small>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-primary" id="btn-connect">
+          <i class="fas fa-plug"></i> Kết nối
+        </button>
+        <button class="btn btn-outline" id="btn-save">
+          <i class="fas fa-save"></i> Lưu cấu hình
+        </button>
+      </div>
+    </div>
+
+    <!-- Thông báo -->
+    <div id="status" class="status"></div>
+
+    <!-- Khu vực chính (ẩn đến khi kết nối thành công) -->
+    <div id="main-area" class="hidden">
+      <!-- Upload -->
+      <div class="card">
+        <h2><i class="fas fa-cloud-upload-alt"></i> Tải file lên</h2>
+        <div class="upload-zone" id="upload-zone">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <p>Kéo thả file vào đây hoặc <strong>nhấn để chọn file</strong></p>
+          <input type="file" id="file-input" multiple hidden />
+        </div>
+        <div class="path-input">
+          <input type="text" id="custom-path" placeholder="Thư mục tùy chọn (ví dụ: documents/2024/)" />
+        </div>
+        <div style="margin-top: 12px;">
+          <button class="btn btn-success" id="btn-upload" disabled>
+            <i class="fas fa-upload"></i> Upload
+          </button>
+        </div>
+      </div>
+
+      <!-- Danh sách file -->
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <h2 style="margin: 0;"><i class="fas fa-folder-open"></i> Danh sách file</h2>
+          <button class="btn btn-outline" id="btn-refresh" style="padding: 8px 14px;">
+            <i class="fas fa-sync-alt"></i> Làm mới
+          </button>
+        </div>
+        <ul class="file-list" id="file-list">
+          <li class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <p>Chưa có file nào. Hãy upload file đầu tiên!</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <footer>
+      Tạo bởi Grok · Dữ liệu lưu trữ 100% trên GitHub của bạn
+    </footer>
+  </div>
+
+  <script>
+    // ==================== STATE ====================
+    let config = {
+      username: '',
+      repo: '',
+      token: ''
+    };
+    let selectedFiles = [];
+
+    // ==================== DOM ====================
+    const $ = id => document.getElementById(id);
+    const statusEl = $('status');
+    const uploadZone = $('upload-zone');
+    const fileInput = $('file-input');
+    const btnUpload = $('btn-upload');
+    const fileList = $('file-list');
+    const mainArea = $('main-area');
+
+    // ==================== HELPERS ====================
+    function showStatus(msg, type = 'info') {
+      statusEl.textContent = msg;
+      statusEl.className = `status show ${type}`;
+      setTimeout(() => statusEl.classList.remove('show'), 5000);
+    }
+
+    function formatSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / 1048576).toFixed(1) + ' MB';
+    }
+
+    function getFileIcon(name) {
+      const ext = name.split('.').pop().toLowerCase();
+      const map = {
+        pdf: 'fa-file-pdf',
+        doc: 'fa-file-word', docx: 'fa-file-word',
+        xls: 'fa-file-excel', xlsx: 'fa-file-excel',
+        ppt: 'fa-file-powerpoint', pptx: 'fa-file-powerpoint',
+        zip: 'fa-file-archive', rar: 'fa-file-archive', '7z': 'fa-file-archive',
+        jpg: 'fa-file-image', jpeg: 'fa-file-image', png: 'fa-file-image', gif: 'fa-file-image', webp: 'fa-file-image',
+        mp4: 'fa-file-video', mov: 'fa-file-video', avi: 'fa-file-video',
+        mp3: 'fa-file-audio', wav: 'fa-file-audio',
+        js: 'fa-file-code', ts: 'fa-file-code', html: 'fa-file-code', css: 'fa-file-code', json: 'fa-file-code', py: 'fa-file-code',
+        txt: 'fa-file-alt', md: 'fa-file-alt'
+      };
+      return map[ext] || 'fa-file';
+    }
+
+    // ==================== LOCAL STORAGE ====================
+    function loadConfig() {
+      const saved = localStorage.getItem('gh-file-storage');
+      if (saved) {
+        config = JSON.parse(saved);
+        $('username').value = config.username || '';
+        $('repo').value = config.repo || '';
+        $('token').value = config.token || '';
+      }
+    }
+
+    function saveConfig() {
+      config.username = $('username').value.trim();
+      config.repo = $('repo').value.trim();
+      config.token = $('token').value.trim();
+      localStorage.setItem('gh-file-storage', JSON.stringify(config));
+      showStatus('Đã lưu cấu hình vào trình duyệt', 'success');
+    }
+
+    // ==================== GITHUB API ====================
+    async function githubFetch(path, options = {}) {
+      const url = `https://api.github.com/repos/${config.username}/${config.repo}/contents/${path}`;
+      const res = await fetch(url, {
+        ...options,
+        headers: {
+          'Authorization': `token ${config.token}`,
+          'Accept': 'application/vnd.github.v3+json',
+          ...(options.headers || {})
+        }
+      });
+      return res;
+    }
+
+    async function listFiles() {
+      try {
+        const res = await githubFetch('');
+        if (res.status === 404) {
+          // Repo trống hoặc chưa có content
+          fileList.innerHTML = `
+            <li class="empty-state">
+              <i class="fas fa-inbox"></i>
+              <p>Repository trống. Hãy upload file đầu tiên!</p>
+            </li>`;
+          return;
+        }
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.message || 'Không thể lấy danh sách file');
+        }
+        const data = await res.json();
+        renderFileList(Array.isArray(data) ? data : [data]);
+      } catch (e) {
+        showStatus('Lỗi: ' + e.message, 'error');
+      }
+    }
+
+    function renderFileList(files) {
+      if (!files || files.length === 0) {
+        fileList.innerHTML = `
+          <li class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <p>Chưa có file nào</p>
+          </li>`;
+        return;
+      }
+
+      // Sắp xếp: folder trước, rồi file theo tên
+      files.sort((a, b) => {
+        if (a.type === 'dir' && b.type !== 'dir') return -1;
+        if (a.type !== 'dir' && b.type === 'dir') return 1;
+        return a.name.localeCompare(b.name);
+      });
+
+      fileList.innerHTML = files.map(f => {
+        const isDir = f.type === 'dir';
+        const icon = isDir ? 'fa-folder' : getFileIcon(f.name);
+        const size = isDir ? 'Thư mục' : formatSize(f.size);
+        return `
+          <li class="file-item" data-path="${f.path}" data-sha="${f.sha || ''}">
+            <div class="file-info">
+              <div class="file-icon"><i class="fas ${icon}"></i></div>
+              <div>
+                <div class="file-name">${f.name}</div>
+                <div class="file-meta">${size}</div>
+              </div>
+            </div>
+            <div class="file-actions">
+              ${!isDir ? `
+                <a class="btn btn-outline" href="${f.download_url}" target="_blank" download style="padding: 8px 12px; text-decoration: none;">
+                  <i class="fas fa-download"></i>
+                </a>
+                <button class="btn btn-danger btn-delete" data-path="${f.path}" data-sha="${f.sha}">
+                  <i class="fas fa-trash"></i>
+                </button>
+              ` : ''}
+            </div>
+          </li>`;
+      }).join('');
+
+      // Gắn sự kiện xóa
+      document.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.addEventListener('click', () => deleteFile(btn.dataset.path, btn.dataset.sha));
+      });
+    }
+
+    async function uploadFiles() {
+      if (selectedFiles.length === 0) return;
+
+      const customPath = $('custom-path').value.trim().replace(/^\/+|\/+$/g, '');
+      btnUpload.disabled = true;
+      btnUpload.innerHTML = '<span class="spinner"></span> Đang upload...';
+
+      let success = 0;
+      let fail = 0;
+
+      for (const file of selectedFiles) {
+        try {
+          const content = await readFileAsBase64(file);
+          const path = customPath ? `${customPath}/${file.name}` : file.name;
+
+          // Kiểm tra file đã tồn tại chưa để lấy SHA (ghi đè)
+          let sha = null;
+          try {
+            const check = await githubFetch(path);
+            if (check.ok) {
+              const existing = await check.json();
+              sha = existing.sha;
+            }
+          } catch (_) {}
+
+          const body = {
+            message: `Upload ${file.name} via GitHub File Storage`,
+            content: content,
+            ...(sha ? { sha } : {})
+          };
+
+          const res = await githubFetch(path, {
+            method: 'PUT',
+            body: JSON.stringify(body)
+          });
+
+          if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.message);
+          }
+          success++;
+        } catch (e) {
+          console.error(e);
+          fail++;
+        }
+      }
+
+      btnUpload.disabled = false;
+      btnUpload.innerHTML = '<i class="fas fa-upload"></i> Upload';
+      selectedFiles = [];
+      fileInput.value = '';
+      updateUploadButton();
+
+      if (success > 0) {
+        showStatus(`Upload thành công ${success} file${fail > 0 ? `, thất bại ${fail} file` : ''}`, fail > 0 ? 'info' : 'success');
+        listFiles();
+      } else {
+        showStatus('Upload thất bại. Kiểm tra lại token và quyền repo.', 'error');
+      }
+    }
+
+    function readFileAsBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const base64 = reader.result.split(',')[1];
+          resolve(base64);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function deleteFile(path, sha) {
+      if (!confirm(`Bạn có chắc muốn xóa "${path}"?`)) return;
+
+      try {
+        const res = await githubFetch(path, {
+          method: 'DELETE',
+          body: JSON.stringify({
+            message: `Delete ${path} via GitHub File Storage`,
+            sha: sha
+          })
+        });
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.message);
+        }
+        showStatus(`Đã xóa: ${path}`, 'success');
+        listFiles();
+      } catch (e) {
+        showStatus('Lỗi xóa file: ' + e.message, 'error');
+      }
+    }
+
+    async function connect() {
+      config.username = $('username').value.trim();
+      config.repo = $('repo').value.trim();
+      config.token = $('token').value.trim();
+
+      if (!config.username || !config.repo || !config.token) {
+        showStatus('Vui lòng điền đầy đủ thông tin', 'error');
+        return;
+      }
+
+      showStatus('Đang kết nối...', 'info');
+      try {
+        // Kiểm tra quyền truy cập repo
+        const res = await fetch(`https://api.github.com/repos/${config.username}/${config.repo}`, {
+          headers: {
+            'Authorization': `token ${config.token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.message || 'Không thể truy cập repository');
+        }
+        showStatus('Kết nối thành công!', 'success');
+        mainArea.classList.remove('hidden');
+        listFiles();
+      } catch (e) {
+        showStatus('Kết nối thất bại: ' + e.message, 'error');
+        mainArea.classList.add('hidden');
+      }
+    }
+
+    // ==================== UPLOAD ZONE ====================
+    function updateUploadButton() {
+      btnUpload.disabled = selectedFiles.length === 0;
+      if (selectedFiles.length > 0) {
+        uploadZone.querySelector('p').innerHTML = `Đã chọn <strong>${selectedFiles.length}</strong> file. Nhấn Upload để tải lên.`;
+      } else {
+        uploadZone.querySelector('p').innerHTML = 'Kéo thả file vào đây hoặc <strong>nhấn để chọn file</strong>';
+      }
+    }
+
+    uploadZone.addEventListener('click', () => fileInput.click());
+    uploadZone.addEventListener('dragover', e => {
+      e.preventDefault();
+      uploadZone.classList.add('dragover');
+    });
+    uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+    uploadZone.addEventListener('drop', e => {
+      e.preventDefault();
+      uploadZone.classList.remove('dragover');
+      selectedFiles = Array.from(e.dataTransfer.files);
+      updateUploadButton();
+    });
+    fileInput.addEventListener('change', () => {
+      selectedFiles = Array.from(fileInput.files);
+      updateUploadButton();
+    });
+
+    // ==================== EVENTS ====================
+    $('btn-connect').addEventListener('click', connect);
+    $('btn-save').addEventListener('click', saveConfig);
+    $('btn-upload').addEventListener('click', uploadFiles);
+    $('btn-refresh').addEventListener('click', listFiles);
+
+    // Enter key
+    ['username', 'repo', 'token'].forEach(id => {
+      $(id).addEventListener('keypress', e => {
+        if (e.key === 'Enter') connect();
+      });
+    });
+
+    // Load config khi mở trang
+    loadConfig();
+  </script>
+</body>
+</html>
