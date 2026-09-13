@@ -142,14 +142,37 @@
     .search-box input { width: 100%; padding: 8px 12px 8px 34px; font-size: .85rem; }
     .search-box i { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: .85rem; }
     .view-toggles { display: flex; gap: 4px; }
-    .status { padding: 10px 12px; border-radius: 8px; margin-bottom: 12px; font-size: .8rem; display: none; }
-    .status.show { display: block; }
-    .status.success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-    .status.error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
-    .status.info { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
-    [data-theme="dark"] .status.success { background: #14532d; color: #86efac; border-color: #166534; }
-    [data-theme="dark"] .status.error { background: #7f1d1d; color: #fca5a5; border-color: #991b1b; }
-    [data-theme="dark"] .status.info { background: #1e3a5f; color: #93c5fd; border-color: #1e40af; }
+    /* Toast */
+    #toast-wrap {
+      position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+      z-index: 3000; display: flex; flex-direction: column; gap: 8px;
+      width: min(92vw, 360px); pointer-events: none;
+    }
+    .toast {
+      pointer-events: auto;
+      padding: 12px 14px; border-radius: 10px; font-size: .85rem; font-weight: 500;
+      display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.18);
+      animation: toastIn .25s ease;
+      background: var(--card); color: var(--text); border: 1px solid var(--border);
+    }
+    .toast.hiding { animation: toastOut .25s ease forwards; }
+    .toast.success { border-left: 4px solid #16a34a; }
+    .toast.error { border-left: 4px solid #dc2626; }
+    .toast.info { border-left: 4px solid #2563eb; }
+    .toast i { font-size: 1rem; flex-shrink: 0; }
+    .toast.success i { color: #16a34a; }
+    .toast.error i { color: #dc2626; }
+    .toast.info i { color: #2563eb; }
+    .toast span { flex: 1; line-height: 1.35; }
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(-12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes toastOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-12px); }
+    }
     .empty-state { text-align: center; padding: 28px 12px; color: var(--muted); }
     .empty-state i { font-size: 2rem; margin-bottom: 8px; opacity: .35; }
     .config-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; }
@@ -334,7 +357,7 @@
       </div>
     </div>
 
-    <div id="status" class="status"></div>
+    <div id="toast-wrap"></div>
 
     <div id="main-area" class="hidden">
       <div class="card">
@@ -542,9 +565,25 @@
     }
 
     function showStatus(msg, type) {
-      const el = $('status');
-      el.textContent = msg; el.className = 'status show ' + (type||'info');
-      setTimeout(() => el.classList.remove('show'), 4000);
+      type = type || 'info';
+      const icons = {
+        success: 'fa-check-circle',
+        error: 'fa-exclamation-circle',
+        info: 'fa-info-circle'
+      };
+      const wrap = $('toast-wrap');
+      if (!wrap) return;
+      const t = document.createElement('div');
+      t.className = 'toast ' + type;
+      t.innerHTML = '<i class="fas ' + (icons[type] || icons.info) + '"></i><span></span>';
+      t.querySelector('span').textContent = msg;
+      wrap.appendChild(t);
+      const remove = () => {
+        t.classList.add('hiding');
+        setTimeout(() => { if (t.parentNode) t.parentNode.removeChild(t); }, 250);
+      };
+      t.onclick = remove;
+      setTimeout(remove, 2800);
     }
     function formatSize(b) {
       if (b < 1024) return b + ' B';
