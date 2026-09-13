@@ -225,6 +225,18 @@
     #lock-screen h2 { font-size: 1.1rem; margin-bottom: 8px; }
     #lock-screen p { color: var(--muted); font-size: .85rem; margin-bottom: 16px; }
     #lock-screen input { margin-bottom: 12px; text-align: center; letter-spacing: 2px; }
+    .pw-wrap { position: relative; width: 100%; }
+    .pw-wrap input { width: 100%; padding-right: 42px; }
+    .pw-toggle {
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; padding: 4px;
+      color: var(--muted); font-size: 0.95rem; line-height: 1;
+    }
+    .pw-toggle:hover { color: var(--text); }
+    /* Ẩn icon mắt mặc định của trình duyệt */
+    input[type="password"]::-ms-reveal,
+    input[type="password"]::-ms-clear { display: none; }
+    input[type="password"]::-webkit-credentials-auto-fill-button { visibility: hidden; }
 
     /* Mini player */
     #mini-player {
@@ -310,7 +322,10 @@
       <i class="fas fa-lock" style="font-size:2rem;color:var(--primary);margin-bottom:12px"></i>
       <h2>Nhập mật khẩu</h2>
       <p>Web đã được bảo vệ</p>
-      <input type="password" id="lock-input" placeholder="Mật khẩu" />
+      <div class="pw-wrap" style="margin-bottom:12px">
+        <input type="password" id="lock-input" placeholder="Mật khẩu" />
+        <button type="button" class="pw-toggle" data-target="lock-input" title="Hiện/ẩn mật khẩu"><i class="fas fa-eye"></i></button>
+      </div>
       <button class="btn btn-primary" id="lock-btn" style="width:100%">Mở khóa</button>
       <p id="lock-error" style="color:var(--danger);font-size:.8rem;margin-top:8px;display:none">Sai mật khẩu</p>
     </div>
@@ -342,12 +357,18 @@
         </div>
         <div class="form-group">
           <label>Personal Access Token</label>
-          <input type="password" id="token" placeholder="ghp_xxxx..." />
+          <div class="pw-wrap">
+            <input type="password" id="token" placeholder="ghp_xxxx..." />
+            <button type="button" class="pw-toggle" data-target="token" title="Hiện/ẩn"><i class="fas fa-eye"></i></button>
+          </div>
           <small>Cần quyền <strong>repo</strong></small>
         </div>
         <div class="form-group">
           <label>Mật khẩu khóa web (tùy chọn)</label>
-          <input type="password" id="app-password" placeholder="Để trống = không khóa" />
+          <div class="pw-wrap">
+            <input type="password" id="app-password" placeholder="Để trống = không khóa" />
+            <button type="button" class="pw-toggle" data-target="app-password" title="Hiện/ẩn"><i class="fas fa-eye"></i></button>
+          </div>
           <small>Ai mở link cũng phải nhập mật khẩu này</small>
         </div>
         <div class="btn-group">
@@ -518,12 +539,26 @@
         sessionStorage.setItem('gh-unlocked', '1');
         $('lock-screen').classList.add('hidden');
         $('lock-error').style.display = 'none';
+        // Tiếp tục khởi động app (tự kết nối) sau khi mở khóa
+        startApp();
       } else {
         $('lock-error').style.display = 'block';
       }
     }
     $('lock-btn').addEventListener('click', tryUnlock);
     $('lock-input').addEventListener('keypress', e => { if (e.key === 'Enter') tryUnlock(); });
+
+    // Nút hiện/ẩn mật khẩu (màu theo theme)
+    document.querySelectorAll('.pw-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const input = $(btn.dataset.target);
+        if (!input) return;
+        const show = input.type === 'password';
+        input.type = show ? 'text' : 'password';
+        const icon = btn.querySelector('i');
+        if (icon) icon.className = show ? 'fas fa-eye-slash' : 'fas fa-eye';
+      });
+    });
 
     // ===== THEME =====
     function initTheme() {
@@ -1328,15 +1363,24 @@
     $('config-toggle').onclick=e=>{e.stopPropagation();toggleConfig();};
     ['username','repo','token'].forEach(id=>$(id).onkeypress=e=>{if(e.key==='Enter')connect(false);});
 
-    (async function init() {
-      if (!checkLock()) return;
+    let appStarted = false;
+    async function startApp() {
+      if (appStarted) return;
+      appStarted = true;
       const has = loadConfig();
-      setViewMode(localStorage.getItem('gh-view-mode')||'list');
-      if (localStorage.getItem('gh-config-collapsed')==='1') { configCollapsed=false; toggleConfig(); }
+      setViewMode(localStorage.getItem('gh-view-mode') || 'list');
+      if (localStorage.getItem('gh-config-collapsed') === '1') {
+        configCollapsed = false;
+        toggleConfig();
+      }
       if (has && config.username && config.repo && config.token) {
         loadFavorites();
         await connect(true);
       }
+    }
+    (async function init() {
+      if (!checkLock()) return; // đang hiện màn khóa → chờ tryUnlock gọi startApp
+      await startApp();
     })();
   </script>
 </body>
