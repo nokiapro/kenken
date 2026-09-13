@@ -78,13 +78,16 @@
     .progress-text { font-size: .75rem; color: var(--muted); margin-top: 6px; text-align: center; }
     .file-list { list-style: none; }
     .file-item {
-      display: flex; align-items: center; justify-content: space-between; padding: 10px 8px;
+      display: flex; flex-direction: column; padding: 10px 8px;
       border-bottom: 1px solid var(--border); gap: 8px;
     }
     .file-item:last-child { border-bottom: none; }
     .file-item:hover { background: var(--hover); }
     .file-item.folder { cursor: pointer; }
     .file-item.selected { background: rgba(37,99,235,.1); }
+    .file-row {
+      display: flex; align-items: center; gap: 10px; min-width: 0; width: 100%;
+    }
     .file-info { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
     .file-check { width: 18px; height: 18px; accent-color: var(--primary); flex-shrink: 0; cursor: pointer; }
     .file-icon {
@@ -98,7 +101,14 @@
     .file-icon.image { background: #ecfdf5; color: #059669; }
     .file-name { font-weight: 500; font-size: .875rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .file-meta { font-size: .7rem; color: var(--muted); }
-    .file-actions { display: flex; gap: 5px; flex-shrink: 0; flex-wrap: wrap; }
+    .file-actions {
+      display: flex; gap: 6px; flex-wrap: wrap; width: 100%;
+      padding-left: 28px; /* align under name, past checkbox */
+    }
+    @media (min-width: 600px) {
+      .file-item { flex-direction: row; align-items: center; justify-content: space-between; }
+      .file-actions { width: auto; padding-left: 0; flex-shrink: 0; }
+    }
     .file-list.grid-view {
       display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px;
     }
@@ -443,7 +453,8 @@
     let selectedPaths = new Set(), favorites = new Set();
     let viewMode = 'list', showOnlyStars = false;
     let plyrInstance = null, configCollapsed = false, promptResolve = null;
-    let playlist = [], playlistIndex = 0, shuffleMode = false, repeatMode = false, shuffleOrder = [];
+    let playlist = [], playlistIndex = 0, shuffleMode = false, repeatMode = 0, shuffleOrder = [];
+    // repeatMode: 0 = off, 1 = lặp list, 2 = lặp 1 bài
     let sleepTimer = null, sleepEndsAt = 0;
     let audioEl = null; // current HTMLAudioElement for mini player
     let isPlaying = false;
@@ -586,9 +597,19 @@
         el.onclick = () => navigateTo(el.dataset.path);
       });
     }
+    function pathKey() {
+      return 'gh-path-' + (config.username || '') + '/' + (config.repo || '');
+    }
+    function saveCurrentPath() {
+      try { localStorage.setItem(pathKey(), currentPath || ''); } catch(_) {}
+    }
+    function loadCurrentPath() {
+      try { return localStorage.getItem(pathKey()) || ''; } catch(_) { return ''; }
+    }
     function navigateTo(path) {
-      currentPath = path||'';
-      $('custom-path').value = currentPath ? currentPath+'/' : '';
+      currentPath = path || '';
+      saveCurrentPath();
+      $('custom-path').value = currentPath ? currentPath + '/' : '';
       selectedPaths.clear(); updateBatchBar(); listFiles();
     }
 
@@ -680,7 +701,12 @@
       el.onplay = () => { isPlaying = true; updateMiniUI(); };
       el.onpause = () => { isPlaying = false; updateMiniUI(); };
       el.onended = () => {
-        if (playlist.length > 1 || repeatMode) playNext();
+        if (repeatMode === 2) {
+          el.currentTime = 0;
+          el.play();
+          return;
+        }
+        if (playlist.length > 1 || repeatMode === 1) playNext();
         else { isPlaying = false; updateMiniUI(); }
       };
     }
@@ -695,15 +721,22 @@
     }
     function updatePlaylistUI() {
       const c = $('playlist-controls');
-      if (playlist.length > 1) {
+      if (playlist.length >= 1) {
         c.style.display = 'flex';
         $('pl-info').textContent = (playlistIndex+1)+' / '+playlist.length;
         $('pl-shuffle').classList.toggle('active', shuffleMode);
-        $('pl-repeat').classList.toggle('active', repeatMode);
+        const rb = $('pl-repeat');
+        rb.classList.toggle('active', repeatMode > 0);
+        rb.innerHTML = repeatMode === 2
+          ? '<i class="fas fa-redo"></i><span style="font-size:0.55rem;margin-left:1px">1</span>'
+          : '<i class="fas fa-redo"></i>';
+        rb.title = repeatMode === 0 ? 'Lặp lại: Tắt' : (repeatMode === 1 ? 'Lặp list' : 'Lặp 1 bài');
       } else c.style.display = 'none';
     }
     function getNextIndex(dir) {
       if (!playlist.length) return 0;
+      // Lặp 1 bài: luôn giữ index hiện tại khi next do hết bài
+      if (repeatMode === 2 && dir === 1) return playlistIndex;
       if (shuffleMode) {
         if (shuffleOrder.length !== playlist.length) {
           shuffleOrder = playlist.map((_,i)=>i);
@@ -716,13 +749,13 @@
         }
         const pos = shuffleOrder.indexOf(playlistIndex);
         let np = pos + dir;
-        if (np >= shuffleOrder.length) np = repeatMode ? 0 : shuffleOrder.length-1;
-        if (np < 0) np = repeatMode ? shuffleOrder.length-1 : 0;
+        if (np >= shuffleOrder.length) np = (repeatMode === 1) ? 0 : shuffleOrder.length-1;
+        if (np < 0) np = (repeatMode === 1) ? shuffleOrder.length-1 : 0;
         return shuffleOrder[np];
       }
       let n = playlistIndex + dir;
-      if (n >= playlist.length) n = repeatMode ? 0 : playlist.length-1;
-      if (n < 0) n = repeatMode ? playlist.length-1 : 0;
+      if (n >= playlist.length) n = (repeatMode === 1) ? 0 : playlist.length-1;
+      if (n < 0) n = (repeatMode === 1) ? playlist.length-1 : 0;
       return n;
     }
     function playTrackAt(index) {
@@ -787,7 +820,13 @@
         plyrInstance.on('play', () => { isPlaying = true; updateMiniUI(); });
         plyrInstance.on('pause', () => { isPlaying = false; updateMiniUI(); });
         plyrInstance.on('ended', () => {
-          if (playlist.length > 1 || repeatMode) playNext();
+          if (repeatMode === 2) {
+            try { plyrInstance.restart(); plyrInstance.play(); } catch(_) {
+              if (audioEl) { audioEl.currentTime = 0; audioEl.play(); }
+            }
+            return;
+          }
+          if (playlist.length > 1 || repeatMode === 1) playNext();
         });
         // Don't auto-open modal for audio — use mini player
       }
@@ -841,8 +880,12 @@
       showStatus(shuffleMode ? 'Bật ngẫu nhiên' : 'Tắt ngẫu nhiên', 'info');
     };
     $('pl-repeat').onclick = e => {
-      e.stopPropagation(); repeatMode = !repeatMode; updatePlaylistUI();
-      showStatus(repeatMode ? 'Bật lặp lại' : 'Tắt lặp lại', 'info');
+      e.stopPropagation();
+      // 0 → 1 (list) → 2 (one) → 0
+      repeatMode = (repeatMode + 1) % 3;
+      updatePlaylistUI();
+      const msgs = ['Tắt lặp lại', 'Lặp cả list', 'Lặp 1 bài'];
+      showStatus(msgs[repeatMode], 'info');
     };
 
     document.addEventListener('keydown', e => {
@@ -970,11 +1013,14 @@
         if (!isDir) actions += '<button class="btn btn-danger btn-delete" data-path="'+f.path+'" data-sha="'+f.sha+'"><i class="fas fa-trash"></i></button>';
         else actions += '<button class="btn btn-outline btn-enter-folder" data-path="'+f.path+'"><i class="fas fa-folder-open"></i></button>';
         return '<li class="file-item '+(isDir?'folder ':'')+selectedClass+'" data-path="'+f.path+'">'+
-          '<div class="file-info">'+
-            '<input type="checkbox" class="file-check" data-path="'+f.path+'" data-sha="'+(f.sha||'')+'" data-type="'+f.type+'" '+checked+' />'+
-            preview+
-            '<div style="min-width:0"><div class="file-name">'+f.name+'</div><div class="file-meta">'+size+'</div></div>'+
-          '</div><div class="file-actions">'+actions+'</div></li>';
+          '<div class="file-row">'+
+            '<div class="file-info">'+
+              '<input type="checkbox" class="file-check" data-path="'+f.path+'" data-sha="'+(f.sha||'')+'" data-type="'+f.type+'" '+checked+' />'+
+              preview+
+              '<div style="min-width:0;flex:1"><div class="file-name">'+f.name+'</div><div class="file-meta">'+size+'</div></div>'+
+            '</div>'+
+          '</div>'+
+          '<div class="file-actions">'+actions+'</div></li>';
       }).join('');
 
       document.querySelectorAll('.file-item.folder').forEach(item => {
@@ -1034,12 +1080,25 @@
     }
 
     async function renameItem(oldPath, oldName, type, sha) {
-      const newName = await showPrompt('Đổi tên', oldName);
-      if (!newName || newName===oldName) return;
-      const clean = newName.replace(/[\\/:*?"<>|]/g,'').trim();
-      if (!clean) return showStatus('Tên không hợp lệ','error');
+      // Chỉ hiện phần tên (không đuôi) khi đổi tên file
+      let nameOnly = oldName;
+      let ext = '';
+      if (type !== 'dir' && oldName.includes('.')) {
+        const dot = oldName.lastIndexOf('.');
+        nameOnly = oldName.slice(0, dot);
+        ext = oldName.slice(dot); // gồm dấu chấm, vd: .mp3
+      }
+      const newName = await showPrompt('Đổi tên (giữ nguyên đuôi' + (ext || '') + ')', nameOnly);
+      if (!newName || newName === nameOnly) return;
+      let clean = newName.replace(/[\\/:*?"<>|]/g, '').trim();
+      if (!clean) return showStatus('Tên không hợp lệ', 'error');
+      // Nếu user không gõ đuôi, tự gắn lại đuôi cũ
+      if (ext && !clean.toLowerCase().endsWith(ext.toLowerCase())) {
+        clean = clean + ext;
+      }
+      if (clean === oldName) return;
       const parent = oldPath.includes('/') ? oldPath.slice(0, oldPath.lastIndexOf('/')) : '';
-      const newPath = parent ? parent+'/'+clean : clean;
+      const newPath = parent ? parent + '/' + clean : clean;
       try {
         if (type==='dir') {
           const res = await githubFetch(oldPath);
@@ -1148,7 +1207,9 @@
         if (!silent) showStatus('Kết nối thành công!','success');
         $('main-area').classList.remove('hidden');
         setConnectedUI(true);
-        currentPath=''; selectedPaths.clear();
+        currentPath = loadCurrentPath();
+        $('custom-path').value = currentPath ? currentPath + '/' : '';
+        selectedPaths.clear();
         listFiles();
         return true;
       } catch(e) {
@@ -1174,7 +1235,14 @@
     $('btn-connect').onclick=()=>connect(false);
     $('btn-save').onclick=saveConfig;
     $('btn-upload').onclick=uploadFiles;
-    $('btn-refresh').onclick=listFiles;
+    $('btn-refresh').onclick=async()=>{
+      const btn=$('btn-refresh');
+      const icon=btn.querySelector('i');
+      if(icon){icon.classList.add('fa-spin');}
+      btn.disabled=true;
+      try{await listFiles();showStatus('Đã làm mới','success');}
+      finally{btn.disabled=false;if(icon)icon.classList.remove('fa-spin');}
+    };
     $('btn-new-folder').onclick=createFolder;
     $('btn-batch-delete').onclick=batchDelete;
     $('btn-batch-clear').onclick=()=>{selectedPaths.clear();document.querySelectorAll('.file-check').forEach(c=>c.checked=false);document.querySelectorAll('.file-item').forEach(e=>e.classList.remove('selected'));updateBatchBar();};
