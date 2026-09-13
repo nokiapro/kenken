@@ -218,8 +218,14 @@
     .mini-btn {
       width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--hover);
       color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center;
+      position: relative;
     }
     .mini-btn.play { background: var(--purple); color: #fff; width: 40px; height: 40px; }
+    .mini-btn.active { color: var(--purple); }
+    .mini-btn .badge-1 {
+      position: absolute; bottom: 2px; right: 2px; font-size: 0.5rem; font-weight: 700;
+      line-height: 1;
+    }
     .mini-progress {
       position: absolute; top: 0; left: 0; height: 3px; background: var(--purple); width: 0%;
     }
@@ -403,11 +409,13 @@
         </div>
       </div>
       <div class="mini-controls">
-        <button class="mini-btn" id="mini-prev"><i class="fas fa-step-backward"></i></button>
+        <button class="mini-btn" id="mini-shuffle" title="Ngẫu nhiên"><i class="fas fa-random"></i></button>
+        <button class="mini-btn" id="mini-prev" title="Bài trước"><i class="fas fa-step-backward"></i></button>
         <button class="mini-btn play" id="mini-play"><i class="fas fa-play" id="mini-play-icon"></i></button>
-        <button class="mini-btn" id="mini-next"><i class="fas fa-step-forward"></i></button>
+        <button class="mini-btn" id="mini-next" title="Bài sau"><i class="fas fa-step-forward"></i></button>
+        <button class="mini-btn" id="mini-repeat" title="Lặp lại"><i class="fas fa-redo"></i></button>
         <button class="mini-btn" id="mini-expand" title="Mở rộng"><i class="fas fa-expand"></i></button>
-        <button class="mini-btn" id="mini-close"><i class="fas fa-times"></i></button>
+        <button class="mini-btn" id="mini-close" title="Dừng"><i class="fas fa-times"></i></button>
       </div>
     </div>
   </div>
@@ -682,6 +690,7 @@
       $('mini-player').classList.add('show');
       $('mini-title').textContent = track.name;
       updateMiniUI();
+      updatePlaylistUI();
     }
     function hideMini() {
       $('mini-player').classList.remove('show');
@@ -732,6 +741,17 @@
           : '<i class="fas fa-redo"></i>';
         rb.title = repeatMode === 0 ? 'Lặp lại: Tắt' : (repeatMode === 1 ? 'Lặp list' : 'Lặp 1 bài');
       } else c.style.display = 'none';
+
+      // Sync mini player buttons
+      const ms = $('mini-shuffle'), mr = $('mini-repeat');
+      if (ms) ms.classList.toggle('active', shuffleMode);
+      if (mr) {
+        mr.classList.toggle('active', repeatMode > 0);
+        mr.innerHTML = repeatMode === 2
+          ? '<i class="fas fa-redo"></i><span class="badge-1">1</span>'
+          : '<i class="fas fa-redo"></i>';
+        mr.title = repeatMode === 0 ? 'Lặp lại: Tắt' : (repeatMode === 1 ? 'Lặp list' : 'Lặp 1 bài');
+      }
     }
     function getNextIndex(dir) {
       if (!playlist.length) return 0;
@@ -869,6 +889,18 @@
         $('media-modal').classList.add('show');
         updatePlaylistUI();
       }
+    };
+    $('mini-shuffle').onclick = () => {
+      shuffleMode = !shuffleMode;
+      shuffleOrder = [];
+      updatePlaylistUI();
+      showStatus(shuffleMode ? 'Bật ngẫu nhiên' : 'Tắt ngẫu nhiên', 'info');
+    };
+    $('mini-repeat').onclick = () => {
+      repeatMode = (repeatMode + 1) % 3;
+      updatePlaylistUI();
+      const msgs = ['Tắt lặp lại', 'Lặp cả list', 'Lặp 1 bài'];
+      showStatus(msgs[repeatMode], 'info');
     };
 
     $('media-modal').onclick = e => { if (e.target === $('media-modal')) closeMediaModal(); };
