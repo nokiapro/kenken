@@ -195,6 +195,20 @@
       border-radius: 8px; margin-bottom: 10px; font-size: .8rem; flex-wrap: wrap;
     }
     .batch-bar.show { display: flex; }
+    .pagination {
+      display: none; align-items: center; justify-content: center; gap: 6px;
+      margin-top: 12px; flex-wrap: wrap;
+    }
+    .pagination.show { display: flex; }
+    .pagination .page-btn {
+      min-width: 34px; height: 34px; padding: 0 10px; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--card); color: var(--text);
+      font-size: .8rem; font-weight: 600; cursor: pointer;
+    }
+    .pagination .page-btn:hover:not(:disabled) { background: var(--hover); }
+    .pagination .page-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .pagination .page-btn:disabled { opacity: .4; cursor: not-allowed; }
+    .pagination .page-info { font-size: .75rem; color: var(--muted); margin: 0 4px; }
     .music-bar { display: none; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
     .music-bar.show { display: flex; }
     .quota-bar {
@@ -436,6 +450,11 @@
         <ul class="file-list" id="file-list">
           <li class="empty-state"><i class="fas fa-inbox"></i><p>Chưa có file nào</p></li>
         </ul>
+        <div class="pagination" id="pagination">
+          <button class="page-btn" id="page-prev" title="Trang trước"><i class="fas fa-chevron-left"></i></button>
+          <span class="page-info" id="page-info">1 / 1</span>
+          <button class="page-btn" id="page-next" title="Trang sau"><i class="fas fa-chevron-right"></i></button>
+        </div>
       </div>
     </div>
     <footer>GitHub File Storage</footer>
@@ -504,6 +523,9 @@
     let selectedFiles = [], currentPath = '', allFiles = [];
     let selectedPaths = new Set(), favorites = new Set();
     let viewMode = 'list', showOnlyStars = false;
+    const PAGE_SIZE = 5;
+    let currentPage = 1;
+    let filteredFilesCache = [];
     let plyrInstance = null, configCollapsed = false, promptResolve = null;
     let playlist = [], playlistIndex = 0, shuffleMode = false, repeatMode = 0, shuffleOrder = [];
     // repeatMode: 0 = off, 1 = lặp list, 2 = lặp 1 bài
@@ -1061,7 +1083,7 @@
       updateBreadcrumb();
       try {
         const res = await githubFetch(currentPath);
-        if (res.status === 404) { allFiles = []; renderFileList([]); updateMusicBar(); return; }
+        if (res.status === 404) { allFiles = []; currentPage = 1; applySearch(false); return; }
         if (!res.ok) throw new Error((await res.json()).message || 'Lỗi');
         const data = await res.json();
         allFiles = Array.isArray(data) ? data : [data];
@@ -1069,13 +1091,65 @@
         updateQuota();
       } catch(e) { showStatus('Lỗi: '+e.message, 'error'); }
     }
-    function applySearch() {
-      const q = ($('search-input').value||'').trim().toLowerCase();
-      let files = allFiles;
+    function applySearch(resetPage) {
+      if (resetPage !== false) currentPage = 1;
+      const q = ($('search-input').value || '').trim().toLowerCase();
+      let files = allFiles.slice();
       if (q) files = files.filter(f => f.name.toLowerCase().includes(q));
       if (showOnlyStars) files = files.filter(f => favorites.has(f.path));
+      files.sort((a, b) => {
+        const as = favorites.has(a.path) ? 0 : 1, bs = favorites.has(b.path) ? 0 : 1;
+        if (as !== bs) return as - bs;
+        if (a.type === 'dir' && b.type !== 'dir') return -1;
+        if (a.type !== 'dir' && b.type === 'dir') return 1;
+        return a.name.localeCompare(b.name);
+      });
+      filteredFilesCache = files;
+      const totalPages = Math.max(1, Math.ceil(files.length / PAGE_SIZE));
+      if (currentPage > totalPages) currentPage = totalPages;
       renderFileList(files);
+      updatePagination(files.length);
       updateMusicBar();
+    }
+
+    function updatePagination(totalItems) {
+      const pag = $('pagination');
+      if (!pag) return;
+      const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
+      if (totalItems <= PAGE_SIZE) {
+        pag.classList.remove('show');
+        return;
+      }
+      pag.classList.add('show');
+      $('page-info').textContent = currentPage + ' / ' + totalPages + ' · ' + totalItems + ' mục';
+      $('page-prev').disabled = currentPage <= 1;
+      $('page-next').disabled = currentPage >= totalPages;
+      // number buttons
+      let nums = pag.querySelector('.page-nums');
+      if (!nums) {
+        nums = document.createElement('div');
+        nums.className = 'page-nums';
+        nums.style.cssText = 'display:flex;gap:4px;flex-wrap:wrap;';
+        pag.insertBefore(nums, $('page-next'));
+      }
+      nums.innerHTML = '';
+      // show up to 5 page numbers around current
+      let start = Math.max(1, currentPage - 2);
+      let end = Math.min(totalPages, start + 4);
+      start = Math.max(1, end - 4);
+      for (let i = start; i <= end; i++) {
+        const b = document.createElement('button');
+        b.className = 'page-btn' + (i === currentPage ? ' active' : '');
+        b.textContent = i;
+        b.onclick = () => { currentPage = i; applySearch(false); };
+        nums.appendChild(b);
+      }
+    }
+
+    function goPage(delta) {
+      const totalPages = Math.max(1, Math.ceil(filteredFilesCache.length / PAGE_SIZE));
+      currentPage = Math.min(totalPages, Math.max(1, currentPage + delta));
+      applySearch(false);
     }
 
     function renderFileList(files) {
@@ -1085,17 +1159,14 @@
         listEl.innerHTML = '<li class="empty-state"><i class="fas fa-inbox"></i><p>'+
           (showOnlyStars?'Chưa có yêu thích':(($('search-input').value||'').trim()?'Không tìm thấy':'Thư mục trống'))+
           '</p></li>';
+        updatePagination(0);
         return;
       }
-      files = files.slice().sort((a,b) => {
-        const as = favorites.has(a.path)?0:1, bs = favorites.has(b.path)?0:1;
-        if (as!==bs) return as-bs;
-        if (a.type==='dir' && b.type!=='dir') return -1;
-        if (a.type!=='dir' && b.type==='dir') return 1;
-        return a.name.localeCompare(b.name);
-      });
+      // Phân trang: chỉ lấy 5 mục của trang hiện tại
+      const start = (currentPage - 1) * PAGE_SIZE;
+      const pageFiles = files.slice(start, start + PAGE_SIZE);
       const isGrid = viewMode==='grid';
-      listEl.innerHTML = files.map(f => {
+      listEl.innerHTML = pageFiles.map(f => {
         const isDir = f.type==='dir';
         const icon = isDir?'fa-folder':getFileIcon(f.name);
         const iconClass = isDir?'folder':getIconClass(f.name);
@@ -1352,7 +1423,9 @@
     $('btn-new-folder').onclick=createFolder;
     $('btn-batch-delete').onclick=batchDelete;
     $('btn-batch-clear').onclick=()=>{selectedPaths.clear();document.querySelectorAll('.file-check').forEach(c=>c.checked=false);document.querySelectorAll('.file-item').forEach(e=>e.classList.remove('selected'));updateBatchBar();};
-    $('search-input').oninput=applySearch;
+    $('search-input').oninput=()=>applySearch(true);
+    $('page-prev').onclick=()=>goPage(-1);
+    $('page-next').onclick=()=>goPage(1);
     $('btn-view-list').onclick=()=>setViewMode('list');
     $('btn-view-grid').onclick=()=>setViewMode('grid');
     $('btn-filter-star').onclick=toggleStarFilter;
