@@ -208,7 +208,7 @@
     .pagination .page-btn:hover:not(:disabled) { background: var(--hover); }
     .pagination .page-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
     .pagination .page-btn:disabled { opacity: .4; cursor: not-allowed; }
-    .pagination .page-info { font-size: .75rem; color: var(--muted); margin: 0 4px; }
+    .pagination .page-nums { display: flex; gap: 4px; flex-wrap: wrap; }
     .music-bar { display: none; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
     .music-bar.show { display: flex; }
     .quota-bar {
@@ -234,11 +234,34 @@
     }
     #lock-screen .lock-box {
       background: var(--card); border: 1px solid var(--border); border-radius: 16px;
-      padding: 28px 24px; width: 100%; max-width: 340px; text-align: center;
+      padding: 28px 20px; width: 100%; max-width: 360px; text-align: center;
     }
     #lock-screen h2 { font-size: 1.1rem; margin-bottom: 8px; }
     #lock-screen p { color: var(--muted); font-size: .85rem; margin-bottom: 16px; }
-    #lock-screen input { margin-bottom: 12px; text-align: center; letter-spacing: 2px; }
+    .pin-boxes {
+      display: flex; gap: 8px; justify-content: center; margin-bottom: 16px;
+    }
+    .pin-box {
+      width: 42px; height: 48px; border: 2px solid var(--border); border-radius: 10px;
+      background: var(--input-bg); display: flex; align-items: center; justify-content: center;
+      font-size: 1.35rem; font-weight: 700; color: var(--text);
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .pin-box.empty { color: var(--muted); font-weight: 500; }
+    .pin-box.active {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+    }
+    .pin-box.filled { border-color: var(--primary); }
+    .pin-box.error { border-color: var(--danger); animation: pinShake .35s ease; }
+    @keyframes pinShake {
+      0%,100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
+    }
+    #pin-hidden {
+      position: absolute; opacity: 0; pointer-events: none; height: 0; width: 0;
+    }
     .pw-wrap { position: relative; width: 100%; }
     .pw-wrap input { width: 100%; padding-right: 42px; }
     .pw-toggle {
@@ -256,31 +279,59 @@
     #mini-player {
       position: fixed; left: 0; right: 0; bottom: 0; z-index: 900;
       background: var(--card); border-top: 1px solid var(--border);
-      box-shadow: 0 -4px 20px rgba(0,0,0,.12); display: none; padding: 10px 14px;
+      box-shadow: 0 -4px 24px rgba(0,0,0,.15); display: none; padding: 0;
     }
     #mini-player.show { display: block; }
-    .mini-inner { max-width: 720px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
-    .mini-info { flex: 1; min-width: 0; }
-    .mini-title { font-size: .85rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .mini-sub { font-size: .7rem; color: var(--muted); }
-    .mini-controls { display: flex; gap: 6px; align-items: center; }
+    .mini-inner {
+      max-width: 720px; margin: 0 auto; display: flex; flex-direction: column;
+      gap: 8px; padding: 10px 14px 12px;
+    }
+    .mini-info { width: 100%; min-width: 0; text-align: center; }
+    .mini-title {
+      font-size: .9rem; font-weight: 600; white-space: nowrap; overflow: hidden;
+      text-overflow: ellipsis; padding: 0 4px;
+    }
+    .mini-sub {
+      font-size: .7rem; color: var(--muted); display: flex; justify-content: center;
+      align-items: center; gap: 6px; margin-top: 2px;
+    }
+    .mini-controls {
+      display: flex; gap: 8px; align-items: center; justify-content: center; width: 100%;
+    }
     .mini-btn {
-      width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--hover);
+      width: 38px; height: 38px; border-radius: 50%; border: none; background: var(--hover);
       color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center;
-      position: relative;
+      position: relative; font-size: 0.95rem; transition: transform .15s, background .15s;
     }
-    .mini-btn.play { background: var(--purple); color: #fff; width: 40px; height: 40px; }
-    .mini-btn.active { color: var(--purple); }
+    .mini-btn:active { transform: scale(0.92); }
+    .mini-btn.play {
+      background: linear-gradient(135deg, #7c3aed, #a855f7); color: #fff;
+      width: 46px; height: 46px; font-size: 1.05rem; box-shadow: 0 4px 12px rgba(124,58,237,.35);
+    }
+    .mini-btn.active { color: #a855f7; background: rgba(124,58,237,.15); }
     .mini-btn .badge-1 {
-      position: absolute; bottom: 2px; right: 2px; font-size: 0.5rem; font-weight: 700;
-      line-height: 1;
+      position: absolute; bottom: 3px; right: 3px; font-size: 0.5rem; font-weight: 700; line-height: 1;
     }
-    .mini-progress {
-      position: absolute; top: 0; left: 0; height: 3px; background: var(--purple); width: 0%;
+    .mini-seek {
+      width: 100%; height: 20px; display: flex; align-items: center; cursor: pointer;
+      touch-action: none; padding: 0 2px; user-select: none;
     }
+    .mini-seek-track {
+      width: 100%; height: 6px; background: var(--border); border-radius: 999px; position: relative;
+    }
+    .mini-seek-fill {
+      height: 100%; background: linear-gradient(90deg, #7c3aed, #a855f7);
+      border-radius: 999px; width: 0%; pointer-events: none;
+    }
+    .mini-seek-thumb {
+      position: absolute; top: 50%; width: 14px; height: 14px; border-radius: 50%;
+      background: #fff; border: 2px solid #7c3aed; transform: translate(-50%, -50%);
+      left: 0%; pointer-events: none; box-shadow: 0 1px 4px rgba(0,0,0,.25);
+    }
+    .mini-seek:hover .mini-seek-track, .mini-seek.dragging .mini-seek-track { height: 8px; }
     .sleep-badge {
       font-size: .65rem; background: var(--purple); color: #fff; padding: 2px 6px;
-      border-radius: 8px; margin-left: 4px;
+      border-radius: 8px;
     }
 
     .modal-overlay {
@@ -334,14 +385,18 @@
   <div id="lock-screen" class="hidden">
     <div class="lock-box">
       <i class="fas fa-lock" style="font-size:2rem;color:var(--primary);margin-bottom:12px"></i>
-      <h2>Nhập mật khẩu</h2>
-      <p>Web đã được bảo vệ</p>
-      <div class="pw-wrap" style="margin-bottom:12px">
-        <input type="password" id="lock-input" placeholder="Mật khẩu" />
-        <button type="button" class="pw-toggle" data-target="lock-input" title="Hiện/ẩn mật khẩu"><i class="fas fa-eye"></i></button>
+      <h2>Nhập mã PIN</h2>
+      <p>6 chữ số để mở khóa</p>
+      <div class="pin-boxes" id="pin-boxes">
+        <div class="pin-box empty active" data-i="0">–</div>
+        <div class="pin-box empty" data-i="1">–</div>
+        <div class="pin-box empty" data-i="2">–</div>
+        <div class="pin-box empty" data-i="3">–</div>
+        <div class="pin-box empty" data-i="4">–</div>
+        <div class="pin-box empty" data-i="5">–</div>
       </div>
-      <button class="btn btn-primary" id="lock-btn" style="width:100%">Mở khóa</button>
-      <p id="lock-error" style="color:var(--danger);font-size:.8rem;margin-top:8px;display:none">Sai mật khẩu</p>
+      <input type="tel" id="pin-hidden" inputmode="numeric" autocomplete="one-time-code" maxlength="6" />
+      <p id="lock-error" style="color:var(--danger);font-size:.8rem;margin-top:4px;display:none">Sai mã PIN</p>
     </div>
   </div>
 
@@ -378,16 +433,16 @@
           <small>Cần quyền <strong>repo</strong></small>
         </div>
         <div class="form-group">
-          <label>Mật khẩu khóa web (tùy chọn)</label>
+          <label>Mã PIN 6 số khóa web (tùy chọn)</label>
           <div class="pw-wrap">
-            <input type="password" id="app-password" placeholder="Để trống = không khóa" />
+            <input type="password" id="app-password" placeholder="VD: 123456 — để trống = không khóa" maxlength="6" inputmode="numeric" />
             <button type="button" class="pw-toggle" data-target="app-password" title="Hiện/ẩn"><i class="fas fa-eye"></i></button>
           </div>
-          <small>Ai mở link cũng phải nhập mật khẩu này</small>
+          <small>Chỉ dùng 6 chữ số. Ai mở link phải nhập PIN này</small>
         </div>
         <div class="btn-group">
-          <button class="btn btn-primary" id="btn-connect"><i class="fas fa-plug"></i> Kết nối</button>
-          <button class="btn btn-outline" id="btn-save"><i class="fas fa-save"></i> Lưu</button>
+          <button class="btn btn-primary" id="btn-connect"><i class="fas fa-link"></i> Kết nối</button>
+          <button class="btn btn-outline" id="btn-save"><i class="fas fa-floppy-disk"></i> Lưu</button>
         </div>
       </div>
     </div>
@@ -396,9 +451,9 @@
 
     <div id="main-area" class="hidden">
       <div class="card">
-        <h2><i class="fas fa-cloud-upload-alt"></i> Tải file lên</h2>
+        <h2><i class="fas fa-cloud-arrow-up"></i> Tải file lên</h2>
         <div class="upload-zone" id="upload-zone">
-          <i class="fas fa-cloud-upload-alt"></i>
+          <i class="fas fa-cloud-arrow-up"></i>
           <p>Kéo thả hoặc <strong>chạm để chọn</strong></p>
           <input type="file" id="file-input" multiple hidden />
         </div>
@@ -408,7 +463,7 @@
           <div class="progress-text" id="progress-text">0%</div>
         </div>
         <div style="margin-top:10px" class="btn-group">
-          <button class="btn btn-success" id="btn-upload" disabled><i class="fas fa-upload"></i> Upload</button>
+          <button class="btn btn-success" id="btn-upload" disabled><i class="fas fa-cloud-arrow-up"></i> Upload</button>
           <button class="btn btn-outline btn-sm" id="btn-new-folder"><i class="fas fa-folder-plus"></i> Tạo thư mục</button>
         </div>
       </div>
@@ -416,7 +471,7 @@
       <div class="card">
         <div class="list-header">
           <h2><i class="fas fa-folder-open"></i> Files</h2>
-          <button class="btn btn-outline" id="btn-refresh"><i class="fas fa-sync-alt"></i></button>
+          <button class="btn btn-outline" id="btn-refresh" title="Làm mới"><i class="fas fa-arrows-rotate"></i></button>
         </div>
         <div class="quota-bar" id="quota-bar">
           <i class="fas fa-database"></i>
@@ -438,22 +493,21 @@
           </div>
         </div>
         <div class="music-bar" id="music-bar">
-          <button class="btn btn-play btn-sm" id="btn-play-all"><i class="fas fa-play"></i> Phát tất cả</button>
-          <button class="btn btn-outline btn-sm" id="btn-shuffle-all"><i class="fas fa-random"></i> Ngẫu nhiên</button>
-          <button class="btn btn-outline btn-sm" id="btn-sleep" title="Hẹn giờ tắt"><i class="fas fa-moon"></i> Sleep</button>
+          <button class="btn btn-play btn-sm" id="btn-play-all"><i class="fas fa-circle-play"></i> Phát tất cả</button>
+          <button class="btn btn-outline btn-sm" id="btn-shuffle-all"><i class="fas fa-shuffle"></i> Ngẫu nhiên</button>
+          <button class="btn btn-outline btn-sm" id="btn-sleep" title="Hẹn giờ tắt"><i class="fas fa-clock"></i> Sleep</button>
         </div>
         <div class="batch-bar" id="batch-bar">
           <span id="batch-count">0 đã chọn</span>
-          <button class="btn btn-danger btn-sm" id="btn-batch-delete"><i class="fas fa-trash"></i> Xóa</button>
+          <button class="btn btn-danger btn-sm" id="btn-batch-delete"><i class="fas fa-trash-can"></i> Xóa</button>
           <button class="btn btn-outline btn-sm" id="btn-batch-clear">Bỏ chọn</button>
         </div>
         <ul class="file-list" id="file-list">
           <li class="empty-state"><i class="fas fa-inbox"></i><p>Chưa có file nào</p></li>
         </ul>
         <div class="pagination" id="pagination">
-          <button class="page-btn" id="page-prev" title="Trang trước"><i class="fas fa-chevron-left"></i></button>
-          <span class="page-info" id="page-info">1 / 1</span>
-          <button class="page-btn" id="page-next" title="Trang sau"><i class="fas fa-chevron-right"></i></button>
+          <button class="page-btn" id="page-prev" title="Trang trước"><i class="fas fa-angle-left"></i></button>
+          <button class="page-btn" id="page-next" title="Trang sau"><i class="fas fa-angle-right"></i></button>
         </div>
       </div>
     </div>
@@ -462,23 +516,28 @@
 
   <!-- MINI PLAYER -->
   <div id="mini-player">
-    <div class="mini-progress" id="mini-progress"></div>
     <div class="mini-inner">
       <div class="mini-info">
         <div class="mini-title" id="mini-title">—</div>
-        <div class="mini-sub" id="mini-sub">
-          <span id="mini-time">0:00</span>
+        <div class="mini-sub">
+          <span id="mini-time">0:00 / 0:00</span>
           <span id="sleep-badge" class="sleep-badge hidden"></span>
         </div>
       </div>
+      <div class="mini-seek" id="mini-seek" title="Kéo để tua">
+        <div class="mini-seek-track">
+          <div class="mini-seek-fill" id="mini-progress"></div>
+          <div class="mini-seek-thumb" id="mini-thumb"></div>
+        </div>
+      </div>
       <div class="mini-controls">
-        <button class="mini-btn" id="mini-shuffle" title="Ngẫu nhiên"><i class="fas fa-random"></i></button>
-        <button class="mini-btn" id="mini-prev" title="Bài trước"><i class="fas fa-step-backward"></i></button>
+        <button class="mini-btn" id="mini-shuffle" title="Ngẫu nhiên"><i class="fas fa-shuffle"></i></button>
+        <button class="mini-btn" id="mini-prev" title="Bài trước"><i class="fas fa-backward-step"></i></button>
         <button class="mini-btn play" id="mini-play"><i class="fas fa-play" id="mini-play-icon"></i></button>
-        <button class="mini-btn" id="mini-next" title="Bài sau"><i class="fas fa-step-forward"></i></button>
-        <button class="mini-btn" id="mini-repeat" title="Lặp lại"><i class="fas fa-redo"></i></button>
-        <button class="mini-btn" id="mini-expand" title="Mở rộng"><i class="fas fa-expand"></i></button>
-        <button class="mini-btn" id="mini-close" title="Dừng"><i class="fas fa-times"></i></button>
+        <button class="mini-btn" id="mini-next" title="Bài sau"><i class="fas fa-forward-step"></i></button>
+        <button class="mini-btn" id="mini-repeat" title="Lặp lại"><i class="fas fa-repeat"></i></button>
+        <button class="mini-btn" id="mini-expand" title="Mở rộng"><i class="fas fa-up-right-and-down-left-from-center"></i></button>
+        <button class="mini-btn" id="mini-close" title="Dừng"><i class="fas fa-xmark"></i></button>
       </div>
     </div>
   </div>
@@ -492,10 +551,10 @@
       </div>
       <div class="modal-body" id="modal-body"></div>
       <div class="playlist-controls" id="playlist-controls" style="display:none">
-        <button class="pl-btn" id="pl-prev"><i class="fas fa-step-backward"></i></button>
-        <button class="pl-btn" id="pl-shuffle"><i class="fas fa-random"></i></button>
-        <button class="pl-btn" id="pl-repeat"><i class="fas fa-redo"></i></button>
-        <button class="pl-btn" id="pl-next"><i class="fas fa-step-forward"></i></button>
+        <button class="pl-btn" id="pl-prev"><i class="fas fa-backward-step"></i></button>
+        <button class="pl-btn" id="pl-shuffle"><i class="fas fa-shuffle"></i></button>
+        <button class="pl-btn" id="pl-repeat"><i class="fas fa-repeat"></i></button>
+        <button class="pl-btn" id="pl-next"><i class="fas fa-forward-step"></i></button>
         <span class="pl-info" id="pl-info">1 / 1</span>
       </div>
     </div>
@@ -536,11 +595,17 @@
     const $ = id => document.getElementById(id);
 
     // ===== PASSWORD LOCK =====
+    function hashPin(pw) {
+      let h = 0;
+      for (let i = 0; i < pw.length; i++) h = ((h << 5) - h) + pw.charCodeAt(i) | 0;
+      return String(h);
+    }
     function checkLock() {
       const hash = localStorage.getItem('gh-app-pass');
       if (!hash) return true;
       if (sessionStorage.getItem('gh-unlocked') === '1') return true;
       $('lock-screen').classList.remove('hidden');
+      setTimeout(() => focusPin(), 80);
       return false;
     }
     function setAppPassword(pw) {
@@ -548,27 +613,78 @@
         localStorage.removeItem('gh-app-pass');
         return;
       }
-      // simple hash
-      let h = 0;
-      for (let i = 0; i < pw.length; i++) h = ((h << 5) - h) + pw.charCodeAt(i) | 0;
-      localStorage.setItem('gh-app-pass', String(h));
+      const digits = String(pw).replace(/\D/g, '').slice(0, 6);
+      if (digits.length !== 6) {
+        showStatus('PIN phải đủ 6 chữ số', 'error');
+        return;
+      }
+      localStorage.setItem('gh-app-pass', hashPin(digits));
     }
-    function tryUnlock() {
-      const pw = $('lock-input').value;
-      let h = 0;
-      for (let i = 0; i < pw.length; i++) h = ((h << 5) - h) + pw.charCodeAt(i) | 0;
-      if (String(h) === localStorage.getItem('gh-app-pass')) {
+    function renderPinBoxes(val) {
+      const boxes = document.querySelectorAll('#pin-boxes .pin-box');
+      boxes.forEach((box, i) => {
+        box.classList.remove('active', 'filled', 'empty', 'error');
+        if (i < val.length) {
+          box.textContent = val[i];
+          box.classList.add('filled');
+        } else {
+          box.textContent = '–';
+          box.classList.add('empty');
+        }
+        if (i === val.length && val.length < 6) box.classList.add('active');
+        if (val.length === 6 && i === 5) box.classList.add('active');
+      });
+    }
+    function focusPin() {
+      const inp = $('pin-hidden');
+      if (inp) { inp.focus(); inp.click(); }
+    }
+    function clearPin() {
+      const inp = $('pin-hidden');
+      if (inp) inp.value = '';
+      renderPinBoxes('');
+    }
+    function tryUnlock(pw) {
+      if (!pw || pw.length !== 6) return;
+      if (hashPin(pw) === localStorage.getItem('gh-app-pass')) {
         sessionStorage.setItem('gh-unlocked', '1');
         $('lock-screen').classList.add('hidden');
         $('lock-error').style.display = 'none';
-        // Tiếp tục khởi động app (tự kết nối) sau khi mở khóa
         startApp();
       } else {
         $('lock-error').style.display = 'block';
+        document.querySelectorAll('#pin-boxes .pin-box').forEach(b => b.classList.add('error'));
+        setTimeout(() => {
+          clearPin();
+          $('lock-error').style.display = 'none';
+          focusPin();
+        }, 500);
       }
     }
-    $('lock-btn').addEventListener('click', tryUnlock);
-    $('lock-input').addEventListener('keypress', e => { if (e.key === 'Enter') tryUnlock(); });
+    // PIN input handlers
+    (function initPin() {
+      const inp = $('pin-hidden');
+      if (!inp) return;
+      const boxes = $('pin-boxes');
+      if (boxes) {
+        boxes.addEventListener('click', focusPin);
+      }
+      inp.addEventListener('input', () => {
+        let v = inp.value.replace(/\D/g, '').slice(0, 6);
+        inp.value = v;
+        renderPinBoxes(v);
+        if (v.length === 6) tryUnlock(v);
+      });
+      inp.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace') {
+          setTimeout(() => renderPinBoxes(inp.value.replace(/\D/g, '').slice(0, 6)), 0);
+        }
+      });
+      // Mobile: keep focus
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && !$('lock-screen').classList.contains('hidden')) focusPin();
+      });
+    })();
 
     // Nút hiện/ẩn mật khẩu (màu theo theme)
     document.querySelectorAll('.pw-toggle').forEach(btn => {
@@ -790,16 +906,72 @@
     }
     function hideMini() {
       $('mini-player').classList.remove('show');
-      $('mini-progress').style.width = '0%';
+      const fill = $('mini-progress');
+      if (fill) fill.style.width = '0%';
+      const thumb = $('mini-thumb');
+      if (thumb) thumb.style.left = '0%';
     }
     function updateMiniUI() {
-      $('mini-play-icon').className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
-      if (audioEl) {
+      const playIcon = $('mini-play-icon');
+      if (playIcon) playIcon.className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
+      if (audioEl && !seekDragging) {
         const cur = audioEl.currentTime || 0, dur = audioEl.duration || 0;
-        $('mini-time').textContent = fmtTime(cur) + ' / ' + fmtTime(dur);
-        $('mini-progress').style.width = (dur ? (cur/dur*100) : 0) + '%';
+        const t = $('mini-time');
+        if (t) t.textContent = fmtTime(cur) + ' / ' + fmtTime(dur);
+        const pct = dur ? (cur / dur * 100) : 0;
+        const fill = $('mini-progress');
+        if (fill) fill.style.width = pct + '%';
+        const thumb = $('mini-thumb');
+        if (thumb) thumb.style.left = pct + '%';
       }
     }
+    let seekDragging = false;
+    function seekFromEvent(e) {
+      if (!audioEl || !audioEl.duration) return;
+      const seek = $('mini-seek');
+      const rect = seek.getBoundingClientRect();
+      const clientX = (e.touches && e.touches[0]) ? e.touches[0].clientX
+        : (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientX
+        : e.clientX;
+      let ratio = (clientX - rect.left) / rect.width;
+      ratio = Math.max(0, Math.min(1, ratio));
+      audioEl.currentTime = ratio * audioEl.duration;
+      const pct = ratio * 100;
+      const fill = $('mini-progress');
+      if (fill) fill.style.width = pct + '%';
+      const thumb = $('mini-thumb');
+      if (thumb) thumb.style.left = pct + '%';
+      const t = $('mini-time');
+      if (t) t.textContent = fmtTime(audioEl.currentTime) + ' / ' + fmtTime(audioEl.duration);
+    }
+    (function bindSeek() {
+      const seek = $('mini-seek');
+      if (!seek) return;
+      const onStart = (e) => {
+        seekDragging = true;
+        seek.classList.add('dragging');
+        seekFromEvent(e);
+        e.preventDefault();
+      };
+      const onMove = (e) => {
+        if (!seekDragging) return;
+        seekFromEvent(e);
+        e.preventDefault();
+      };
+      const onEnd = (e) => {
+        if (!seekDragging) return;
+        seekFromEvent(e);
+        seekDragging = false;
+        seek.classList.remove('dragging');
+      };
+      seek.addEventListener('mousedown', onStart);
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseup', onEnd);
+      seek.addEventListener('touchstart', onStart, { passive: false });
+      window.addEventListener('touchmove', onMove, { passive: false });
+      window.addEventListener('touchend', onEnd);
+      seek.addEventListener('click', (e) => { if (!seekDragging) seekFromEvent(e); });
+    })();
     function bindAudioEvents(el) {
       audioEl = el;
       el.ontimeupdate = updateMiniUI;
@@ -833,8 +1005,8 @@
         const rb = $('pl-repeat');
         rb.classList.toggle('active', repeatMode > 0);
         rb.innerHTML = repeatMode === 2
-          ? '<i class="fas fa-redo"></i><span style="font-size:0.55rem;margin-left:1px">1</span>'
-          : '<i class="fas fa-redo"></i>';
+          ? '<i class="fas fa-repeat"></i><span style="font-size:0.55rem;margin-left:1px">1</span>'
+          : '<i class="fas fa-repeat"></i>';
         rb.title = repeatMode === 0 ? 'Lặp lại: Tắt' : (repeatMode === 1 ? 'Lặp list' : 'Lặp 1 bài');
       } else c.style.display = 'none';
 
@@ -844,8 +1016,8 @@
       if (mr) {
         mr.classList.toggle('active', repeatMode > 0);
         mr.innerHTML = repeatMode === 2
-          ? '<i class="fas fa-redo"></i><span class="badge-1">1</span>'
-          : '<i class="fas fa-redo"></i>';
+          ? '<i class="fas fa-repeat"></i><span class="badge-1">1</span>'
+          : '<i class="fas fa-repeat"></i>';
         mr.title = repeatMode === 0 ? 'Lặp lại: Tắt' : (repeatMode === 1 ? 'Lặp list' : 'Lặp 1 bài');
       }
     }
@@ -1121,10 +1293,8 @@
         return;
       }
       pag.classList.add('show');
-      $('page-info').textContent = currentPage + ' / ' + totalPages + ' · ' + totalItems + ' mục';
       $('page-prev').disabled = currentPage <= 1;
       $('page-next').disabled = currentPage >= totalPages;
-      // number buttons
       let nums = pag.querySelector('.page-nums');
       if (!nums) {
         nums = document.createElement('div');
@@ -1133,7 +1303,6 @@
         pag.insertBefore(nums, $('page-next'));
       }
       nums.innerHTML = '';
-      // show up to 5 page numbers around current
       let start = Math.max(1, currentPage - 2);
       let end = Math.min(totalPages, start + 4);
       start = Math.max(1, end - 4);
@@ -1180,14 +1349,14 @@
           : '<div class="file-icon '+iconClass+'"><i class="fas '+icon+'"></i></div>';
         let actions = '';
         if (isGrid) actions += '<button class="btn btn-star-grid '+starClass+' btn-star-toggle" data-path="'+f.path+'"><i class="fas fa-star"></i></button>';
-        if (canPlay) actions += '<button class="btn btn-play btn-play-media" data-url="'+(f.download_url||'')+'" data-name="'+f.name+'"><i class="fas fa-play"></i></button>';
+        if (canPlay) actions += '<button class="btn btn-play btn-play-media" data-url="'+(f.download_url||'')+'" data-name="'+f.name+'"><i class="fas fa-circle-play"></i></button>';
         if (!isGrid) actions += '<button class="btn btn-star '+starClass+' btn-star-toggle" data-path="'+f.path+'"><i class="fas fa-star"></i></button>';
         if (!isDir) {
-          actions += '<button class="btn btn-outline btn-copy" data-url="'+(f.download_url||'')+'"><i class="fas fa-link"></i></button>';
+          actions += '<button class="btn btn-outline btn-copy" data-url="'+(f.download_url||'')+'"><i class="fas fa-copy"></i></button>';
           actions += '<a class="btn btn-outline" href="'+(f.download_url||'')+'" target="_blank" download><i class="fas fa-download"></i></a>';
         }
-        actions += '<button class="btn btn-outline btn-rename" data-path="'+f.path+'" data-name="'+f.name+'" data-type="'+f.type+'" data-sha="'+(f.sha||'')+'"><i class="fas fa-pen"></i></button>';
-        if (!isDir) actions += '<button class="btn btn-danger btn-delete" data-path="'+f.path+'" data-sha="'+f.sha+'"><i class="fas fa-trash"></i></button>';
+        actions += '<button class="btn btn-outline btn-rename" data-path="'+f.path+'" data-name="'+f.name+'" data-type="'+f.type+'" data-sha="'+(f.sha||'')+'"><i class="fas fa-pen-to-square"></i></button>';
+        if (!isDir) actions += '<button class="btn btn-danger btn-delete" data-path="'+f.path+'" data-sha="'+f.sha+'"><i class="fas fa-trash-can"></i></button>';
         else actions += '<button class="btn btn-outline btn-enter-folder" data-path="'+f.path+'"><i class="fas fa-folder-open"></i></button>';
         return '<li class="file-item '+(isDir?'folder ':'')+selectedClass+'" data-path="'+f.path+'">'+
           '<div class="file-row">'+
@@ -1329,7 +1498,7 @@
         txt.textContent = Math.round(((i+1)/total)*100)+'%';
       }
       $('btn-upload').disabled=false;
-      $('btn-upload').innerHTML='<i class="fas fa-upload"></i> Upload';
+      $('btn-upload').innerHTML='<i class="fas fa-cloud-arrow-up"></i> Upload';
       selectedFiles=[]; $('file-input').value=''; updateUploadButton();
       setTimeout(()=>{ wrap.classList.remove('show'); bar.style.width='0%'; },1500);
       if (ok) { showStatus('Upload '+ok+' file'+(fail?', lỗi '+fail:''), fail?'info':'success'); listFiles(); }
@@ -1411,6 +1580,9 @@
 
     $('btn-connect').onclick=()=>connect(false);
     $('btn-save').onclick=saveConfig;
+    $('app-password').addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g, '').slice(0, 6);
+    });
     $('btn-upload').onclick=uploadFiles;
     $('btn-refresh').onclick=async()=>{
       const btn=$('btn-refresh');
