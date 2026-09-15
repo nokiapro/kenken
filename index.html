@@ -263,6 +263,46 @@
       25% { transform: translateX(-4px); }
       75% { transform: translateX(4px); }
     }
+    /* Success: 6 ô gộp thành 1 ô tích xanh */
+    .pin-boxes.success-merge {
+      gap: 0 !important;
+      justify-content: center;
+      transition: gap .35s ease;
+    }
+    .pin-boxes.success-merge .pin-box {
+      transition: all .4s cubic-bezier(.4,0,.2,1);
+      overflow: hidden;
+    }
+    .pin-boxes.success-merge .pin-box:not(.pin-success) {
+      width: 0 !important;
+      min-width: 0 !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      border-width: 0 !important;
+      opacity: 0;
+      transform: scale(0.3);
+    }
+    .pin-box.pin-success {
+      width: 56px !important;
+      height: 56px !important;
+      border-radius: 14px;
+      border: 2px solid #16a34a !important;
+      background: #dcfce7 !important;
+      color: #16a34a !important;
+      font-size: 1.6rem !important;
+      box-shadow: 0 0 0 4px rgba(22,163,74,.2);
+      animation: pinPop .4s cubic-bezier(.34,1.56,.64,1);
+    }
+    [data-theme="dark"] .pin-box.pin-success {
+      background: #14532d !important;
+      color: #4ade80 !important;
+      border-color: #22c55e !important;
+    }
+    @keyframes pinPop {
+      0% { transform: scale(0.6); }
+      60% { transform: scale(1.12); }
+      100% { transform: scale(1); }
+    }
     #pin-hidden {
       position: absolute; opacity: 0; pointer-events: none; height: 0; width: 0;
     }
@@ -700,13 +740,42 @@
       if (inp) inp.value = '';
       renderPinBoxes('');
     }
+    function playPinSuccessThenUnlock() {
+      const wrap = $('pin-boxes');
+      const boxes = wrap ? wrap.querySelectorAll('.pin-box') : [];
+      if (!wrap || !boxes.length) {
+        $('lock-screen').classList.add('hidden');
+        startApp();
+        return;
+      }
+      $('lock-error').style.display = 'none';
+      // Giữ ô đầu, ẩn dần các ô còn lại → 1 ô tích xanh
+      boxes.forEach((b, i) => {
+        if (i === 0) {
+          b.classList.remove('empty', 'active', 'filled', 'error');
+          b.classList.add('pin-success');
+          b.innerHTML = '<i class="fas fa-check"></i>';
+        }
+      });
+      wrap.classList.add('success-merge');
+      setTimeout(() => {
+        $('lock-screen').classList.add('hidden');
+        // Reset boxes cho lần sau (tab mới / session hết)
+        wrap.classList.remove('success-merge');
+        boxes.forEach((b, i) => {
+          b.classList.remove('pin-success');
+          b.textContent = '–';
+          b.className = 'pin-box empty' + (i === 0 ? ' active' : '');
+        });
+        clearPin();
+        startApp();
+      }, 700);
+    }
     function tryUnlock(pw, forceFail) {
       if (!pw || pw.length < PIN_MIN) return false;
       if (hashPin(pw) === localStorage.getItem('gh-app-pass')) {
         sessionStorage.setItem('gh-unlocked', '1');
-        $('lock-screen').classList.add('hidden');
-        $('lock-error').style.display = 'none';
-        startApp();
+        playPinSuccessThenUnlock();
         return true;
       }
       if (forceFail || pw.length >= PIN_MAX) {
