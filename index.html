@@ -44,7 +44,7 @@
       font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.5;
       -webkit-tap-highlight-color: transparent; transition: background .3s, color .3s;
-      padding-bottom: 110px;
+      padding-bottom: 140px;
     }
     [data-theme="dark"] body {
       background:
@@ -322,6 +322,17 @@
     }
     #lock-screen h2 { font-size: 1.15rem; margin-bottom: 8px; font-weight: 700; }
     #lock-screen p { color: var(--muted); font-size: .85rem; margin-bottom: 16px; }
+    .pin-len-toggle {
+      display: flex; gap: 8px; justify-content: center; margin-bottom: 14px;
+    }
+    .pin-len-btn {
+      padding: 6px 14px; border-radius: 999px; border: 1.5px solid var(--border);
+      background: var(--input-bg); color: var(--muted); font-size: .8rem; font-weight: 600;
+      cursor: pointer; transition: all .15s;
+    }
+    .pin-len-btn.active {
+      background: var(--primary-soft); color: var(--primary); border-color: var(--primary);
+    }
     .pin-boxes {
       display: flex; gap: 6px; justify-content: center; margin-bottom: 16px; flex-wrap: nowrap;
     }
@@ -409,8 +420,9 @@
 
     /* ===== PLAYER ===== */
     #mini-player {
-      position: fixed; left: 10px; right: 10px; bottom: 10px; z-index: 900;
-      display: none; padding: 0; pointer-events: none;
+      position: fixed; left: 0; right: 0; bottom: 16px; z-index: 900;
+      display: none; padding: 0 14px; pointer-events: none;
+      /* Cùng bề ngang với .container (max 720px) */
     }
     #mini-player.show { display: block; animation: playerIn .35s cubic-bezier(.34,1.2,.64,1); }
     @keyframes playerIn {
@@ -419,7 +431,8 @@
     }
     .mini-inner {
       pointer-events: auto;
-      max-width: 440px; margin: 0 auto;
+      max-width: 720px; margin: 0 auto;
+      width: 100%;
       border-radius: 24px;
       padding: 16px 16px 14px;
       background:
@@ -581,16 +594,13 @@
     <div class="lock-box">
       <i class="fas fa-lock" style="font-size:2rem;color:var(--primary);margin-bottom:12px"></i>
       <h2>Nhập mã PIN</h2>
-      <p>Nhập mã PIN 6 số</p>
-      <div class="pin-boxes" id="pin-boxes">
-        <div class="pin-box empty active" data-i="0">–</div>
-        <div class="pin-box empty" data-i="1">–</div>
-        <div class="pin-box empty" data-i="2">–</div>
-        <div class="pin-box empty" data-i="3">–</div>
-        <div class="pin-box empty" data-i="4">–</div>
-        <div class="pin-box empty" data-i="5">–</div>
+      <p id="pin-hint">Chọn độ dài rồi nhập PIN</p>
+      <div class="pin-len-toggle" id="pin-len-toggle">
+        <button type="button" class="pin-len-btn active" data-len="6">6 số</button>
+        <button type="button" class="pin-len-btn" data-len="8">8 số</button>
       </div>
-      <input type="tel" id="pin-hidden" inputmode="numeric" autocomplete="one-time-code" maxlength="6" />
+      <div class="pin-boxes" id="pin-boxes"></div>
+      <input type="tel" id="pin-hidden" inputmode="numeric" autocomplete="one-time-code" maxlength="8" />
       <p id="lock-error" style="color:var(--danger);font-size:.8rem;margin-top:4px;display:none">Sai mã PIN</p>
     </div>
   </div>
@@ -628,12 +638,19 @@
           <small>Cần quyền <strong>repo</strong></small>
         </div>
         <div class="form-group">
+          <label>Độ dài PIN</label>
+          <div class="pin-len-toggle" id="cfg-pin-len">
+            <button type="button" class="pin-len-btn active" data-len="6">6 số</button>
+            <button type="button" class="pin-len-btn" data-len="8">8 số</button>
+          </div>
+        </div>
+        <div class="form-group">
           <label>Mã PIN khóa web (tùy chọn)</label>
           <div class="pw-wrap">
-            <input type="password" id="app-password" placeholder="VD: 123456 — trống = không khóa" maxlength="6" inputmode="numeric" />
+            <input type="password" id="app-password" placeholder="Trống = không khóa" maxlength="6" inputmode="numeric" />
             <button type="button" class="pw-toggle" data-target="app-password" title="Hiện/ẩn"><i class="fas fa-eye"></i></button>
           </div>
-          <small>Đúng 6 chữ số. Ai mở link phải nhập PIN này</small>
+          <small id="pin-cfg-hint">Nhập đúng 6 chữ số. Ai mở link phải nhập PIN này</small>
         </div>
         <div class="btn-group">
           <button class="btn btn-primary" id="btn-connect"><i class="fas fa-link"></i> Kết nối</button>
@@ -805,23 +822,63 @@
       setTimeout(() => focusPin(), 80);
       return false;
     }
-    const PIN_MAX = 6;
-    const PIN_MIN = 6;
+    let pinLen = parseInt(localStorage.getItem('gh-app-pass-len') || '6', 10);
+    if (pinLen !== 6 && pinLen !== 8) pinLen = 6;
+
+    function getPinLen() { return pinLen; }
+
+    function setPinLen(n, rebuild) {
+      pinLen = (n === 8) ? 8 : 6;
+      // Update UI toggles
+      document.querySelectorAll('#pin-len-toggle .pin-len-btn, #cfg-pin-len .pin-len-btn').forEach(btn => {
+        btn.classList.toggle('active', parseInt(btn.dataset.len, 10) === pinLen);
+      });
+      const hint = $('pin-hint');
+      if (hint) hint.textContent = 'Nhập mã PIN ' + pinLen + ' số';
+      const cfgHint = $('pin-cfg-hint');
+      if (cfgHint) cfgHint.textContent = 'Nhập đúng ' + pinLen + ' chữ số. Ai mở link phải nhập PIN này';
+      const appPw = $('app-password');
+      if (appPw) {
+        appPw.maxLength = pinLen;
+        appPw.placeholder = 'VD: ' + (pinLen === 6 ? '123456' : '12345678') + ' — trống = không khóa';
+      }
+      const pinHidden = $('pin-hidden');
+      if (pinHidden) pinHidden.maxLength = pinLen;
+      if (rebuild !== false) {
+        buildPinBoxes();
+        clearPin();
+      }
+    }
+
+    function buildPinBoxes() {
+      const wrap = $('pin-boxes');
+      if (!wrap) return;
+      let html = '';
+      for (let i = 0; i < pinLen; i++) {
+        html += '<div class="pin-box empty' + (i === 0 ? ' active' : '') + '" data-i="' + i + '">–</div>';
+      }
+      wrap.innerHTML = html;
+      wrap.classList.remove('success-merge');
+    }
+
     function setAppPassword(pw) {
       if (!pw) {
         localStorage.removeItem('gh-app-pass');
+        localStorage.removeItem('gh-app-pass-len');
         return;
       }
-      const digits = String(pw).replace(/\D/g, '').slice(0, PIN_MAX);
-      if (digits.length < PIN_MIN || digits.length > PIN_MAX) {
-        showStatus('PIN phải từ ' + PIN_MIN + ' đến ' + PIN_MAX + ' chữ số', 'error');
+      const digits = String(pw).replace(/\D/g, '').slice(0, pinLen);
+      if (digits.length !== pinLen) {
+        showStatus('PIN phải đúng ' + pinLen + ' chữ số', 'error');
         return;
       }
       localStorage.setItem('gh-app-pass', hashPin(digits));
       localStorage.setItem('gh-app-pass-len', String(digits.length));
     }
+
     function renderPinBoxes(val) {
       const boxes = document.querySelectorAll('#pin-boxes .pin-box');
+      const len = getPinLen();
       boxes.forEach((box, i) => {
         box.classList.remove('active', 'filled', 'empty', 'error');
         if (i < val.length) {
@@ -831,8 +888,8 @@
           box.textContent = '–';
           box.classList.add('empty');
         }
-        if (i === val.length && val.length < PIN_MAX) box.classList.add('active');
-        if (val.length === PIN_MAX && i === PIN_MAX - 1) box.classList.add('active');
+        if (i === val.length && val.length < len) box.classList.add('active');
+        if (val.length === len && i === len - 1) box.classList.add('active');
       });
     }
     function focusPin() {
@@ -853,7 +910,6 @@
         return;
       }
       $('lock-error').style.display = 'none';
-      // Giữ ô đầu, ẩn dần các ô còn lại → 1 ô tích xanh
       boxes.forEach((b, i) => {
         if (i === 0) {
           b.classList.remove('empty', 'active', 'filled', 'error');
@@ -864,25 +920,21 @@
       wrap.classList.add('success-merge');
       setTimeout(() => {
         $('lock-screen').classList.add('hidden');
-        // Reset boxes cho lần sau (tab mới / session hết)
         wrap.classList.remove('success-merge');
-        boxes.forEach((b, i) => {
-          b.classList.remove('pin-success');
-          b.textContent = '–';
-          b.className = 'pin-box empty' + (i === 0 ? ' active' : '');
-        });
+        buildPinBoxes();
         clearPin();
         startApp();
       }, 700);
     }
     function tryUnlock(pw, forceFail) {
-      if (!pw || pw.length < PIN_MIN) return false;
+      const len = getPinLen();
+      if (!pw || pw.length < len) return false;
       if (hashPin(pw) === localStorage.getItem('gh-app-pass')) {
         sessionStorage.setItem('gh-unlocked', '1');
         playPinSuccessThenUnlock();
         return true;
       }
-      if (forceFail || pw.length >= PIN_MAX) {
+      if (forceFail || pw.length >= len) {
         $('lock-error').style.display = 'block';
         document.querySelectorAll('#pin-boxes .pin-box').forEach(b => b.classList.add('error'));
         setTimeout(() => {
@@ -897,22 +949,42 @@
     (function initPin() {
       const inp = $('pin-hidden');
       if (!inp) return;
+      // Load stored length if password exists
+      const storedLen = parseInt(localStorage.getItem('gh-app-pass-len') || '0', 10);
+      if (storedLen === 6 || storedLen === 8) pinLen = storedLen;
+      setPinLen(pinLen, true);
+
+      // Lock screen length toggle
+      document.querySelectorAll('#pin-len-toggle .pin-len-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          setPinLen(parseInt(btn.dataset.len, 10), true);
+          focusPin();
+        });
+      });
+      // Config length toggle
+      document.querySelectorAll('#cfg-pin-len .pin-len-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          setPinLen(parseInt(btn.dataset.len, 10), false);
+        });
+      });
+
       const boxes = $('pin-boxes');
       if (boxes) boxes.addEventListener('click', focusPin);
       inp.addEventListener('input', () => {
-        let v = inp.value.replace(/\D/g, '').slice(0, PIN_MAX);
+        const len = getPinLen();
+        let v = inp.value.replace(/\D/g, '').slice(0, len);
         inp.value = v;
         renderPinBoxes(v);
-        // Thử mở khóa khi đủ 4+ số (hỗ trợ PIN 6 hoặc 8 cũ)
-        if (v.length >= PIN_MIN) tryUnlock(v, v.length >= PIN_MAX);
+        if (v.length >= len) tryUnlock(v, true);
       });
       inp.addEventListener('keydown', (e) => {
+        const len = getPinLen();
         if (e.key === 'Backspace') {
-          setTimeout(() => renderPinBoxes(inp.value.replace(/\D/g, '').slice(0, PIN_MAX)), 0);
+          setTimeout(() => renderPinBoxes(inp.value.replace(/\D/g, '').slice(0, len)), 0);
         }
         if (e.key === 'Enter') {
           const v = inp.value.replace(/\D/g, '');
-          if (v.length >= PIN_MIN) tryUnlock(v, true);
+          if (v.length >= len) tryUnlock(v, true);
         }
       });
       document.addEventListener('visibilitychange', () => {
@@ -1811,7 +1883,7 @@
     $('btn-connect').onclick=()=>connect(false);
     $('btn-save').onclick=saveConfig;
     $('app-password').addEventListener('input', function() {
-      this.value = this.value.replace(/\D/g, '').slice(0, 6);
+      this.value = this.value.replace(/\D/g, '').slice(0, getPinLen());
     });
     $('btn-upload').onclick=uploadFiles;
     $('btn-refresh').onclick=async()=>{
