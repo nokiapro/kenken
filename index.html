@@ -239,13 +239,17 @@
     #lock-screen h2 { font-size: 1.1rem; margin-bottom: 8px; }
     #lock-screen p { color: var(--muted); font-size: .85rem; margin-bottom: 16px; }
     .pin-boxes {
-      display: flex; gap: 8px; justify-content: center; margin-bottom: 16px;
+      display: flex; gap: 6px; justify-content: center; margin-bottom: 16px; flex-wrap: nowrap;
     }
     .pin-box {
-      width: 42px; height: 48px; border: 2px solid var(--border); border-radius: 10px;
+      width: 36px; height: 44px; border: 2px solid var(--border); border-radius: 10px;
       background: var(--input-bg); display: flex; align-items: center; justify-content: center;
-      font-size: 1.35rem; font-weight: 700; color: var(--text);
-      transition: border-color .15s, box-shadow .15s;
+      font-size: 1.2rem; font-weight: 700; color: var(--text);
+      transition: border-color .15s, box-shadow .15s; flex-shrink: 0;
+    }
+    @media (min-width: 400px) {
+      .pin-boxes { gap: 8px; }
+      .pin-box { width: 42px; height: 48px; font-size: 1.35rem; }
     }
     .pin-box.empty { color: var(--muted); font-weight: 500; }
     .pin-box.active {
@@ -386,7 +390,7 @@
     <div class="lock-box">
       <i class="fas fa-lock" style="font-size:2rem;color:var(--primary);margin-bottom:12px"></i>
       <h2>Nhập mã PIN</h2>
-      <p>6 chữ số để mở khóa</p>
+      <p>Nhập mã PIN (6–8 số)</p>
       <div class="pin-boxes" id="pin-boxes">
         <div class="pin-box empty active" data-i="0">–</div>
         <div class="pin-box empty" data-i="1">–</div>
@@ -394,8 +398,10 @@
         <div class="pin-box empty" data-i="3">–</div>
         <div class="pin-box empty" data-i="4">–</div>
         <div class="pin-box empty" data-i="5">–</div>
+        <div class="pin-box empty" data-i="6">–</div>
+        <div class="pin-box empty" data-i="7">–</div>
       </div>
-      <input type="tel" id="pin-hidden" inputmode="numeric" autocomplete="one-time-code" maxlength="6" />
+      <input type="tel" id="pin-hidden" inputmode="numeric" autocomplete="one-time-code" maxlength="8" />
       <p id="lock-error" style="color:var(--danger);font-size:.8rem;margin-top:4px;display:none">Sai mã PIN</p>
     </div>
   </div>
@@ -433,12 +439,12 @@
           <small>Cần quyền <strong>repo</strong></small>
         </div>
         <div class="form-group">
-          <label>Mã PIN 6 số khóa web (tùy chọn)</label>
+          <label>Mã PIN khóa web (tùy chọn)</label>
           <div class="pw-wrap">
-            <input type="password" id="app-password" placeholder="VD: 123456 — để trống = không khóa" maxlength="6" inputmode="numeric" />
+            <input type="password" id="app-password" placeholder="6–8 số, VD: 12345678 — trống = không khóa" maxlength="8" inputmode="numeric" />
             <button type="button" class="pw-toggle" data-target="app-password" title="Hiện/ẩn"><i class="fas fa-eye"></i></button>
           </div>
-          <small>Chỉ dùng 6 chữ số. Ai mở link phải nhập PIN này</small>
+          <small>6 đến 8 chữ số. Ai mở link phải nhập PIN này</small>
         </div>
         <div class="btn-group">
           <button class="btn btn-primary" id="btn-connect"><i class="fas fa-link"></i> Kết nối</button>
@@ -608,17 +614,20 @@
       setTimeout(() => focusPin(), 80);
       return false;
     }
+    const PIN_MAX = 8;
+    const PIN_MIN = 4;
     function setAppPassword(pw) {
       if (!pw) {
         localStorage.removeItem('gh-app-pass');
         return;
       }
-      const digits = String(pw).replace(/\D/g, '').slice(0, 6);
-      if (digits.length !== 6) {
-        showStatus('PIN phải đủ 6 chữ số', 'error');
+      const digits = String(pw).replace(/\D/g, '').slice(0, PIN_MAX);
+      if (digits.length < PIN_MIN || digits.length > PIN_MAX) {
+        showStatus('PIN phải từ ' + PIN_MIN + ' đến ' + PIN_MAX + ' chữ số', 'error');
         return;
       }
       localStorage.setItem('gh-app-pass', hashPin(digits));
+      localStorage.setItem('gh-app-pass-len', String(digits.length));
     }
     function renderPinBoxes(val) {
       const boxes = document.querySelectorAll('#pin-boxes .pin-box');
@@ -631,8 +640,8 @@
           box.textContent = '–';
           box.classList.add('empty');
         }
-        if (i === val.length && val.length < 6) box.classList.add('active');
-        if (val.length === 6 && i === 5) box.classList.add('active');
+        if (i === val.length && val.length < PIN_MAX) box.classList.add('active');
+        if (val.length === PIN_MAX && i === PIN_MAX - 1) box.classList.add('active');
       });
     }
     function focusPin() {
@@ -644,14 +653,16 @@
       if (inp) inp.value = '';
       renderPinBoxes('');
     }
-    function tryUnlock(pw) {
-      if (!pw || pw.length !== 6) return;
+    function tryUnlock(pw, forceFail) {
+      if (!pw || pw.length < PIN_MIN) return false;
       if (hashPin(pw) === localStorage.getItem('gh-app-pass')) {
         sessionStorage.setItem('gh-unlocked', '1');
         $('lock-screen').classList.add('hidden');
         $('lock-error').style.display = 'none';
         startApp();
-      } else {
+        return true;
+      }
+      if (forceFail || pw.length >= PIN_MAX) {
         $('lock-error').style.display = 'block';
         document.querySelectorAll('#pin-boxes .pin-box').forEach(b => b.classList.add('error'));
         setTimeout(() => {
@@ -660,27 +671,30 @@
           focusPin();
         }, 500);
       }
+      return false;
     }
     // PIN input handlers
     (function initPin() {
       const inp = $('pin-hidden');
       if (!inp) return;
       const boxes = $('pin-boxes');
-      if (boxes) {
-        boxes.addEventListener('click', focusPin);
-      }
+      if (boxes) boxes.addEventListener('click', focusPin);
       inp.addEventListener('input', () => {
-        let v = inp.value.replace(/\D/g, '').slice(0, 6);
+        let v = inp.value.replace(/\D/g, '').slice(0, PIN_MAX);
         inp.value = v;
         renderPinBoxes(v);
-        if (v.length === 6) tryUnlock(v);
+        // Thử mở khóa khi đủ 4+ số (hỗ trợ PIN 6 hoặc 8 cũ)
+        if (v.length >= PIN_MIN) tryUnlock(v, v.length >= PIN_MAX);
       });
       inp.addEventListener('keydown', (e) => {
         if (e.key === 'Backspace') {
-          setTimeout(() => renderPinBoxes(inp.value.replace(/\D/g, '').slice(0, 6)), 0);
+          setTimeout(() => renderPinBoxes(inp.value.replace(/\D/g, '').slice(0, PIN_MAX)), 0);
+        }
+        if (e.key === 'Enter') {
+          const v = inp.value.replace(/\D/g, '');
+          if (v.length >= PIN_MIN) tryUnlock(v, true);
         }
       });
-      // Mobile: keep focus
       document.addEventListener('visibilitychange', () => {
         if (!document.hidden && !$('lock-screen').classList.contains('hidden')) focusPin();
       });
@@ -1581,7 +1595,7 @@
     $('btn-connect').onclick=()=>connect(false);
     $('btn-save').onclick=saveConfig;
     $('app-password').addEventListener('input', function() {
-      this.value = this.value.replace(/\D/g, '').slice(0, 6);
+      this.value = this.value.replace(/\D/g, '').slice(0, 8);
     });
     $('btn-upload').onclick=uploadFiles;
     $('btn-refresh').onclick=async()=>{
