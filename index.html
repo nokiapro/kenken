@@ -317,8 +317,9 @@
     }
     #lock-screen .lock-box {
       background: var(--card); border: 1px solid var(--border); border-radius: 24px;
-      padding: 32px 22px; width: 100%; max-width: 360px; text-align: center;
+      padding: 28px 14px; width: 100%; max-width: 380px; text-align: center;
       box-shadow: var(--shadow), 0 0 0 1px rgba(99,102,241,.08);
+      overflow: hidden;
     }
     #lock-screen h2 { font-size: 1.15rem; margin-bottom: 8px; font-weight: 700; }
     #lock-screen p { color: var(--muted); font-size: .85rem; margin-bottom: 16px; }
@@ -334,23 +335,29 @@
       background: var(--primary-soft); color: var(--primary); border-color: var(--primary);
     }
     .pin-boxes {
-      display: flex; gap: 6px; justify-content: center; margin-bottom: 16px; flex-wrap: nowrap;
+      display: flex; gap: 4px; justify-content: center; margin-bottom: 16px;
+      flex-wrap: nowrap; width: 100%; max-width: 100%;
+      padding: 0 2px;
     }
     .pin-box {
-      width: 36px; height: 44px; border: 2px solid var(--border); border-radius: 12px;
+      flex: 1 1 0;
+      min-width: 0;
+      max-width: 40px;
+      height: 42px;
+      border: 2px solid var(--border); border-radius: 10px;
       background: var(--input-bg); display: flex; align-items: center; justify-content: center;
-      font-size: 1.2rem; font-weight: 700; color: var(--text);
-      transition: border-color .15s, box-shadow .15s, transform .15s; flex-shrink: 0;
+      font-size: 1.05rem; font-weight: 700; color: var(--text);
+      transition: border-color .15s, box-shadow .15s, transform .15s;
     }
     @media (min-width: 400px) {
-      .pin-boxes { gap: 8px; }
-      .pin-box { width: 42px; height: 48px; font-size: 1.35rem; }
+      #lock-screen .lock-box { padding: 32px 20px; }
+      .pin-boxes { gap: 6px; }
+      .pin-box { max-width: 44px; height: 48px; font-size: 1.25rem; border-radius: 12px; }
     }
     .pin-box.empty { color: var(--muted); font-weight: 500; }
     .pin-box.active {
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px var(--primary-soft);
-      transform: scale(1.05);
+      box-shadow: 0 0 0 2px var(--primary-soft);
     }
     .pin-box.filled {
       border-color: var(--primary);
