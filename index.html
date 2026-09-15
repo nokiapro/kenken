@@ -357,57 +357,116 @@
     .pin-box.empty { color: var(--muted); font-weight: 500; }
     .pin-box.active {
       border-color: var(--primary);
-      box-shadow: 0 0 0 2px var(--primary-soft);
+      box-shadow:
+        0 0 0 3px var(--primary-soft),
+        0 0 12px rgba(99,102,241,.35);
+      animation: pinGlow 1.4s ease-in-out infinite;
     }
     .pin-box.filled {
       border-color: var(--primary);
       background: var(--primary-soft);
+      box-shadow:
+        0 0 0 2px var(--primary-soft),
+        0 0 10px rgba(99,102,241,.25);
+      animation: pinFillIn .25s ease;
     }
-    .pin-box.error { border-color: var(--danger); animation: pinShake .35s ease; }
+    @keyframes pinGlow {
+      0%, 100% { box-shadow: 0 0 0 3px var(--primary-soft), 0 0 10px rgba(99,102,241,.25); }
+      50% { box-shadow: 0 0 0 5px var(--primary-soft), 0 0 18px rgba(99,102,241,.5); }
+    }
+    @keyframes pinFillIn {
+      from { transform: scale(0.85); opacity: .6; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .pin-box.error {
+      border-color: var(--danger);
+      box-shadow: 0 0 0 3px rgba(244,63,94,.2), 0 0 12px rgba(244,63,94,.3);
+      animation: pinShake .35s ease;
+    }
     @keyframes pinShake {
       0%,100% { transform: translateX(0); }
       25% { transform: translateX(-4px); }
       75% { transform: translateX(4px); }
     }
-    /* Success: 6 ô gộp thành 1 ô tích xanh */
+    /* Success: gộp về 1 ô tích — luôn căn giữa */
     .pin-boxes.success-merge {
       gap: 0 !important;
-      justify-content: center;
+      justify-content: center !important;
+      align-items: center;
+      position: relative;
+      min-height: 64px;
       transition: gap .35s ease;
     }
     .pin-boxes.success-merge .pin-box {
       transition: all .4s cubic-bezier(.4,0,.2,1);
       overflow: hidden;
+      flex: 0 0 auto !important;
     }
     .pin-boxes.success-merge .pin-box:not(.pin-success) {
       width: 0 !important;
+      max-width: 0 !important;
       min-width: 0 !important;
+      height: 0 !important;
       padding: 0 !important;
       margin: 0 !important;
       border-width: 0 !important;
       opacity: 0;
-      transform: scale(0.3);
+      transform: scale(0.2);
+      flex: 0 0 0 !important;
     }
     .pin-box.pin-success {
-      width: 56px !important;
-      height: 56px !important;
-      border-radius: 14px;
-      border: 2px solid #16a34a !important;
-      background: #dcfce7 !important;
+      width: 58px !important;
+      max-width: 58px !important;
+      height: 58px !important;
+      min-width: 58px !important;
+      border-radius: 16px;
+      border: 2.5px solid #22c55e !important;
+      background: linear-gradient(145deg, #dcfce7, #bbf7d0) !important;
       color: #16a34a !important;
-      font-size: 1.6rem !important;
-      box-shadow: 0 0 0 4px rgba(22,163,74,.2);
-      animation: pinPop .4s cubic-bezier(.34,1.56,.64,1);
+      font-size: 1.7rem !important;
+      flex: 0 0 58px !important;
+      margin: 0 auto !important;
+      position: relative;
+      z-index: 2;
+      box-shadow:
+        0 0 0 4px rgba(34,197,94,.2),
+        0 0 24px rgba(34,197,94,.45),
+        0 4px 16px rgba(0,0,0,.12);
+      animation: pinSuccessPop .55s cubic-bezier(.34,1.56,.64,1);
+    }
+    .pin-box.pin-success::before {
+      content: '';
+      position: absolute; inset: -8px;
+      border-radius: 20px;
+      border: 2px solid rgba(34,197,94,.4);
+      animation: pinRing 1s ease-out forwards;
+      pointer-events: none;
+    }
+    .pin-box.pin-success::after {
+      content: '';
+      position: absolute; inset: -16px;
+      border-radius: 24px;
+      border: 1.5px solid rgba(34,197,94,.25);
+      animation: pinRing 1s .12s ease-out forwards;
+      pointer-events: none;
     }
     [data-theme="dark"] .pin-box.pin-success {
-      background: #14532d !important;
+      background: linear-gradient(145deg, #14532d, #166534) !important;
       color: #4ade80 !important;
       border-color: #22c55e !important;
+      box-shadow:
+        0 0 0 4px rgba(34,197,94,.2),
+        0 0 28px rgba(34,197,94,.5),
+        0 4px 16px rgba(0,0,0,.3);
     }
-    @keyframes pinPop {
-      0% { transform: scale(0.6); }
-      60% { transform: scale(1.12); }
-      100% { transform: scale(1); }
+    @keyframes pinSuccessPop {
+      0% { transform: scale(0.4); opacity: 0; }
+      55% { transform: scale(1.15); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes pinRing {
+      0% { transform: scale(0.7); opacity: .8; }
+      100% { transform: scale(1.35); opacity: 0; }
     }
     #pin-hidden {
       position: absolute; opacity: 0; pointer-events: none; height: 0; width: 0;
