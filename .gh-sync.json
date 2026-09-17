@@ -2,7 +2,7 @@
   "version": 2,
   "profiles": {
     "u7693d2e4": {
-      "updatedAt": 1789639216706,
+      "updatedAt": 1789639226683,
       "label": "xua***",
       "favorites": [],
       "currentPath": "",
@@ -11,10 +11,10 @@
       "devices": {
         "dev_mxi7psgxmu3l56i3": {
           "name": "Windows Chrome",
-          "lastSeen": 1789639216706
+          "lastSeen": 1789639226683
         }
       }
     }
   },
-  "updatedAt": 1789639216706
+  "updatedAt": 1789639226683
 }
