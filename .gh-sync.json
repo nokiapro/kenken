@@ -2,19 +2,19 @@
   "version": 2,
   "profiles": {
     "u7693d2e4": {
-      "updatedAt": 1790067571253,
+      "updatedAt": 1790067683413,
       "label": "xua***",
       "favorites": [],
-      "currentPath": "LYRIC",
+      "currentPath": "DEMO",
       "viewMode": "list",
       "playback": null,
       "devices": {
         "dev_mxi7psgxmu3l56i3": {
           "name": "Windows Chrome",
-          "lastSeen": 1790067571253
+          "lastSeen": 1790067683413
         }
       }
     }
   },
-  "updatedAt": 1790067571253
+  "updatedAt": 1790067683413
 }
