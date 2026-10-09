@@ -2,26 +2,19 @@
   "version": 2,
   "profiles": {
     "u7693d2e4": {
-      "updatedAt": 1791528602608,
+      "updatedAt": 1791528610183,
       "label": "xua***",
       "favorites": [],
       "currentPath": "MUSIC",
       "viewMode": "list",
-      "playback": {
-        "path": "MUSIC/ANHBUONGROI.mp3",
-        "name": "ANHBUONGROI.mp3",
-        "url": "https://raw.githubusercontent.com/nokiapro/kenken/main/MUSIC/ANHBUONGROI.mp3",
-        "time": 3.101043,
-        "updatedAt": 1791528602608,
-        "deviceId": "dev_mxi7psgxmu3l56i3"
-      },
+      "playback": null,
       "devices": {
         "dev_mxi7psgxmu3l56i3": {
           "name": "Windows Chrome",
-          "lastSeen": 1791528602608
+          "lastSeen": 1791528610183
         }
       }
     }
   },
-  "updatedAt": 1791528602608
+  "updatedAt": 1791528610183
 }
